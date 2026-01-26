@@ -1,0 +1,60 @@
+.photo-capture {
+  width: 100%;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.capture-button {
+  width: 100%;
+  padding: 40px 20px;
+  background: #1e1e30;
+  border: 2px dashed #4b5563;
+  border-radius: 12px;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s;
+}
+
+.capture-button:hover {
+  border-color: #3b82f6;
+  background: #252540;
+}
+
+.camera-icon {
+  font-size: 48px;
+}
+
+.preview-container {
+  position: relative;
+  width: 100%;
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.remove-button {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-button:hover {
+  background: #dc2626;
+}

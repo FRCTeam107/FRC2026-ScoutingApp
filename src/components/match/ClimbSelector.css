@@ -1,0 +1,39 @@
+.climb-selector {
+  width: 100%;
+}
+
+.climb-selector label {
+  display: block;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin-bottom: 12px;
+}
+
+.climb-options {
+  display: flex;
+  gap: 8px;
+}
+
+.climb-option {
+  flex: 1;
+  padding: 16px;
+  background: #1e1e30;
+  border: 2px solid #3a3a50;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.climb-option:hover {
+  border-color: #4b5563;
+  background: #252540;
+}
+
+.climb-option.selected {
+  background: #7c3aed;
+  border-color: #8b5cf6;
+  color: white;
+}

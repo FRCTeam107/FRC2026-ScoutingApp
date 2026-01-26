@@ -1,0 +1,56 @@
+.defense-rating {
+  width: 100%;
+}
+
+.defense-rating label {
+  display: block;
+  font-weight: 600;
+  color: #e5e5e5;
+  margin-bottom: 12px;
+}
+
+.rating-options {
+  display: flex;
+  gap: 8px;
+}
+
+.rating-option {
+  flex: 1;
+  padding: 14px 8px;
+  background: #1e1e30;
+  border: 2px solid #3a3a50;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rating-option:hover {
+  border-color: #4b5563;
+}
+
+.rating-option.filled {
+  background: #059669;
+  border-color: #10b981;
+  color: white;
+}
+
+.rating-option.none {
+  font-size: 12px;
+}
+
+.rating-option.selected-none {
+  background: #4b5563;
+  border-color: #6b7280;
+  color: white;
+}
+
+.rating-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6b7280;
+}

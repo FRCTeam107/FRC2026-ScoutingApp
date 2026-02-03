@@ -1,13 +1,15 @@
 import './ClimbSelector.css';
 
-const CLIMB_LEVELS = ['None', 'L1', 'L2', 'L3'];
+const DEFAULT_CLIMB_LEVELS = ['None', 'L1', 'L2', 'L3'];
 
-export function ClimbSelector({ label = 'Climb Level', value, onChange }) {
+export function ClimbSelector({ label = 'Climb Level', value, onChange, levels }) {
+  const levelsToUse = levels ?? DEFAULT_CLIMB_LEVELS;
+
   return (
     <div className="climb-selector">
       <label>{label}</label>
       <div className="climb-options">
-        {CLIMB_LEVELS.map((level) => (
+        {levelsToUse.map((level) => (
           <button
             key={level}
             type="button"

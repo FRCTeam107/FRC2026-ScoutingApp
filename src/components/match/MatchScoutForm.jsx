@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FiringButton } from './FiringButton';
 import { AccuracySlider } from './AccuracySlider';
 import { ClimbSelector } from './ClimbSelector';
+import { AUTON_CLIMB_LEVELS } from '../../config/autonClimb';
+import { TELEOP_CLIMB_LEVELS } from '../../config/teleopClimb';
 import { DefenseRating } from './DefenseRating';
 import { useFiringTimer } from '../../hooks/useFiringTimer';
 import { saveMatchRecord, getMatchRecords } from '../../lib/storage';
@@ -179,6 +181,7 @@ export function MatchScoutForm({ onSave }) {
             label="Auto Climb"
             value={autoClimb}
             onChange={setAutoClimb}
+            levels={AUTON_CLIMB_LEVELS}
           />
 
           <div className="stage-nav">
@@ -211,6 +214,7 @@ export function MatchScoutForm({ onSave }) {
             label="Endgame Climb"
             value={teleopClimb}
             onChange={setTeleopClimb}
+            levels={TELEOP_CLIMB_LEVELS}
           />
 
           <div className="stage-nav">

@@ -3,7 +3,9 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '/FRC2026-ScoutingApp/',
   plugins: [
+    
     react(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -55,3 +57,5 @@ export default defineConfig({
     })
   ]
 })
+
+

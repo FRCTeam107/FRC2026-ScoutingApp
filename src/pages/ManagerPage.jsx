@@ -156,6 +156,7 @@ export function ManagerPage() {
 
     if (pendingAction?.type === 'deleteTeam') {
       deleteTeamProfile(pendingAction.teamNumber);
+      await deleteTeamProfileFromCloud(pendingAction.teamNumber);
       setRefreshKey(k => k + 1);
       setSelectedTeam(null);
     } else if (pendingAction?.type === 'clearForNewEvent') {

@@ -8,7 +8,8 @@ export function PitScoutForm({ teamNumber, onSave, onCancel }) {
     teamNumber: teamNumber || '',
     description: '',
     ballsPerSecond: '',
-    photoBase64: null
+    photoBase64: null,
+    trenchCapability: 'trench' // default: can go under trench
   });
 
   useEffect(() => {
@@ -19,7 +20,8 @@ export function PitScoutForm({ teamNumber, onSave, onCancel }) {
           teamNumber: existing.teamNumber,
           description: existing.description || '',
           ballsPerSecond: existing.ballsPerSecond || '',
-          photoBase64: existing.photoBase64 || existing.photoUrl || null
+          photoBase64: existing.photoBase64 || existing.photoUrl || null,
+          trenchCapability: existing.trenchCapability || 'trench'
         });
       }
     }
@@ -37,7 +39,8 @@ export function PitScoutForm({ teamNumber, onSave, onCancel }) {
       teamNumber: parseInt(formData.teamNumber),
       description: formData.description,
       ballsPerSecond: formData.ballsPerSecond ? parseFloat(formData.ballsPerSecond) : null,
-      photoBase64: formData.photoBase64
+      photoBase64: formData.photoBase64,
+      trenchCapability: formData.trenchCapability
     };
 
     saveTeamProfile(profile);
@@ -77,6 +80,32 @@ export function PitScoutForm({ teamNumber, onSave, onCancel }) {
           max="10"
         />
         <span className="hint">Their firing rate (used for fuel calculations)</span>
+      </div>
+
+      <div className="form-group">
+        <label>Trench/Bump Capability</label>
+        <div className="toggle-group">
+          <label>
+            <input
+              type="radio"
+              name="trenchCapability"
+              value="trench"
+              checked={formData.trenchCapability === 'trench'}
+              onChange={() => handleChange('trenchCapability', 'trench')}
+            />
+            Can go under trench
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="trenchCapability"
+              value="bump"
+              checked={formData.trenchCapability === 'bump'}
+              onChange={() => handleChange('trenchCapability', 'bump')}
+            />
+            Must go over bump
+          </label>
+        </div>
       </div>
 
       <div className="form-group">

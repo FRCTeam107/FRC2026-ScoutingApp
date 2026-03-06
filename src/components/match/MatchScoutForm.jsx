@@ -31,7 +31,7 @@ export function MatchScoutForm({ onSave }) {
   // Teleop/Endgame
   const [teleopAccuracy, setTeleopAccuracy] = useState(50);
   const [teleopClimb, setTeleopClimb] = useState('None');
-  const [teleopPickup, setTeleopPickup] = useState([]);
+  const [pickupLocation, setPickupLocation] = useState([]);
 
   // Post-match
   const [defenseRating, setDefenseRating] = useState(0);
@@ -70,7 +70,7 @@ export function MatchScoutForm({ onSave }) {
       teleopFiringSeconds: teleopSeconds,
       teleopAccuracy,
       teleopClimb,
-      teleopPickup,
+      pickupLocation,
       defenseRating,
       notes
     };
@@ -85,7 +85,7 @@ export function MatchScoutForm({ onSave }) {
     setAutoClimb('None');
     setTeleopAccuracy(50);
     setTeleopClimb('None');
-    setTeleopPickup([]);
+    setPickupLocation([]);
     setDefenseRating(0);
     setNotes('');
     resetTimer();
@@ -215,8 +215,8 @@ export function MatchScoutForm({ onSave }) {
 
           <ClimbSelector
             label="Pickup Location"
-            value={teleopPickup}
-            onChange={setTeleopPickup}
+            value={pickupLocation}
+            onChange={setPickupLocation}
             multiple={true}
             levels={[
               'Neutral Zone',
@@ -256,7 +256,7 @@ export function MatchScoutForm({ onSave }) {
               <span className="stat-label">Teleop</span>
               <span className="stat-value">{teleopSeconds.toFixed(1)}s</span>
                 <span className="stat-detail">
-                  {teleopAccuracy}% · {teleopClimb} · {Array.isArray(teleopPickup) ? (teleopPickup.length ? teleopPickup.join(', ') : 'None') : teleopPickup}
+                  {teleopAccuracy}% · {teleopClimb} · {Array.isArray(pickupLocation) ? (pickupLocation.length ? pickupLocation.join(', ') : 'None') : pickupLocation}
                 </span>
             </div>
           </div>

@@ -61,7 +61,7 @@ export async function syncMatchRecord(record) {
       teleop_firing_seconds: record.teleopFiringSeconds,
       teleop_accuracy: record.teleopAccuracy,
       teleop_climb: record.teleopClimb,
-      teleop_pickup: record.teleopPickup,
+      pickup_location: record.pickupLocation,
       defense_rating: record.defenseRating,
       notes: record.notes,
       scouter_device_id: record.scouterDeviceId

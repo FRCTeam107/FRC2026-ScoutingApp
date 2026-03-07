@@ -88,10 +88,7 @@
     transition: border-color 0.2s, background 0.2s;
   }
   .toggle-group input[type="checkbox"] {
-    accent-color: #3b82f6;
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
+    /* removed: no longer used for trench/bump */
   }
   }
   .toggle-group label:hover,

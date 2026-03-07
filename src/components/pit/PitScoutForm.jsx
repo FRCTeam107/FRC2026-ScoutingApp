@@ -9,7 +9,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
     description: '',
     ballsPerSecond: '',
     photoBase64: null,
-    trenchCapability: [] // default: empty array for multiple choice
+    trenchCapability: 'trench' // default: can go under trench
   });
 
   useEffect(() => {
@@ -20,21 +20,8 @@ export function PitScoutForm({ teamNumber, onSave }) {
         description: existing?.description || '',
         ballsPerSecond: existing?.ballsPerSecond || '',
         photoBase64: existing?.photoBase64 || existing?.photoUrl || null,
-        trenchCapability: existing?.trenchCapability || 'trench'
+        trenchCapability: typeof existing?.trenchCapability === 'string' ? existing.trenchCapability : 'trench'
       });
-      if (existing) {
-        setFormData({
-          teamNumber: existing.teamNumber,
-          description: existing.description || '',
-          ballsPerSecond: existing.ballsPerSecond || '',
-          photoBase64: existing.photoBase64 || existing.photoUrl || null,
-          trenchCapability: Array.isArray(existing.trenchCapability)
-            ? existing.trenchCapability
-            : existing.trenchCapability
-              ? [existing.trenchCapability]
-              : []
-        });
-      }
     }
   }, [teamNumber]);
 
@@ -60,17 +47,6 @@ export function PitScoutForm({ teamNumber, onSave }) {
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-
-  const handleTrenchCapabilityChange = (option) => {
-    setFormData(prev => {
-      const current = prev.trenchCapability || [];
-      if (current.includes(option)) {
-        return { ...prev, trenchCapability: current.filter(o => o !== option) };
-      } else {
-        return { ...prev, trenchCapability: [...current, option] };
-      }
-    });
-  };
   };
 
   return (
@@ -106,43 +82,36 @@ export function PitScoutForm({ teamNumber, onSave }) {
 
       <div className="form-group">
         <label>Trench/Bump Capability</label>
-        <button
-          type="button"
-          className={`trench-toggle ${formData.trenchCapability === 'trench' ? 'can-trench' : 'bump-only'}`}
-          onClick={() => handleChange('trenchCapability', formData.trenchCapability === 'trench' ? 'bump' : 'trench')}
-        >
-          <span className="trench-toggle-label">{formData.trenchCapability === 'trench' ? 'Can Go Under Trench' : 'Over Bump Only'}</span>
-        </button>
         <div className="toggle-group">
           <label>
             <input
-              type="checkbox"
+              type="radio"
               name="trenchCapability"
               value="bump"
-              checked={formData.trenchCapability.includes('bump')}
-              onChange={() => handleTrenchCapabilityChange('bump')}
+              checked={formData.trenchCapability === 'bump'}
+              onChange={() => handleChange('trenchCapability', 'bump')}
             />
             Bump
           </label>
           <label>
             <input
-              type="checkbox"
+              type="radio"
               name="trenchCapability"
               value="trench"
-              checked={formData.trenchCapability.includes('trench')}
-              onChange={() => handleTrenchCapabilityChange('trench')}
+              checked={formData.trenchCapability === 'trench'}
+              onChange={() => handleChange('trenchCapability', 'trench')}
             />
             Trench
           </label>
           <label>
             <input
-              type="checkbox"
+              type="radio"
               name="trenchCapability"
-              value="bumpOrTrench"
-              checked={formData.trenchCapability.includes('bumpOrTrench')}
-              onChange={() => handleTrenchCapabilityChange('bumpOrTrench')}
+              value="bumpAndTrench"
+              checked={formData.trenchCapability === 'bumpAndTrench'}
+              onChange={() => handleChange('trenchCapability', 'bumpAndTrench')}
             />
-            Bump or Trench
+            Bump and Trench
           </label>
         </div>
       </div>

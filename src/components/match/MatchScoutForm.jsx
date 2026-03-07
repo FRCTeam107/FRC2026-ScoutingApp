@@ -28,6 +28,7 @@ export function MatchScoutForm({ onSave }) {
   const [autoAccuracy, setAutoAccuracy] = useState(50);
   const [autoClimb, setAutoClimb] = useState('None');
   const [autonFocus, setAutonFocus] = useState('shooting');
+  const [autoPickupLocation, setAutoPickupLocation] = useState([]);
 
   // Teleop/Endgame
   const [teleopAccuracy, setTeleopAccuracy] = useState(50);
@@ -69,6 +70,7 @@ export function MatchScoutForm({ onSave }) {
       autoFiringSeconds: autoSeconds,
       autoAccuracy,
       autoClimb,
+      autoPickupLocation,
       autonFocus,
       teleopFiringSeconds: teleopSeconds,
       teleopAccuracy,
@@ -235,6 +237,19 @@ export function MatchScoutForm({ onSave }) {
             value={autoClimb}
             onChange={setAutoClimb}
             levels={AUTON_CLIMB_LEVELS}
+          />
+
+          <ClimbSelector
+            label="Auto Pickup Location"
+            value={autoPickupLocation}
+            onChange={setAutoPickupLocation}
+            multiple={true}
+            levels={[
+              'Neutral Zone',
+              'Depot',
+              'Outpost',
+              'Alliance Zone'
+            ]}
           />
 
           <div className="stage-nav">

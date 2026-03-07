@@ -93,6 +93,13 @@
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
   }
+  .toggle-group input[type="checkbox"] {
+    accent-color: #3b82f6;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  }
   .toggle-group label:hover,
   .toggle-group label:focus-within {
     border-color: #3b82f6;

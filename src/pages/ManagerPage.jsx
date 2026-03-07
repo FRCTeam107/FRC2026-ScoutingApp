@@ -618,6 +618,10 @@ export function ManagerPage() {
                       <div className="detail-section">
                         <h3>Match Statistics ({matches.length} matches)</h3>
                         <div className="stats-grid">
+                                                    <div className="stat-box">
+                                                      <span className="stat-value">{matches.length > 0 ? matches.map(m => Array.isArray(m.pickupLocation) ? (m.pickupLocation.length ? m.pickupLocation.join(', ') : 'None') : m.pickupLocation || 'None').join(', ') : 'N/A'}</span>
+                                                      <span className="stat-label">Pickup Location</span>
+                                                    </div>
                           <div className="stat-box">
                             <span className="stat-value">{stats.autoFuel !== null ? stats.autoFuel.toFixed(1) : 'N/A'}</span>
                             <span className="stat-label">Avg Auto Fuel</span>
@@ -657,6 +661,7 @@ export function ManagerPage() {
                               <th>Teleop</th>
                               <th>Auto Climb</th>
                               <th>End Climb</th>
+                              <th>Pickup Location</th>
                               <th>Auton Focus</th>
                               <th>Endgame Focus</th>
                               <th>Notes</th>
@@ -670,6 +675,7 @@ export function ManagerPage() {
                                 <td>{m.teleopFiringSeconds?.toFixed(1)}s @ {m.teleopAccuracy}%</td>
                                 <td>{m.autoClimb || 'None'}</td>
                                 <td>{m.teleopClimb || 'None'}</td>
+                                <td>{Array.isArray(m.pickupLocation) ? (m.pickupLocation.length ? m.pickupLocation.join(', ') : 'None') : m.pickupLocation || 'None'}</td>
                                 <td>{m.autonFocus || 'N/A'}</td>
                                 <td>{m.endgameFocus || 'N/A'}</td>
                                 <td

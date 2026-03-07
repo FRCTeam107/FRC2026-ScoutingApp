@@ -112,6 +112,14 @@ export function FieldDrawPage() {
   const getPos = (e, canvas) => {
     const rect = canvas.getBoundingClientRect();
     const src = e.touches ? e.touches[0] : e;
+    // In portrait orientation the root element is rotated 90° CW via CSS,
+    // so the canvas axes are swapped relative to the viewport. Correct for that.
+    if (window.matchMedia('(orientation: portrait)').matches) {
+      return {
+        x: (rect.bottom - src.clientY) * (canvas.width / rect.height),
+        y: (src.clientX - rect.left) * (canvas.height / rect.width),
+      };
+    }
     return {
       x: (src.clientX - rect.left) * (canvas.width / rect.width),
       y: (src.clientY - rect.top) * (canvas.height / rect.height),

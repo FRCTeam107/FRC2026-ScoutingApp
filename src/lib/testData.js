@@ -45,14 +45,14 @@ export const TEST_MATCH_SCHEDULE = [
 const now = new Date().toISOString();
 
 export const TEST_PROFILES = {
-  107:  { teamNumber: 107,  description: 'Tank drive, reliable shooter with turret, consistent L3 climber.', ballsPerSecond: 2.5, trenchCapability: 'trench', updatedAt: now },
+  107:  { teamNumber: 107,  description: 'Tank drive, reliable shooter with turret, consistent L3 climber.', ballsPerSecond: 2.5, trenchCapability: 'bumpAndTrench', updatedAt: now },
   254:  { teamNumber: 254,  description: 'Swerve drive, elite shooter, L4 hang every match. Very fast cycle time.', ballsPerSecond: 4.2, trenchCapability: 'trench', updatedAt: now },
-  1114: { teamNumber: 1114, description: 'Swerve drive, high-accuracy hood shooter, consistent L3 climb.', ballsPerSecond: 3.1, trenchCapability: 'trench', updatedAt: now },
-  1678: { teamNumber: 1678, description: 'Swerve, very fast cycles, low shooter, prefers floor pickup.', ballsPerSecond: 3.5, trenchCapability: 'trench', updatedAt: now },
+  1114: { teamNumber: 1114, description: 'Swerve drive, high-accuracy hood shooter, consistent L3 climb.', ballsPerSecond: 3.1, trenchCapability: 'bump', updatedAt: now },
+  1678: { teamNumber: 1678, description: 'Swerve, very fast cycles, low shooter, prefers floor pickup.', ballsPerSecond: 3.5, trenchCapability: 'bumpAndTrench', updatedAt: now },
   2767: { teamNumber: 2767, description: 'Tank drive, mid-range shooter, defense capable, L2 climb.', ballsPerSecond: 2.0, trenchCapability: 'bump', updatedAt: now },
   3310: { teamNumber: 3310, description: 'Tank drive, defense specialist, will play defense full match.', ballsPerSecond: 0.8, trenchCapability: 'bump', updatedAt: now },
   4481: { teamNumber: 4481, description: 'Swerve drive, moderate shooter, L3 capable.', ballsPerSecond: 2.2, trenchCapability: 'trench', updatedAt: now },
-  5940: { teamNumber: 5940, description: 'Tank drive, solid shooter, climbs L2, plays bumper defense.', ballsPerSecond: 1.7, trenchCapability: 'bump', updatedAt: now },
+  5940: { teamNumber: 5940, description: 'Tank drive, solid shooter, climbs L2, plays bumper defense.', ballsPerSecond: 1.7, trenchCapability: 'bumpAndTrench', updatedAt: now },
   6328: { teamNumber: 6328, description: 'Swerve drive, consistent shooter, strong autonomous.', ballsPerSecond: 2.8, trenchCapability: 'trench', updatedAt: now },
 };
 

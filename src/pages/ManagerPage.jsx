@@ -515,7 +515,7 @@ export function ManagerPage() {
                           <h3>#{team.teamNumber}</h3>
                           <p className="balls-sec">{team.ballsPerSecond ? `${team.ballsPerSecond} balls/sec` : 'No rate set'}</p>
                           <p className={`trench-badge-inline ${team.trenchCapability === 'bump' ? 'bump' : 'trench'}`}>
-                            {team.trenchCapability === 'bump' ? 'Over Bump Only' : 'Under Trench'}
+                            {team.trenchCapability === 'bump' ? 'Bump Only' : team.trenchCapability === 'trench' ? 'Trench Only' : team.trenchCapability === 'bumpAndTrench' ? 'Bump & Trench' : 'Unknown'}
                           </p>
                         </div>
                         <button
@@ -637,8 +637,8 @@ export function ManagerPage() {
                         </div>
                         <div className="pit-stat">
                           <span className="label">Trench/Bump:</span>
-                          <span className={`trench-badge-inline ${profiles[selectedTeam].trenchCapability === 'bump' ? 'bump' : 'trench'}`}>
-                            {profiles[selectedTeam].trenchCapability === 'bump' ? 'Over Bump Only' : 'Can Go Under Trench'}
+                          <span className={`trench-badge-inline ${profiles[selectedTeam].trenchCapability === 'bump' ? 'bump' : profiles[selectedTeam].trenchCapability === 'trench' ? 'trench' : profiles[selectedTeam].trenchCapability === 'bumpAndTrench' ? 'both' : 'unknown'}`}>
+                            {profiles[selectedTeam].trenchCapability === 'bump' ? 'Bump Only' : profiles[selectedTeam].trenchCapability === 'trench' ? 'Trench Only' : profiles[selectedTeam].trenchCapability === 'bumpAndTrench' ? 'Bump & Trench' : 'Unknown'}
                           </span>
                         </div>
                         <div className="pit-stat">

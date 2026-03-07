@@ -1025,6 +1025,16 @@ td {
   background: #3a1a1a;
   color: #ef4444;
 }
+.trench-badge-inline.both {
+  background: linear-gradient(90deg, #1a3a2a 50%, #3a1a1a 50%);
+  color: #fff;
+  border: 1px solid #3a3a50;
+}
+.trench-badge-inline.unknown {
+  background: #6b7280;
+  color: #fff;
+}
+}
 
 /* Mobile adjustments */
 @media (max-width: 600px) {

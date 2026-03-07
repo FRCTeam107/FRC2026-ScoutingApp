@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
-import { getTeamProfiles, getMatchRecords, deleteTeamProfile, clearAllMatchRecords, getCurrentEvent, setCurrentEvent, clearCurrentEvent } from '../lib/storage';
-import { deleteAllMatchRecords } from '../lib/supabase';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { getTeamProfiles, getMatchRecords, deleteTeamProfile, clearAllMatchRecords, getCurrentEvent, setCurrentEvent, clearCurrentEvent, getFieldImage, setFieldImage, clearFieldImage } from '../lib/storage';
+import { deleteAllMatchRecords, deleteTeamProfileFromCloud } from '../lib/supabase';
 import { getEventTeams, getEventInfo } from '../lib/tba';
 import { PasswordModal } from '../components/common/PasswordModal';
+import { isTestModeActive, loadTestData, unloadTestData } from '../lib/testData';
 import './ManagerPage.css';
 
 export function ManagerPage() {
@@ -13,6 +14,12 @@ export function ManagerPage() {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [expandedNotes, setExpandedNotes] = useState(null);
+
+  useEffect(() => {
+    const handler = () => setRefreshKey(k => k + 1);
+    window.addEventListener('scouting-sync-complete', handler);
+    return () => window.removeEventListener('scouting-sync-complete', handler);
+  }, []);
   const [climbViewMode, setClimbViewMode] = useState('endgame'); // 'auto' or 'endgame'
 
   // Password modal state
@@ -24,6 +31,9 @@ export function ManagerPage() {
   const [eventLoading, setEventLoading] = useState(false);
   const [eventError, setEventError] = useState(null);
   const [currentEvent, setCurrentEventState] = useState(() => getCurrentEvent());
+  const [testMode, setTestMode] = useState(() => isTestModeActive());
+  const [fieldImage, setFieldImageState] = useState(() => getFieldImage());
+  const fieldFileRef = useRef(null);
 
   const profiles = getTeamProfiles();
   const records = getMatchRecords();
@@ -156,7 +166,11 @@ export function ManagerPage() {
 
     if (pendingAction?.type === 'deleteTeam') {
       deleteTeamProfile(pendingAction.teamNumber);
-      await deleteTeamProfileFromCloud(pendingAction.teamNumber);
+      try {
+        await deleteTeamProfileFromCloud(pendingAction.teamNumber);
+      } catch (err) {
+        console.error('Failed to delete from cloud:', err);
+      }
       setRefreshKey(k => k + 1);
       setSelectedTeam(null);
     } else if (pendingAction?.type === 'clearForNewEvent') {
@@ -210,6 +224,36 @@ export function ManagerPage() {
   const requestClearForNewEvent = () => {
     setPendingAction({ type: 'clearForNewEvent' });
     setShowPasswordModal(true);
+  };
+
+  const handleToggleTestMode = () => {
+    if (testMode) {
+      unloadTestData();
+      setTestMode(false);
+    } else {
+      loadTestData();
+      setTestMode(true);
+    }
+    setCurrentEventState(getCurrentEvent());
+    setRefreshKey(k => k + 1);
+  };
+
+  const handleFieldImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const base64 = ev.target.result;
+      setFieldImage(base64);
+      setFieldImageState(base64);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleClearFieldImage = () => {
+    clearFieldImage();
+    setFieldImageState(null);
+    if (fieldFileRef.current) fieldFileRef.current.value = '';
   };
 
   const getTeamMatches = (teamNumber) => {
@@ -298,7 +342,7 @@ export function ManagerPage() {
                 </button>
               </div>
 
-              <div className="rankings-table">
+              <div className="rankings-table table-scroll">
                 <table>
                   <thead>
                     <tr>
@@ -470,6 +514,9 @@ export function ManagerPage() {
                         <div className="team-card-info">
                           <h3>#{team.teamNumber}</h3>
                           <p className="balls-sec">{team.ballsPerSecond ? `${team.ballsPerSecond} balls/sec` : 'No rate set'}</p>
+                          <p className={`trench-badge-inline ${team.trenchCapability === 'bump' ? 'bump' : 'trench'}`}>
+                            {team.trenchCapability === 'bump' ? 'Over Bump Only' : 'Under Trench'}
+                          </p>
                         </div>
                         <button
                           className="delete-btn"
@@ -510,7 +557,7 @@ export function ManagerPage() {
             {records.length === 0 ? (
               <p className="empty-state">No match records yet</p>
             ) : (
-              <table>
+              <div className="table-scroll"><table>
                 <thead>
                   <tr>
                     <th>Match</th>
@@ -544,7 +591,7 @@ export function ManagerPage() {
                       </tr>
                     ))}
                 </tbody>
-              </table>
+              </table></div>
             )}
           </div>
         )}
@@ -587,6 +634,12 @@ export function ManagerPage() {
                         <div className="pit-stat">
                           <span className="label">Balls/sec:</span>
                           <span className="value">{profiles[selectedTeam].ballsPerSecond || 'Not set'}</span>
+                        </div>
+                        <div className="pit-stat">
+                          <span className="label">Trench/Bump:</span>
+                          <span className={`trench-badge-inline ${profiles[selectedTeam].trenchCapability === 'bump' ? 'bump' : 'trench'}`}>
+                            {profiles[selectedTeam].trenchCapability === 'bump' ? 'Over Bump Only' : 'Can Go Under Trench'}
+                          </span>
                         </div>
                         <div className="pit-stat">
                           <span className="label">Description:</span>
@@ -653,7 +706,7 @@ export function ManagerPage() {
 
                       <div className="detail-section">
                         <h3>Match History</h3>
-                        <table className="match-history">
+                        <div className="match-history-wrap table-scroll"><table className="match-history">
                           <thead>
                             <tr>
                               <th>Match</th>
@@ -661,6 +714,7 @@ export function ManagerPage() {
                               <th>Teleop</th>
                               <th>Auto Climb</th>
                               <th>End Climb</th>
+                              <th>Defense</th>
                               <th>Pickup Location</th>
                               <th>Auton Focus</th>
                               <th>Endgame Focus</th>
@@ -675,6 +729,7 @@ export function ManagerPage() {
                                 <td>{m.teleopFiringSeconds?.toFixed(1)}s @ {m.teleopAccuracy}%</td>
                                 <td>{m.autoClimb || 'None'}</td>
                                 <td>{m.teleopClimb || 'None'}</td>
+                                <td>{m.defenseRating > 0 ? '★'.repeat(m.defenseRating) : '-'}</td>
                                 <td>{Array.isArray(m.pickupLocation) ? (m.pickupLocation.length ? m.pickupLocation.join(', ') : 'None') : m.pickupLocation || 'None'}</td>
                                 <td>{m.autonFocus || 'N/A'}</td>
                                 <td>{m.endgameFocus || 'N/A'}</td>
@@ -687,7 +742,7 @@ export function ManagerPage() {
                               </tr>
                             ))}
                           </tbody>
-                        </table>
+                        </table></div>
                       </div>
                     </>
                   );
@@ -781,6 +836,53 @@ export function ManagerPage() {
                 <p className="hint">Enter an event key above to load teams from The Blue Alliance.</p>
               </div>
             )}
+
+            <div className="field-image-section">
+              <h3>Field Image</h3>
+              <p className="dev-note">Upload a field diagram image to use as the background in the Field Drawing tool.</p>
+              <input
+                ref={fieldFileRef}
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handleFieldImageUpload}
+              />
+              {fieldImage ? (
+                <div className="field-image-preview-wrap">
+                  <img src={fieldImage} alt="Field" className="field-image-preview" />
+                  <div className="field-image-actions">
+                    <button className="load-event-btn" onClick={() => fieldFileRef.current?.click()}>
+                      Replace Image
+                    </button>
+                    <button className="danger-btn" onClick={handleClearFieldImage}>
+                      Remove Image
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button className="load-event-btn" onClick={() => fieldFileRef.current?.click()}>
+                  Upload Field Image
+                </button>
+              )}
+            </div>
+
+            <div className="dev-tools-section">
+              <div className="dev-tools-header">
+                <span className="dev-badge">DEV</span>
+                <h3>Test Data</h3>
+              </div>
+              <p className="dev-note">
+                {testMode
+                  ? 'Test mode active — fake event, 12 teams, 72 match records loaded. Your real data is backed up.'
+                  : 'Load a fake event with pre-generated teams, profiles, and match records for testing. Real data is backed up and restored on unload.'}
+              </p>
+              <button
+                className={`test-toggle-btn ${testMode ? 'active' : ''}`}
+                onClick={handleToggleTestMode}
+              >
+                {testMode ? 'Unload Test Data' : 'Load Test Data'}
+              </button>
+            </div>
           </div>
         )}
       </div>

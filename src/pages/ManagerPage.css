@@ -1000,6 +1000,32 @@ td {
   margin-top: 8px;
 }
 
+/* Table scroll wrapper */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Trench badge on pit cards */
+.trench-badge-inline {
+  font-size: 11px;
+  font-weight: 600;
+  margin: 2px 0 0 0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.trench-badge-inline.trench {
+  background: #1a3a2a;
+  color: #22c55e;
+}
+
+.trench-badge-inline.bump {
+  background: #3a1a1a;
+  color: #ef4444;
+}
+
 /* Mobile adjustments */
 @media (max-width: 600px) {
   .manager-page {
@@ -1027,8 +1053,16 @@ td {
     width: 100%;
   }
 
+  .rankings-table,
+  .matches-tab,
+  .match-history-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   table {
     font-size: 12px;
+    min-width: 480px;
   }
 
   th, td {
@@ -1051,4 +1085,102 @@ td {
   .event-teams-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Dev Tools ──────────────────────────────────────────── */
+.field-image-section {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  background: #111;
+}
+
+.field-image-section h3 {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin: 0 0 0.4rem;
+}
+
+.field-image-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.field-image-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+}
+
+.field-image-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.dev-tools-section {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px dashed #3a3a3a;
+  border-radius: 10px;
+  background: #111;
+}
+
+.dev-tools-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.dev-tools-header h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.dev-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: #2a2a00;
+  color: #facc15;
+  border: 1px solid #5a5a00;
+}
+
+.dev-note {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.test-toggle-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 7px;
+  border: 1px solid #444;
+  background: #1e1e1e;
+  color: #ccc;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.test-toggle-btn:hover {
+  border-color: #facc15;
+  color: #facc15;
+}
+
+.test-toggle-btn.active {
+  background: #2a2a00;
+  border-color: #facc15;
+  color: #facc15;
 }

@@ -3,7 +3,7 @@ import { PhotoCapture } from './PhotoCapture';
 import { saveTeamProfile, getTeamProfile } from '../../lib/storage';
 import './PitScoutForm.css';
 
-export function PitScoutForm({ teamNumber, onSave, onCancel }) {
+export function PitScoutForm({ teamNumber, onSave }) {
   const [formData, setFormData] = useState({
     teamNumber: teamNumber || '',
     description: '',
@@ -15,6 +15,13 @@ export function PitScoutForm({ teamNumber, onSave, onCancel }) {
   useEffect(() => {
     if (teamNumber) {
       const existing = getTeamProfile(teamNumber);
+      setFormData({
+        teamNumber: existing?.teamNumber ?? teamNumber,
+        description: existing?.description || '',
+        ballsPerSecond: existing?.ballsPerSecond || '',
+        photoBase64: existing?.photoBase64 || existing?.photoUrl || null,
+        trenchCapability: existing?.trenchCapability || 'trench'
+      });
       if (existing) {
         setFormData({
           teamNumber: existing.teamNumber,
@@ -99,6 +106,13 @@ export function PitScoutForm({ teamNumber, onSave, onCancel }) {
 
       <div className="form-group">
         <label>Trench/Bump Capability</label>
+        <button
+          type="button"
+          className={`trench-toggle ${formData.trenchCapability === 'trench' ? 'can-trench' : 'bump-only'}`}
+          onClick={() => handleChange('trenchCapability', formData.trenchCapability === 'trench' ? 'bump' : 'trench')}
+        >
+          <span className="trench-toggle-label">{formData.trenchCapability === 'trench' ? 'Can Go Under Trench' : 'Over Bump Only'}</span>
+        </button>
         <div className="toggle-group">
           <label>
             <input
@@ -153,11 +167,6 @@ export function PitScoutForm({ teamNumber, onSave, onCancel }) {
       </div>
 
       <div className="form-actions">
-        {onCancel && (
-          <button type="button" onClick={onCancel} className="cancel-button">
-            Cancel
-          </button>
-        )}
         <button type="submit" className="save-button">
           Save Team Profile
         </button>

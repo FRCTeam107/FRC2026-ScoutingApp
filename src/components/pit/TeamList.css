@@ -2,9 +2,21 @@
   margin-top: 32px;
 }
 
-.team-list h3 {
+.team-list-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   margin-bottom: 16px;
+}
+
+.team-list-header h3 {
   color: #e5e5e5;
+  margin: 0;
+}
+
+.team-list-count {
+  font-size: 0.8rem;
+  color: #6b7280;
 }
 
 .team-list-empty {

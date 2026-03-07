@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { PitScoutForm } from '../components/pit/PitScoutForm';
 import { TeamList } from '../components/pit/TeamList';
 import { getCurrentEvent, getTeamProfiles } from '../lib/storage';
@@ -7,6 +7,12 @@ import './PitScoutPage.css';
 export function PitScoutPage() {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const handler = () => setRefreshKey(k => k + 1);
+    window.addEventListener('scouting-sync-complete', handler);
+    return () => window.removeEventListener('scouting-sync-complete', handler);
+  }, []);
 
   const currentEvent = getCurrentEvent();
   const profiles = getTeamProfiles();
@@ -64,7 +70,6 @@ export function PitScoutPage() {
         <PitScoutForm
           teamNumber={selectedTeam}
           onSave={handleSave}
-          onCancel={selectedTeam ? () => setSelectedTeam(null) : null}
         />
 
         <TeamList

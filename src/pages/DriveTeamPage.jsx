@@ -131,9 +131,18 @@ export function DriveTeamPage() {
                 {profile.ballsPerSecond && (
                   <span className="dtc-badge neutral">BPS: {profile.ballsPerSecond}</span>
                 )}
-                <span className={`dtc-badge ${profile.trenchCapability === 'trench' ? 'good' : 'warn'}`}>
-                  {profile.trenchCapability === 'trench' ? 'Trench ✓' : 'Bump Only'}
-                </span>
+                  {profile.trenchCapability === 'bump' && (
+                    <span className="dtc-badge bump">Bump</span>
+                  )}
+                  {profile.trenchCapability === 'trench' && (
+                    <span className="dtc-badge trench">Trench</span>
+                  )}
+                  {profile.trenchCapability === 'bumpAndTrench' && (
+                    <span className="dtc-badge both">Both</span>
+                  )}
+                  {!profile.trenchCapability && (
+                    <span className="dtc-badge unknown">Unknown</span>
+                  )}
               </div>
               {profile.description && (
                 <p className="dtc-desc">{profile.description}</p>

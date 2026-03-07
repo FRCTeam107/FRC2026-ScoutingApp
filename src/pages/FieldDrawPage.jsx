@@ -112,6 +112,20 @@ export function FieldDrawPage() {
   const getPos = (e, canvas) => {
     const rect = canvas.getBoundingClientRect();
     const src = e.touches ? e.touches[0] : e;
+
+    // In portrait mode the whole page is CSS-rotated 90° CW, so
+    // getBoundingClientRect() returns visual (post-rotation) bounds where
+    // width ≈ canvas logical height and height ≈ canvas logical width.
+    // We must swap and invert the axes to get correct canvas coordinates.
+    if (window.matchMedia('(orientation: portrait)').matches) {
+      const vx = src.clientX - rect.left;
+      const vy = src.clientY - rect.top;
+      return {
+        x: (rect.height - vy) * (canvas.width / rect.height),
+        y: vx * (canvas.height / rect.width),
+      };
+    }
+
     return {
       x: (src.clientX - rect.left) * (canvas.width / rect.width),
       y: (src.clientY - rect.top) * (canvas.height / rect.height),
@@ -246,7 +260,7 @@ export function FieldDrawPage() {
                 className={`field-size-btn ${size === s ? 'active' : ''}`}
                 onClick={() => setSize(s)}
               >
-                <span style={{ width: Math.min(s * 1.8, 22), height: Math.min(s * 1.8, 22), borderRadius: '50%', background: '#fff', display: 'block' }} />
+                <span style={{ width: Math.min(s * 1.8, 22), height: Math.min(s * 1.8, 22), borderRadius: '50%', background: '#fff', display: 'block', flexShrink: 0 }} />
               </button>
             ))}
           </div>

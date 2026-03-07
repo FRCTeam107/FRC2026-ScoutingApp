@@ -109,6 +109,7 @@ function makeRecord(teamNumber, matchNumber, allianceColor) {
     autoFiringSeconds: autoFiring,
     autoAccuracy: autoAcc,
     autoClimb: 'None',
+    autoPickupLocation: PICKUPS[ri(0, PICKUPS.length - 1)],
     teleopFiringSeconds: teleopFiring,
     teleopAccuracy: teleopAcc,
     teleopClimb,

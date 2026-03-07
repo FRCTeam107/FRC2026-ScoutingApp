@@ -27,11 +27,13 @@ export function MatchScoutForm({ onSave }) {
   // Auto period
   const [autoAccuracy, setAutoAccuracy] = useState(50);
   const [autoClimb, setAutoClimb] = useState('None');
+  const [autonFocus, setAutonFocus] = useState('shooting');
 
   // Teleop/Endgame
   const [teleopAccuracy, setTeleopAccuracy] = useState(50);
   const [teleopClimb, setTeleopClimb] = useState('None');
   const [pickupLocation, setPickupLocation] = useState([]);
+  const [endgameFocus, setEndgameFocus] = useState('climb');
 
   // Post-match
   const [defenseRating, setDefenseRating] = useState(0);
@@ -67,10 +69,12 @@ export function MatchScoutForm({ onSave }) {
       autoFiringSeconds: autoSeconds,
       autoAccuracy,
       autoClimb,
+      autonFocus,
       teleopFiringSeconds: teleopSeconds,
       teleopAccuracy,
       teleopClimb,
       pickupLocation,
+      endgameFocus,
       defenseRating,
       notes
     };
@@ -167,6 +171,52 @@ export function MatchScoutForm({ onSave }) {
           <h2 className="stage-title">Auto Period</h2>
           <p className="stage-subtitle">Team #{teamNumber} · Match #{matchNumber}</p>
 
+          <div className="form-group">
+            <label>Auton Focus</label>
+            <div className="auton-focus-toggle">
+              <label>
+                <input
+                  type="radio"
+                  name="autonFocus"
+                  value="shooting"
+                  checked={autonFocus === 'shooting'}
+                  onChange={() => setAutonFocus('shooting')}
+                />
+                Shooting
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="autonFocus"
+                  value="shuttling"
+                  checked={autonFocus === 'shuttling'}
+                  onChange={() => setAutonFocus('shuttling')}
+                />
+                Shuttling
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="autonFocus"
+                  value="both"
+                  checked={autonFocus === 'both'}
+                  onChange={() => setAutonFocus('both')}
+                />
+                Both
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="autonFocus"
+                  value="neither"
+                  checked={autonFocus === 'neither'}
+                  onChange={() => setAutonFocus('neither')}
+                />
+                Neither
+              </label>
+            </div>
+          </div>
+
           <FiringButton
             mode="auto"
             onStart={startFiring}
@@ -199,6 +249,52 @@ export function MatchScoutForm({ onSave }) {
         <div className="stage-content">
           <h2 className="stage-title">Teleop / Endgame</h2>
           <p className="stage-subtitle">Team #{teamNumber} · Match #{matchNumber}</p>
+
+          <div className="form-group">
+            <label>Endgame Focus</label>
+            <div className="auton-focus-toggle">
+              <label>
+                <input
+                  type="radio"
+                  name="endgameFocus"
+                  value="climb"
+                  checked={endgameFocus === 'climb'}
+                  onChange={() => setEndgameFocus('climb')}
+                />
+                Climb
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="endgameFocus"
+                  value="shuttling"
+                  checked={endgameFocus === 'shuttling'}
+                  onChange={() => setEndgameFocus('shuttling')}
+                />
+                Shuttling
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="endgameFocus"
+                  value="both"
+                  checked={endgameFocus === 'both'}
+                  onChange={() => setEndgameFocus('both')}
+                />
+                Both
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="endgameFocus"
+                  value="neither"
+                  checked={endgameFocus === 'neither'}
+                  onChange={() => setEndgameFocus('neither')}
+                />
+                Neither
+              </label>
+            </div>
+          </div>
 
           <FiringButton
             mode="teleop"

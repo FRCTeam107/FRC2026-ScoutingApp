@@ -636,6 +636,14 @@ export function ManagerPage() {
                             <span className="stat-value">{stats.avgDefense > 0 ? stats.avgDefense.toFixed(1) : 'N/A'}</span>
                             <span className="stat-label">Avg Defense</span>
                           </div>
+                          <div className="stat-box">
+                            <span className="stat-value">{matches.length > 0 ? matches.map(m => m.autonFocus || 'N/A').join(', ') : 'N/A'}</span>
+                            <span className="stat-label">Auton Focus</span>
+                          </div>
+                          <div className="stat-box">
+                            <span className="stat-value">{matches.length > 0 ? matches.map(m => m.endgameFocus || 'N/A').join(', ') : 'N/A'}</span>
+                            <span className="stat-label">Endgame Focus</span>
+                          </div>
                         </div>
                       </div>
 
@@ -649,6 +657,8 @@ export function ManagerPage() {
                               <th>Teleop</th>
                               <th>Auto Climb</th>
                               <th>End Climb</th>
+                              <th>Auton Focus</th>
+                              <th>Endgame Focus</th>
                               <th>Notes</th>
                             </tr>
                           </thead>
@@ -660,6 +670,8 @@ export function ManagerPage() {
                                 <td>{m.teleopFiringSeconds?.toFixed(1)}s @ {m.teleopAccuracy}%</td>
                                 <td>{m.autoClimb || 'None'}</td>
                                 <td>{m.teleopClimb || 'None'}</td>
+                                <td>{m.autonFocus || 'N/A'}</td>
+                                <td>{m.endgameFocus || 'N/A'}</td>
                                 <td
                                   className={`notes-cell ${m.notes && m.notes.length > 30 ? 'expandable' : ''} ${expandedNotes === `${selectedTeam}-${m.matchNumber}` ? 'expanded' : ''}`}
                                   onClick={() => m.notes && m.notes.length > 30 && setExpandedNotes(expandedNotes === `${selectedTeam}-${m.matchNumber}` ? null : `${selectedTeam}-${m.matchNumber}`)}

@@ -1,11 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import legacy from '@vitejs/plugin-legacy';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   base: '/',
   plugins: [
     react(),
+    legacy({
+      targets: ['chrome >=64', 'android >=7.1'],
+      additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+      modernPolyfills: true,
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],

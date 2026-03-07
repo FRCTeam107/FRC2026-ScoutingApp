@@ -1,9 +1,13 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import './PhotoCapture.css';
 
 export function PhotoCapture({ value, onChange }) {
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(value || null);
+
+  useEffect(() => {
+    setPreview(value || null);
+  }, [value]);
 
   const compressImage = (file, maxWidth = 800, quality = 0.7) => {
     return new Promise((resolve) => {

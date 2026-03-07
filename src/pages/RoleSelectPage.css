@@ -61,6 +61,10 @@
   border-color: #8b5cf6;
 }
 
+.role-card.drive:hover {
+  border-color: #f59e0b;
+}
+
 .role-icon {
   font-size: 48px;
   margin-bottom: 16px;

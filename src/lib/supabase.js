@@ -39,7 +39,8 @@ export async function syncTeamProfile(profile) {
       description: profile.description,
       balls_per_second: profile.ballsPerSecond,
       photo_url: profile.photoUrl,
-      updated_at: new Date().toISOString()
+      trench_capability: profile.trenchCapability,
+      updated_at: profile.updatedAt || new Date().toISOString()
     }, {
       onConflict: 'team_number'
     });

@@ -1,16 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useOnlineStatus } from './useOnlineStatus';
 import {
   getTeamProfiles,
   getMatchRecords,
   getPendingSync,
   clearPendingSync,
-  hasPendingData
+  hasPendingData,
+  mergeTeamProfiles,
+  mergeMatchRecords
 } from '../lib/storage';
 import {
   syncTeamProfile,
   syncMatchRecord,
-  uploadPhoto
+  uploadPhoto,
+  fetchTeamProfiles,
+  fetchMatchRecords
 } from '../lib/supabase';
 
 export function useAutoSync() {
@@ -18,25 +22,24 @@ export function useAutoSync() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(null);
   const [syncError, setSyncError] = useState(null);
+  // Prevent auto-retry loop after errors
+  const syncingRef = useRef(false);
 
   const syncAll = useCallback(async () => {
-    if (!isOnline || isSyncing) return;
+    if (!isOnline || syncingRef.current) return;
 
-    const pending = getPendingSync();
-    if (pending.teamProfiles.length === 0 && pending.matchRecords.length === 0) {
-      return;
-    }
-
+    syncingRef.current = true;
     setIsSyncing(true);
     setSyncError(null);
 
     try {
-      // Sync team profiles
+      // Push pending local data up
+      const pending = getPendingSync();
+
       const profiles = getTeamProfiles();
       for (const teamNumber of pending.teamProfiles) {
         const profile = profiles[teamNumber];
         if (profile) {
-          // Upload photo first if it's base64
           if (profile.photoBase64) {
             try {
               const photoUrl = await uploadPhoto(teamNumber, profile.photoBase64);
@@ -51,7 +54,6 @@ export function useAutoSync() {
         }
       }
 
-      // Sync match records
       const records = getMatchRecords();
       for (const recordId of pending.matchRecords) {
         const [teamNum, matchNum] = recordId.split('_');
@@ -64,18 +66,32 @@ export function useAutoSync() {
         }
       }
 
+      // Pull latest data from Supabase
+      const [cloudProfiles, cloudRecords] = await Promise.all([
+        fetchTeamProfiles(),
+        fetchMatchRecords()
+      ]);
+
+      mergeTeamProfiles(cloudProfiles);
+      mergeMatchRecords(cloudRecords);
+
       setLastSyncTime(new Date());
+      setIsSyncing(false);
+      syncingRef.current = false;
+
+      // Notify pages to re-read localStorage
+      window.dispatchEvent(new CustomEvent('scouting-sync-complete'));
     } catch (error) {
       console.error('Sync failed:', error);
       setSyncError(error.message);
-    } finally {
       setIsSyncing(false);
+      syncingRef.current = false;
     }
-  }, [isOnline, isSyncing]);
+  }, [isOnline]);
 
-  // Auto-sync when coming online
+  // Auto-sync when coming online (only if pending data, won't loop on error)
   useEffect(() => {
-    if (isOnline && hasPendingData()) {
+    if (isOnline && hasPendingData() && !syncingRef.current) {
       syncAll();
     }
   }, [isOnline, syncAll]);

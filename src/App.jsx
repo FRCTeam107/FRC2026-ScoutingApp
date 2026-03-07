@@ -4,6 +4,8 @@ import { RoleSelectPage } from './pages/RoleSelectPage';
 import { PitScoutPage } from './pages/PitScoutPage';
 import { MatchScoutPage } from './pages/MatchScoutPage';
 import { ManagerPage } from './pages/ManagerPage';
+import { DriveTeamPage } from './pages/DriveTeamPage';
+import { FieldDrawPage } from './pages/FieldDrawPage';
 import './App.css';
 
 
@@ -18,6 +20,8 @@ function App() {
             <Route path="/pit" element={<PitScoutPage />} />
             <Route path="/match" element={<MatchScoutPage />} />
             <Route path="/manager" element={<ManagerPage />} />
+            <Route path="/drive" element={<DriveTeamPage />} />
+            <Route path="/field" element={<FieldDrawPage />} />
           </Routes>
         </main>
       </div>

@@ -38,6 +38,38 @@ export async function getEventTeams(eventKey) {
 }
 
 /**
+ * Fetch match schedule for an event
+ * @param {string} eventKey - Event key (e.g., '2026miket')
+ * @returns {Promise<Array>} Array of match objects with alliance team keys
+ */
+export async function getEventMatches(eventKey) {
+  if (!TBA_KEY) {
+    throw new Error('TBA API key not configured. Add VITE_TBA_KEY to your .env.local file.');
+  }
+
+  const response = await fetch(`${TBA_BASE}/event/${eventKey}/matches/simple`, {
+    headers: {
+      'X-TBA-Auth-Key': TBA_KEY
+    }
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error(`Event "${eventKey}" not found.`);
+    }
+    throw new Error(`Failed to fetch match schedule: ${response.statusText}`);
+  }
+
+  const matches = await response.json();
+  return matches.sort((a, b) => {
+    const levelOrder = { qm: 0, ef: 1, qf: 2, sf: 3, f: 4 };
+    if (a.comp_level !== b.comp_level) return (levelOrder[a.comp_level] ?? 9) - (levelOrder[b.comp_level] ?? 9);
+    if (a.set_number !== b.set_number) return a.set_number - b.set_number;
+    return a.match_number - b.match_number;
+  });
+}
+
+/**
  * Fetch event information
  * @param {string} eventKey - Event key (e.g., '2026miket')
  * @returns {Promise<{name: string, city: string, state_prov: string, start_date: string, end_date: string}>}

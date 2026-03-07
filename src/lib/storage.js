@@ -4,7 +4,9 @@ const KEYS = {
   MATCH_RECORDS: 'frc_match_records',
   PENDING_SYNC: 'frc_pending_sync',
   DEVICE_ID: 'frc_device_id',
-  CURRENT_EVENT: 'frc_current_event'
+  CURRENT_EVENT: 'frc_current_event',
+  MATCH_SCHEDULE: 'frc_match_schedule',
+  FIELD_IMAGE: 'frc_field_image'
 };
 
 // Generate or get device ID
@@ -136,6 +138,39 @@ export function clearAllMatchRecords() {
   localStorage.setItem(KEYS.PENDING_SYNC, JSON.stringify(pending));
 }
 
+// Merge cloud match records into local (adds records not already present locally)
+export function mergeMatchRecords(cloudRecords) {
+  const local = getMatchRecords();
+
+  cloudRecords.forEach(cloud => {
+    const exists = local.some(
+      r => r.teamNumber === cloud.team_number &&
+           r.matchNumber === cloud.match_number &&
+           r.scouterDeviceId === cloud.scouter_device_id
+    );
+    if (!exists) {
+      local.push({
+        teamNumber: cloud.team_number,
+        matchNumber: cloud.match_number,
+        allianceColor: cloud.alliance_color,
+        autoFiringSeconds: cloud.auto_firing_seconds,
+        autoAccuracy: cloud.auto_accuracy,
+        autoClimb: cloud.auto_climb || 'None',
+        teleopFiringSeconds: cloud.teleop_firing_seconds,
+        teleopAccuracy: cloud.teleop_accuracy,
+        teleopClimb: cloud.teleop_climb || 'None',
+        pickupLocation: cloud.pickup_location,
+        defenseRating: cloud.defense_rating,
+        notes: cloud.notes,
+        scouterDeviceId: cloud.scouter_device_id,
+        createdAt: cloud.created_at
+      });
+    }
+  });
+
+  localStorage.setItem(KEYS.MATCH_RECORDS, JSON.stringify(local));
+}
+
 // Merge cloud data with local (cloud wins for conflicts)
 export function mergeTeamProfiles(cloudProfiles) {
   const localProfiles = getTeamProfiles();
@@ -149,6 +184,7 @@ export function mergeTeamProfiles(cloudProfiles) {
         description: cloud.description,
         ballsPerSecond: cloud.balls_per_second,
         photoUrl: cloud.photo_url,
+        trenchCapability: cloud.trench_capability || 'trench',
         updatedAt: cloud.updated_at
       };
     }
@@ -166,6 +202,8 @@ export function getCurrentEvent() {
 }
 
 export function setCurrentEvent(key, name, teams, startDate, endDate) {
+  // Clear cached schedule when event changes
+  localStorage.removeItem(KEYS.MATCH_SCHEDULE);
   const eventData = {
     key,
     name,
@@ -179,4 +217,28 @@ export function setCurrentEvent(key, name, teams, startDate, endDate) {
 
 export function clearCurrentEvent() {
   localStorage.removeItem(KEYS.CURRENT_EVENT);
+  localStorage.removeItem(KEYS.MATCH_SCHEDULE);
+}
+
+// Match Schedule (cached from TBA for Drive Team page)
+export function getMatchSchedule() {
+  const data = localStorage.getItem(KEYS.MATCH_SCHEDULE);
+  return data ? JSON.parse(data) : null;
+}
+
+export function setMatchSchedule(schedule) {
+  localStorage.setItem(KEYS.MATCH_SCHEDULE, JSON.stringify(schedule));
+}
+
+// Field image (base64) for field drawing tool
+export function getFieldImage() {
+  return localStorage.getItem(KEYS.FIELD_IMAGE) || null;
+}
+
+export function setFieldImage(base64) {
+  localStorage.setItem(KEYS.FIELD_IMAGE, base64);
+}
+
+export function clearFieldImage() {
+  localStorage.removeItem(KEYS.FIELD_IMAGE);
 }

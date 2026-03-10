@@ -34,7 +34,7 @@ export function MatchScoutForm({ onSave }) {
   const [teleopAccuracy, setTeleopAccuracy] = useState(50);
   const [teleopClimb, setTeleopClimb] = useState('None');
   const [pickupLocation, setPickupLocation] = useState([]);
-  const [endgameFocus, setEndgameFocus] = useState('climb');
+  const [endgameFocus, setEndgameFocus] = useState('shooting');
 
   // Post-match
   const [defenseRating, setDefenseRating] = useState(0);
@@ -266,47 +266,17 @@ export function MatchScoutForm({ onSave }) {
           <p className="stage-subtitle">Team #{teamNumber} · Match #{matchNumber}</p>
 
           <div className="form-group">
-            <label>Endgame Focus</label>
+            <label>Teleop Focus</label>
             <div className="auton-focus-toggle">
               <label>
                 <input
                   type="radio"
                   name="endgameFocus"
-                  value="climb"
-                  checked={endgameFocus === 'climb'}
-                  onChange={() => setEndgameFocus('climb')}
+                  value="shooting"
+                  checked={endgameFocus === 'shooting'}
+                  onChange={() => setEndgameFocus('shooting')}
                 />
-                Climb
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="endgameFocus"
-                  value="shuttling"
-                  checked={endgameFocus === 'shuttling'}
-                  onChange={() => setEndgameFocus('shuttling')}
-                />
-                Shuttling
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="endgameFocus"
-                  value="both"
-                  checked={endgameFocus === 'both'}
-                  onChange={() => setEndgameFocus('both')}
-                />
-                Both
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="endgameFocus"
-                  value="neither"
-                  checked={endgameFocus === 'neither'}
-                  onChange={() => setEndgameFocus('neither')}
-                />
-                Neither
+                Shooting
               </label>
             </div>
           </div>

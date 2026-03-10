@@ -278,6 +278,36 @@ export function MatchScoutForm({ onSave }) {
                 />
                 Shooting
               </label>
+              <label>
+                <input
+                  type="radio"
+                  name="endgameFocus"
+                  value="shuttling"
+                  checked={endgameFocus === 'shuttling'}
+                  onChange={() => setEndgameFocus('shuttling')}
+                />
+                Shuttling
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="endgameFocus"
+                  value="both"
+                  checked={endgameFocus === 'both'}
+                  onChange={() => setEndgameFocus('both')}
+                />
+                Both
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="endgameFocus"
+                  value="neither"
+                  checked={endgameFocus === 'neither'}
+                  onChange={() => setEndgameFocus('neither')}
+                />
+                Neither
+              </label>
             </div>
           </div>
 

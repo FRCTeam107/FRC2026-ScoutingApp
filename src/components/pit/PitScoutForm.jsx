@@ -75,7 +75,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
           placeholder="e.g., 2.5"
           step="0.1"
           min="0"
-          max="10"
+          max="50"
         />
         <span className="hint">Their firing rate (used for fuel calculations)</span>
       </div>

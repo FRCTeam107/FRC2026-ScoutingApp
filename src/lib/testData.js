@@ -1,3 +1,14 @@
+// Explicitly remove pit data (team profiles)
+export function clearPitData() {
+  localStorage.removeItem('frc_team_profiles');
+  // Optionally clear pending pit sync if you track it separately
+  const pending = localStorage.getItem('frc_pending_sync');
+  if (pending) {
+    const pendingObj = JSON.parse(pending);
+    pendingObj.teamProfiles = [];
+    localStorage.setItem('frc_pending_sync', JSON.stringify(pendingObj));
+  }
+}
 // ─── Fake Event ──────────────────────────────────────────────────────────────
 export const TEST_EVENT = {
   key: '2026test',

@@ -6,7 +6,7 @@ import { AUTON_CLIMB_LEVELS } from '../../config/autonClimb';
 import { TELEOP_CLIMB_LEVELS } from '../../config/teleopClimb';
 import { DefenseRating } from './DefenseRating';
 import { useFiringTimer } from '../../hooks/useFiringTimer';
-import { saveMatchRecord, getMatchRecords, getCurrentEvent } from '../../lib/storage';
+import { saveMatchRecord, getMatchRecords, getCurrentEvent, getMatchSchedule } from '../../lib/storage';
 import './MatchScoutForm.css';
 
 const STAGES = ['setup', 'auto', 'teleop', 'postmatch'];
@@ -16,6 +16,19 @@ export function MatchScoutForm({ onSave }) {
   const eventTeams = currentEvent?.teams
     ? [...currentEvent.teams].sort((a, b) => a.team_number - b.team_number)
     : [];
+  const schedule = getMatchSchedule() || [];
+
+  const getMatchLineup = (num) => {
+    const match = schedule.find(m => m.comp_level === 'qm' && m.match_number === parseInt(num));
+    if (!match) return null;
+    const parse = keys => (keys || []).map(k => parseInt(k.replace('frc', '')));
+    return {
+      blue: parse(match.alliances?.blue?.team_keys),
+      red: parse(match.alliances?.red?.team_keys),
+    };
+  };
+
+  const lineup = getMatchLineup(matchNumber);
 
   const getNextMatchNumber = () => {
     const records = getMatchRecords();
@@ -157,6 +170,37 @@ export function MatchScoutForm({ onSave }) {
               />
             </div>
           </div>
+
+          {lineup && (
+            <div className="match-lineup">
+              <div className="lineup-alliance blue">
+                {lineup.blue.map((num, i) => (
+                  <button
+                    key={num}
+                    type="button"
+                    className={`lineup-team-btn blue${parseInt(teamNumber) === num && allianceColor === 'blue' ? ' selected' : ''}`}
+                    onClick={() => { setTeamNumber(String(num)); setAllianceColor('blue'); }}
+                  >
+                    <span className="lineup-pos">B{i + 1}</span>
+                    <span className="lineup-num">#{num}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="lineup-alliance red">
+                {lineup.red.map((num, i) => (
+                  <button
+                    key={num}
+                    type="button"
+                    className={`lineup-team-btn red${parseInt(teamNumber) === num && allianceColor === 'red' ? ' selected' : ''}`}
+                    onClick={() => { setTeamNumber(String(num)); setAllianceColor('red'); }}
+                  >
+                    <span className="lineup-pos">R{i + 1}</span>
+                    <span className="lineup-num">#{num}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="form-group">
             <label>Alliance</label>

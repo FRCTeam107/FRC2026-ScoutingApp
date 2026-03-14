@@ -125,6 +125,19 @@
   border-radius: 8px;
   color: #fff;
   font-size: 18px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group .team-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.form-group .team-select option {
+  background: #1e1e30;
+  color: #fff;
 }
 
 .form-group input:focus,

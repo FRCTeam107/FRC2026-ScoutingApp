@@ -565,6 +565,7 @@ export function ManagerPage() {
                     <th>Alliance</th>
                     <th>Auto</th>
                     <th>Teleop</th>
+                    <th>Auto Pickup</th>
                     <th>Auto Climb</th>
                     <th>End Climb</th>
                     <th>Defense</th>
@@ -586,6 +587,7 @@ export function ManagerPage() {
                         </td>
                         <td>{record.autoFiringSeconds?.toFixed(1) || 0}s @ {record.autoAccuracy || 0}%</td>
                         <td>{record.teleopFiringSeconds?.toFixed(1) || 0}s @ {record.teleopAccuracy || 0}%</td>
+                        <td>{Array.isArray(record.autoPickupLocation) ? (record.autoPickupLocation.length ? record.autoPickupLocation.join(', ') : 'None') : record.autoPickupLocation || 'None'}</td>
                         <td><span className={`climb-badge ${record.autoClimb !== 'None' ? 'success' : ''}`}>{record.autoClimb || 'None'}</span></td>
                         <td><span className={`climb-badge ${record.teleopClimb !== 'None' ? 'success' : ''}`}>{record.teleopClimb || 'None'}</span></td>
                         <td>{record.defenseRating > 0 ? '★'.repeat(record.defenseRating) : 'N/A'}</td>
@@ -673,10 +675,14 @@ export function ManagerPage() {
                       <div className="detail-section">
                         <h3>Match Statistics ({matches.length} matches)</h3>
                         <div className="stats-grid">
-                                                    <div className="stat-box">
-                                                      <span className="stat-value">{matches.length > 0 ? matches.map(m => Array.isArray(m.pickupLocation) ? (m.pickupLocation.length ? m.pickupLocation.join(', ') : 'None') : m.pickupLocation || 'None').join(', ') : 'N/A'}</span>
-                                                      <span className="stat-label">Pickup Location</span>
-                                                    </div>
+                          <div className="stat-box">
+                            <span className="stat-value">{matches.length > 0 ? matches.map(m => Array.isArray(m.autoPickupLocation) ? (m.autoPickupLocation.length ? m.autoPickupLocation.join(', ') : 'None') : m.autoPickupLocation || 'None').join(' · ') : 'N/A'}</span>
+                            <span className="stat-label">Auto Pickup Location</span>
+                          </div>
+                          <div className="stat-box">
+                            <span className="stat-value">{matches.length > 0 ? matches.map(m => Array.isArray(m.pickupLocation) ? (m.pickupLocation.length ? m.pickupLocation.join(', ') : 'None') : m.pickupLocation || 'None').join(' · ') : 'N/A'}</span>
+                            <span className="stat-label">Teleop Pickup Location</span>
+                          </div>
                           <div className="stat-box">
                             <span className="stat-value">{stats.autoFuel !== null ? stats.autoFuel.toFixed(1) : 'N/A'}</span>
                             <span className="stat-label">Avg Auto Fuel</span>
@@ -718,10 +724,11 @@ export function ManagerPage() {
                               <th>Match</th>
                               <th>Auto</th>
                               <th>Teleop</th>
+                              <th>Auto Pickup</th>
                               <th>Auto Climb</th>
                               <th>End Climb</th>
                               <th>Defense</th>
-                              <th>Pickup Location</th>
+                              <th>Teleop Pickup</th>
                               <th>Auton Focus</th>
                               <th>Endgame Focus</th>
                               <th>Human Player</th>
@@ -734,6 +741,7 @@ export function ManagerPage() {
                                 <td>#{m.matchNumber}</td>
                                 <td>{m.autoFiringSeconds?.toFixed(1)}s @ {m.autoAccuracy}%</td>
                                 <td>{m.teleopFiringSeconds?.toFixed(1)}s @ {m.teleopAccuracy}%</td>
+                                <td>{Array.isArray(m.autoPickupLocation) ? (m.autoPickupLocation.length ? m.autoPickupLocation.join(', ') : 'None') : m.autoPickupLocation || 'None'}</td>
                                 <td>{m.autoClimb || 'None'}</td>
                                 <td>{m.teleopClimb || 'None'}</td>
                                 <td>{m.defenseRating > 0 ? '★'.repeat(m.defenseRating) : '-'}</td>

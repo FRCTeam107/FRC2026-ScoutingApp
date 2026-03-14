@@ -28,8 +28,6 @@ export function MatchScoutForm({ onSave }) {
     };
   };
 
-  const lineup = getMatchLineup(matchNumber);
-
   const getNextMatchNumber = () => {
     const records = getMatchRecords();
     if (records.length === 0) return 1;
@@ -53,6 +51,8 @@ export function MatchScoutForm({ onSave }) {
   const [teleopClimb, setTeleopClimb] = useState('None');
   const [pickupLocation, setPickupLocation] = useState([]);
   const [endgameFocus, setEndgameFocus] = useState('shooting');
+
+  const lineup = getMatchLineup(matchNumber);
 
   // Post-match
   const [defenseRating, setDefenseRating] = useState(0);

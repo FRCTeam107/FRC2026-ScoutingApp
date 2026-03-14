@@ -302,11 +302,11 @@ export function MatchScoutForm({ onSave }) {
             <label>Human Player Shooting Ability</label>
             <div className="focus-toggle">
               {[
-                { value: 'excellent', label: 'Excellent' },
-                { value: 'good', label: 'Good' },
-                { value: 'average', label: 'Average' },
+                { value: 'none', label: 'Did Not Shoot' },
                 { value: 'poor', label: 'Poor' },
-                { value: 'none', label: 'Did Not Shoot' }
+                { value: 'average', label: 'Average' },
+                { value: 'good', label: 'Good' },
+                { value: 'excellent', label: 'Excellent' }
               ].map(opt => (
                 <button
                   key={opt.value}

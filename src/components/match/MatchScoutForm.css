@@ -117,7 +117,8 @@
 
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group .team-select {
   padding: 14px 16px;
   background: #1e1e30;
   border: 1px solid #3a3a50;
@@ -127,7 +128,8 @@
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group .team-select:focus {
   outline: none;
   border-color: #3b82f6;
 }
@@ -293,7 +295,8 @@
   }
 
   .form-group input,
-  .form-group textarea {
+  .form-group textarea,
+  .form-group .team-select {
     font-size: 15px;
     padding: 10px 12px;
     width: 100%;

@@ -6,12 +6,17 @@ import { AUTON_CLIMB_LEVELS } from '../../config/autonClimb';
 import { TELEOP_CLIMB_LEVELS } from '../../config/teleopClimb';
 import { DefenseRating } from './DefenseRating';
 import { useFiringTimer } from '../../hooks/useFiringTimer';
-import { saveMatchRecord, getMatchRecords } from '../../lib/storage';
+import { saveMatchRecord, getMatchRecords, getCurrentEvent } from '../../lib/storage';
 import './MatchScoutForm.css';
 
 const STAGES = ['setup', 'auto', 'teleop', 'postmatch'];
 
 export function MatchScoutForm({ onSave }) {
+  const currentEvent = getCurrentEvent();
+  const eventTeams = currentEvent?.teams
+    ? [...currentEvent.teams].sort((a, b) => a.team_number - b.team_number)
+    : [];
+
   const getNextMatchNumber = () => {
     const records = getMatchRecords();
     if (records.length === 0) return 1;
@@ -119,13 +124,29 @@ export function MatchScoutForm({ onSave }) {
           <div className="form-row">
             <div className="form-group">
               <label>Team #</label>
-              <input
-                type="number"
-                value={teamNumber}
-                onChange={(e) => setTeamNumber(e.target.value)}
-                placeholder="107"
-                autoFocus
-              />
+              {eventTeams.length > 0 ? (
+                <select
+                  value={teamNumber}
+                  onChange={(e) => setTeamNumber(e.target.value)}
+                  className="team-select"
+                  autoFocus
+                >
+                  <option value="">Select a team...</option>
+                  {eventTeams.map(t => (
+                    <option key={t.team_number} value={t.team_number}>
+                      #{t.team_number} — {t.nickname}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="number"
+                  value={teamNumber}
+                  onChange={(e) => setTeamNumber(e.target.value)}
+                  placeholder="107"
+                  autoFocus
+                />
+              )}
             </div>
             <div className="form-group">
               <label>Match #</label>

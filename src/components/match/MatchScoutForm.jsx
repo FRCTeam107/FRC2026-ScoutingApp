@@ -35,6 +35,8 @@ export function MatchScoutForm({ onSave }) {
   const [teleopClimb, setTeleopClimb] = useState('None');
   const [pickupLocation, setPickupLocation] = useState([]);
   const [endgameFocus, setEndgameFocus] = useState('shooting');
+  // Human player shooting ability (endgame)
+  const [humanPlayerAbility, setHumanPlayerAbility] = useState('average');
 
   // Post-match
   const [defenseRating, setDefenseRating] = useState(0);
@@ -77,6 +79,7 @@ export function MatchScoutForm({ onSave }) {
       teleopClimb,
       pickupLocation,
       endgameFocus,
+      humanPlayerAbility,
       defenseRating,
       notes
     };
@@ -337,12 +340,24 @@ export function MatchScoutForm({ onSave }) {
             ]}
           />
 
+
           <ClimbSelector
             label="Endgame Climb"
             value={teleopClimb}
             onChange={setTeleopClimb}
             levels={TELEOP_CLIMB_LEVELS}
           />
+
+          <div className="form-group">
+            <label>Human Player Shooting Ability</label>
+            <select value={humanPlayerAbility} onChange={e => setHumanPlayerAbility(e.target.value)}>
+              <option value="excellent">Excellent</option>
+              <option value="good">Good</option>
+              <option value="average">Average</option>
+              <option value="poor">Poor</option>
+              <option value="none">Did Not Shoot</option>
+            </select>
+          </div>
 
           <div className="stage-nav">
             <button className="back-button" onClick={prevStage}>← Auto</button>

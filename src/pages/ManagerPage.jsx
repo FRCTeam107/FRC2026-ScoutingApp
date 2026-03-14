@@ -568,6 +568,7 @@ export function ManagerPage() {
                     <th>Auto Climb</th>
                     <th>End Climb</th>
                     <th>Defense</th>
+                    <th>Human Player</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -588,6 +589,7 @@ export function ManagerPage() {
                         <td><span className={`climb-badge ${record.autoClimb !== 'None' ? 'success' : ''}`}>{record.autoClimb || 'None'}</span></td>
                         <td><span className={`climb-badge ${record.teleopClimb !== 'None' ? 'success' : ''}`}>{record.teleopClimb || 'None'}</span></td>
                         <td>{record.defenseRating > 0 ? '★'.repeat(record.defenseRating) : 'N/A'}</td>
+                        <td>{record.humanPlayerAbility || 'N/A'}</td>
                       </tr>
                     ))}
                 </tbody>
@@ -701,6 +703,10 @@ export function ManagerPage() {
                             <span className="stat-value">{matches.length > 0 ? matches.map(m => m.endgameFocus || 'N/A').join(', ') : 'N/A'}</span>
                             <span className="stat-label">Endgame Focus</span>
                           </div>
+                          <div className="stat-box">
+                            <span className="stat-value">{matches.length > 0 ? matches.map(m => m.humanPlayerAbility || 'N/A').join(', ') : 'N/A'}</span>
+                            <span className="stat-label">Human Player Shooting</span>
+                          </div>
                         </div>
                       </div>
 
@@ -718,6 +724,7 @@ export function ManagerPage() {
                               <th>Pickup Location</th>
                               <th>Auton Focus</th>
                               <th>Endgame Focus</th>
+                              <th>Human Player</th>
                               <th>Notes</th>
                             </tr>
                           </thead>
@@ -733,6 +740,7 @@ export function ManagerPage() {
                                 <td>{Array.isArray(m.pickupLocation) ? (m.pickupLocation.length ? m.pickupLocation.join(', ') : 'None') : m.pickupLocation || 'None'}</td>
                                 <td>{m.autonFocus || 'N/A'}</td>
                                 <td>{m.endgameFocus || 'N/A'}</td>
+                                <td>{m.humanPlayerAbility || 'N/A'}</td>
                                 <td
                                   className={`notes-cell ${m.notes && m.notes.length > 30 ? 'expandable' : ''} ${expandedNotes === `${selectedTeam}-${m.matchNumber}` ? 'expanded' : ''}`}
                                   onClick={() => m.notes && m.notes.length > 30 && setExpandedNotes(expandedNotes === `${selectedTeam}-${m.matchNumber}` ? null : `${selectedTeam}-${m.matchNumber}`)}

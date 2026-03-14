@@ -113,6 +113,10 @@ function makeRecord(teamNumber, matchNumber, allianceColor) {
   const isDefender = (SKILL[teamNumber] || [])[0] < 0.5;
   const defenseRating = isDefender ? ri(3, 5) : (Math.random() < 0.2 ? ri(1, 3) : 0);
 
+  // Randomize human player ability
+  const humanPlayerOptions = ['excellent', 'good', 'average', 'poor', 'none'];
+  const humanPlayerAbility = humanPlayerOptions[ri(0, humanPlayerOptions.length - 1)];
+
   return {
     teamNumber,
     matchNumber,
@@ -125,6 +129,7 @@ function makeRecord(teamNumber, matchNumber, allianceColor) {
     teleopAccuracy: teleopAcc,
     teleopClimb,
     pickupLocation: PICKUPS[ri(0, PICKUPS.length - 1)],
+    humanPlayerAbility,
     defenseRating,
     notes: '',
     scouterDeviceId: 'test_device',

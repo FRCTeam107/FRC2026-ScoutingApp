@@ -604,10 +604,15 @@ export function ManagerPage() {
           <div className="lookup-tab">
             <div className="search-bar">
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 placeholder="Enter team number..."
                 value={selectedTeam || ''}
-                onChange={(e) => setSelectedTeam(e.target.value ? parseInt(e.target.value) : null)}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '');
+                  setSelectedTeam(val ? parseInt(val) : null);
+                }}
                 className="search-input large"
               />
             </div>

@@ -9,6 +9,17 @@ function avg(arr) {
   return arr.reduce((a, b) => a + b, 0) / arr.length;
 }
 
+function mode(arr) {
+  if (!arr.length) return null;
+  const freq = {};
+  let max = 0, result = null;
+  for (const v of arr) {
+    freq[v] = (freq[v] || 0) + 1;
+    if (freq[v] > max) { max = freq[v]; result = v; }
+  }
+  return result;
+}
+
 function parseTeamNum(key) {
   return parseInt(key.replace('frc', ''));
 }
@@ -91,6 +102,11 @@ export function DriveTeamPage() {
         match: r.matchNumber,
         climb: r.teleopClimb || 'None',
       })),
+      autonFocusMode: mode(recs.map(r => r.autonFocus).filter(Boolean)),
+      endgameFocusMode: mode(recs.map(r => r.endgameFocus).filter(Boolean)),
+      humanPlayerMode: mode(recs.map(r => r.humanPlayerAbility).filter(Boolean)),
+      autoPickupMode: mode(recs.flatMap(r => Array.isArray(r.autoPickupLocation) ? r.autoPickupLocation : r.autoPickupLocation ? [r.autoPickupLocation] : [])),
+      teleopPickupMode: mode(recs.flatMap(r => Array.isArray(r.pickupLocation) ? r.pickupLocation : r.pickupLocation ? [r.pickupLocation] : [])),
     };
   };
 
@@ -183,6 +199,39 @@ export function DriveTeamPage() {
                     );
                   })}
                 </div>
+              </div>
+
+              <div className="dtc-stat-grid">
+                {stats.autonFocusMode && (
+                  <div className="dtc-stat-cell">
+                    <span className="dtc-stat-label">Auto Focus</span>
+                    <span className="dtc-stat-val dtc-capitalize">{stats.autonFocusMode}</span>
+                  </div>
+                )}
+                {stats.endgameFocusMode && (
+                  <div className="dtc-stat-cell">
+                    <span className="dtc-stat-label">Teleop Focus</span>
+                    <span className="dtc-stat-val dtc-capitalize">{stats.endgameFocusMode}</span>
+                  </div>
+                )}
+                {stats.autoPickupMode && (
+                  <div className="dtc-stat-cell">
+                    <span className="dtc-stat-label">Auto Pickup</span>
+                    <span className="dtc-stat-val">{stats.autoPickupMode}</span>
+                  </div>
+                )}
+                {stats.teleopPickupMode && (
+                  <div className="dtc-stat-cell">
+                    <span className="dtc-stat-label">Teleop Pickup</span>
+                    <span className="dtc-stat-val">{stats.teleopPickupMode}</span>
+                  </div>
+                )}
+                {stats.humanPlayerMode && (
+                  <div className="dtc-stat-cell">
+                    <span className="dtc-stat-label">Human Player</span>
+                    <span className="dtc-stat-val dtc-capitalize">{stats.humanPlayerMode}</span>
+                  </div>
+                )}
               </div>
 
               {stats.avgDefense > 0.5 && (

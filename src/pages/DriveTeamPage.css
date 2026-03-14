@@ -347,6 +347,10 @@
   font-weight: 500;
 }
 
+.dtc-capitalize {
+  text-transform: capitalize;
+}
+
 .dtc-perf-row {
   display: flex;
   align-items: center;

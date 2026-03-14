@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { getTeamProfiles, getMatchRecords, deleteTeamProfile, clearAllMatchRecords, getCurrentEvent, setCurrentEvent, clearCurrentEvent, getFieldImage, setFieldImage, clearFieldImage } from '../lib/storage';
+import { getTeamProfiles, getMatchRecords, deleteTeamProfile, clearAllMatchRecords, getCurrentEvent, setCurrentEvent, clearCurrentEvent, getFieldImage, setFieldImage, clearFieldImage, getMatchSchedule, setMatchSchedule } from '../lib/storage';
 import { deleteAllMatchRecords, deleteTeamProfileFromCloud } from '../lib/supabase';
-import { getEventTeams, getEventInfo } from '../lib/tba';
+import { getEventTeams, getEventInfo, getEventMatches } from '../lib/tba';
 import { PasswordModal } from '../components/common/PasswordModal';
 import { isTestModeActive, loadTestData, unloadTestData } from '../lib/testData';
 import './ManagerPage.css';
@@ -14,6 +14,7 @@ export function ManagerPage() {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [expandedNotes, setExpandedNotes] = useState(null);
+  const [scheduleData, setScheduleData] = useState(() => getMatchSchedule());
 
   useEffect(() => {
     const handler = () => setRefreshKey(k => k + 1);
@@ -199,9 +200,10 @@ export function ManagerPage() {
     setEventError(null);
 
     try {
-      const [eventInfo, eventTeams] = await Promise.all([
+      const [eventInfo, eventTeams, eventMatches] = await Promise.all([
         getEventInfo(eventKey.trim()),
-        getEventTeams(eventKey.trim())
+        getEventTeams(eventKey.trim()),
+        getEventMatches(eventKey.trim())
       ]);
 
       setCurrentEvent(eventInfo.key, eventInfo.name, eventTeams, eventInfo.start_date, eventInfo.end_date);
@@ -213,6 +215,8 @@ export function ManagerPage() {
         endDate: eventInfo.end_date,
         loadedAt: new Date().toISOString()
       });
+      setMatchSchedule(eventMatches);
+      setScheduleData(eventMatches);
       setEventKey('');
     } catch (err) {
       setEventError(err.message);
@@ -235,6 +239,7 @@ export function ManagerPage() {
       setTestMode(true);
     }
     setCurrentEventState(getCurrentEvent());
+    setScheduleData(getMatchSchedule());
     setRefreshKey(k => k + 1);
   };
 
@@ -287,6 +292,9 @@ export function ManagerPage() {
         </button>
         <button className={`tab ${activeTab === 'matches' ? 'active' : ''}`} onClick={() => setActiveTab('matches')}>
           Match Data
+        </button>
+        <button className={`tab ${activeTab === 'schedule' ? 'active' : ''}`} onClick={() => setActiveTab('schedule')}>
+          Schedule
         </button>
         <button className={`tab ${activeTab === 'lookup' ? 'active' : ''}`} onClick={() => setActiveTab('lookup')}>
           Team Lookup
@@ -539,6 +547,62 @@ export function ManagerPage() {
                   ))}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'schedule' && (
+          <div className="schedule-tab">
+            {!scheduleData || scheduleData.length === 0 ? (
+              <p className="empty-state">No schedule loaded. Load an event from Event Setup to fetch the match schedule.</p>
+            ) : (() => {
+              const LEVEL_LABEL = { qm: 'Qual', sf: 'Semifinal', f: 'Final' };
+              const levels = ['qm', 'sf', 'f'].filter(l => scheduleData.some(m => m.comp_level === l));
+              return levels.map(level => {
+                const matches = scheduleData
+                  .filter(m => m.comp_level === level)
+                  .sort((a, b) => a.match_number - b.match_number);
+                return (
+                  <div key={level} className="schedule-section">
+                    <h3 className="schedule-level-heading">{LEVEL_LABEL[level] || level.toUpperCase()} Matches</h3>
+                    <div className="table-scroll">
+                      <table className="schedule-table">
+                        <thead>
+                          <tr>
+                            <th>Match</th>
+                            <th className="blue-col">Blue 1</th>
+                            <th className="blue-col">Blue 2</th>
+                            <th className="blue-col">Blue 3</th>
+                            <th className="red-col">Red 1</th>
+                            <th className="red-col">Red 2</th>
+                            <th className="red-col">Red 3</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {matches.map(m => {
+                            const blue = m.alliances?.blue?.team_keys || [];
+                            const red = m.alliances?.red?.team_keys || [];
+                            const fmt = key => key.replace('frc', '#');
+                            return (
+                              <tr key={m.match_number}>
+                                <td><strong>{level === 'qm' ? `Q${m.match_number}` : level === 'sf' ? `SF${m.set_number}M${m.match_number}` : `F${m.match_number}`}</strong></td>
+                                {blue.map((k, i) => (
+                                  <td key={i} className="blue-col" onClick={() => { setSelectedTeam(parseInt(k.replace('frc', ''))); setActiveTab('lookup'); }} style={{cursor:'pointer'}}>{fmt(k)}</td>
+                                ))}
+                                {Array.from({ length: Math.max(0, 3 - blue.length) }).map((_, i) => <td key={`bp${i}`} className="blue-col">—</td>)}
+                                {red.map((k, i) => (
+                                  <td key={i} className="red-col" onClick={() => { setSelectedTeam(parseInt(k.replace('frc', ''))); setActiveTab('lookup'); }} style={{cursor:'pointer'}}>{fmt(k)}</td>
+                                ))}
+                                {Array.from({ length: Math.max(0, 3 - red.length) }).map((_, i) => <td key={`rp${i}`} className="red-col">—</td>)}
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              });
+            })()}
           </div>
         )}
 

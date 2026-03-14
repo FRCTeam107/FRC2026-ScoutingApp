@@ -848,6 +848,66 @@ td {
 }
 
 /* Event Setup Tab */
+/* ── Schedule Tab ─────────────────────── */
+.schedule-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.schedule-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.schedule-level-heading {
+  color: #e5e5e5;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.schedule-table thead tr {
+  background: #1a1a2e;
+}
+
+.schedule-table tbody tr:nth-child(even) {
+  background: #141428;
+}
+
+.schedule-table tbody tr:nth-child(odd) {
+  background: #111126;
+}
+
+.schedule-table th.blue-col,
+.schedule-table td.blue-col {
+  color: #60a5fa;
+}
+
+.schedule-table th.red-col,
+.schedule-table td.red-col {
+  color: #f87171;
+}
+
+.schedule-table td.blue-col:hover,
+.schedule-table td.red-col:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+/* ── Event Tab ────────────────────────── */
 .event-tab {
   display: flex;
   flex-direction: column;
@@ -1065,6 +1125,7 @@ td {
 
   .rankings-table,
   .matches-tab,
+  .schedule-tab .table-scroll,
   .match-history-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;

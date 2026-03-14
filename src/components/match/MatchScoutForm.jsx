@@ -178,47 +178,22 @@ export function MatchScoutForm({ onSave }) {
 
           <div className="form-group">
             <label>Auton Focus</label>
-            <div className="auton-focus-toggle">
-              <label>
-                <input
-                  type="radio"
-                  name="autonFocus"
-                  value="shooting"
-                  checked={autonFocus === 'shooting'}
-                  onChange={() => setAutonFocus('shooting')}
-                />
-                Shooting
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="autonFocus"
-                  value="shuttling"
-                  checked={autonFocus === 'shuttling'}
-                  onChange={() => setAutonFocus('shuttling')}
-                />
-                Shuttling
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="autonFocus"
-                  value="both"
-                  checked={autonFocus === 'both'}
-                  onChange={() => setAutonFocus('both')}
-                />
-                Both
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="autonFocus"
-                  value="neither"
-                  checked={autonFocus === 'neither'}
-                  onChange={() => setAutonFocus('neither')}
-                />
-                Neither
-              </label>
+            <div className="focus-toggle">
+              {[
+                { value: 'shooting', label: 'Shooting' },
+                { value: 'shuttling', label: 'Shuttling' },
+                { value: 'both', label: 'Both' },
+                { value: 'neither', label: 'Neither' }
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={`focus-btn${autonFocus === opt.value ? ' active' : ''}`}
+                  onClick={() => setAutonFocus(opt.value)}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -270,47 +245,22 @@ export function MatchScoutForm({ onSave }) {
 
           <div className="form-group">
             <label>Teleop Focus</label>
-            <div className="auton-focus-toggle">
-              <label>
-                <input
-                  type="radio"
-                  name="endgameFocus"
-                  value="shooting"
-                  checked={endgameFocus === 'shooting'}
-                  onChange={() => setEndgameFocus('shooting')}
-                />
-                Shooting
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="endgameFocus"
-                  value="shuttling"
-                  checked={endgameFocus === 'shuttling'}
-                  onChange={() => setEndgameFocus('shuttling')}
-                />
-                Shuttling
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="endgameFocus"
-                  value="both"
-                  checked={endgameFocus === 'both'}
-                  onChange={() => setEndgameFocus('both')}
-                />
-                Both
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="endgameFocus"
-                  value="neither"
-                  checked={endgameFocus === 'neither'}
-                  onChange={() => setEndgameFocus('neither')}
-                />
-                Neither
-              </label>
+            <div className="focus-toggle">
+              {[
+                { value: 'shooting', label: 'Shooting' },
+                { value: 'shuttling', label: 'Shuttling' },
+                { value: 'both', label: 'Both' },
+                { value: 'neither', label: 'Neither' }
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={`focus-btn${endgameFocus === opt.value ? ' active' : ''}`}
+                  onClick={() => setEndgameFocus(opt.value)}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -350,13 +300,24 @@ export function MatchScoutForm({ onSave }) {
 
           <div className="form-group">
             <label>Human Player Shooting Ability</label>
-            <select value={humanPlayerAbility} onChange={e => setHumanPlayerAbility(e.target.value)}>
-              <option value="excellent">Excellent</option>
-              <option value="good">Good</option>
-              <option value="average">Average</option>
-              <option value="poor">Poor</option>
-              <option value="none">Did Not Shoot</option>
-            </select>
+            <div className="focus-toggle">
+              {[
+                { value: 'excellent', label: 'Excellent' },
+                { value: 'good', label: 'Good' },
+                { value: 'average', label: 'Average' },
+                { value: 'poor', label: 'Poor' },
+                { value: 'none', label: 'Did Not Shoot' }
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={`focus-btn${humanPlayerAbility === opt.value ? ' active' : ''}`}
+                  onClick={() => setHumanPlayerAbility(opt.value)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="stage-nav">

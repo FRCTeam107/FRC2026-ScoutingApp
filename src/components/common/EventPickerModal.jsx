@@ -78,56 +78,58 @@ export function EventPickerModal({ onClose, onEventLoaded }) {
           <button className="epm-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
-        <div className="epm-search-row">
-          <input
-            className="epm-input"
-            type="number"
-            placeholder="Team number (e.g. 107)"
-            value={teamInput}
-            onChange={(e) => setTeamInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && searchEvents()}
-            autoFocus
-          />
-          <button
-            className="epm-search-btn"
-            onClick={searchEvents}
-            disabled={searchLoading}
-          >
-            {searchLoading ? 'Searching…' : 'Find Events'}
-          </button>
-        </div>
-
-        {searchError && <p className="epm-error">{searchError}</p>}
-
-        {events && (
-          <div className="epm-event-list">
-            {events.map(ev => (
-              <button
-                key={ev.key}
-                className={`epm-event-item${selectedEvent?.key === ev.key ? ' selected' : ''}`}
-                onClick={() => setSelectedEvent(ev)}
-              >
-                <span className="epm-event-name">{ev.name}</span>
-                <span className="epm-event-meta">
-                  {ev.city ? `${ev.city}, ${ev.state_prov} · ` : ''}
-                  {formatDateRange(ev.start_date, ev.end_date)}
-                </span>
-              </button>
-            ))}
+        <div className="epm-body">
+          <div className="epm-search-row">
+            <input
+              className="epm-input"
+              type="number"
+              placeholder="Team number (e.g. 107)"
+              value={teamInput}
+              onChange={(e) => setTeamInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && searchEvents()}
+              autoFocus
+            />
+            <button
+              className="epm-search-btn"
+              onClick={searchEvents}
+              disabled={searchLoading}
+            >
+              {searchLoading ? 'Searching…' : 'Find Events'}
+            </button>
           </div>
-        )}
 
-        {loadError && <p className="epm-error">{loadError}</p>}
+          {searchError && <p className="epm-error">{searchError}</p>}
 
-        {selectedEvent && (
-          <button
-            className="epm-confirm-btn"
-            onClick={confirmLoad}
-            disabled={loadingEvent}
-          >
-            {loadingEvent ? 'Loading event data…' : `Load ${selectedEvent.name}`}
-          </button>
-        )}
+          {events && (
+            <div className="epm-event-list">
+              {events.map(ev => (
+                <button
+                  key={ev.key}
+                  className={`epm-event-item${selectedEvent?.key === ev.key ? ' selected' : ''}`}
+                  onClick={() => setSelectedEvent(ev)}
+                >
+                  <span className="epm-event-name">{ev.name}</span>
+                  <span className="epm-event-meta">
+                    {ev.city ? `${ev.city}, ${ev.state_prov} · ` : ''}
+                    {formatDateRange(ev.start_date, ev.end_date)}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {loadError && <p className="epm-error">{loadError}</p>}
+
+          {selectedEvent && (
+            <button
+              className="epm-confirm-btn"
+              onClick={confirmLoad}
+              disabled={loadingEvent}
+            >
+              {loadingEvent ? 'Loading event data…' : `Load ${selectedEvent.name}`}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -70,6 +70,46 @@ export async function getEventMatches(eventKey) {
 }
 
 /**
+ * Fetch events for a team in a given year
+ * @param {number|string} teamNumber - Team number (e.g., 107)
+ * @param {number} year - Year (e.g., 2026)
+ * @returns {Promise<Array>}
+ */
+export async function getTeamEvents(teamNumber, year) {
+  if (!TBA_KEY) {
+    throw new Error('TBA API key not configured. Add VITE_TBA_KEY to your .env.local file.');
+  }
+
+  const response = await fetch(`${TBA_BASE}/team/frc${teamNumber}/events/${year}/simple`, {
+    headers: {
+      'X-TBA-Auth-Key': TBA_KEY
+    }
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error(`No events found for team ${teamNumber} in ${year}.`);
+    }
+    if (response.status === 401) {
+      throw new Error('Invalid TBA API key. Check your VITE_TBA_KEY in .env.local.');
+    }
+    throw new Error(`Failed to fetch events: ${response.statusText}`);
+  }
+
+  const events = await response.json();
+  return events
+    .sort((a, b) => new Date(a.start_date) - new Date(b.start_date))
+    .map(e => ({
+      key: e.key,
+      name: e.name,
+      city: e.city || '',
+      state_prov: e.state_prov || '',
+      start_date: e.start_date,
+      end_date: e.end_date
+    }));
+}
+
+/**
  * Fetch event information
  * @param {string} eventKey - Event key (e.g., '2026miket')
  * @returns {Promise<{name: string, city: string, state_prov: string, start_date: string, end_date: string}>}

@@ -1,12 +1,37 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getCurrentEvent } from '../lib/storage';
+import { EventPickerModal } from '../components/common/EventPickerModal';
 import './RoleSelectPage.css';
 
 export function RoleSelectPage() {
+  const [showEventPicker, setShowEventPicker] = useState(false);
+  const [currentEvent, setCurrentEventState] = useState(() => getCurrentEvent());
+
+  const handleEventLoaded = (eventData) => {
+    setCurrentEventState(eventData);
+  };
+
   return (
     <div className="role-select-page">
       <div className="role-header">
         <h1>FRC Team 107</h1>
         <h2>2026 REBUILT Season</h2>
+
+        <button
+          className={`event-status-btn${currentEvent ? ' loaded' : ''}`}
+          onClick={() => setShowEventPicker(true)}
+        >
+          {currentEvent ? (
+            <>
+              <span className="event-status-dot" />
+              <span className="event-status-name">{currentEvent.name}</span>
+              <span className="event-status-change">Change</span>
+            </>
+          ) : (
+            '＋ Load Event'
+          )}
+        </button>
       </div>
 
       <div className="role-cards">
@@ -40,6 +65,13 @@ export function RoleSelectPage() {
           Works offline - data syncs when WiFi available
         </p>
       </div>
+
+      {showEventPicker && (
+        <EventPickerModal
+          onClose={() => setShowEventPicker(false)}
+          onEventLoaded={handleEventLoaded}
+        />
+      )}
     </div>
   );
 }

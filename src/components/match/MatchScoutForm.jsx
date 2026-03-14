@@ -35,8 +35,6 @@ export function MatchScoutForm({ onSave }) {
   const [teleopClimb, setTeleopClimb] = useState('None');
   const [pickupLocation, setPickupLocation] = useState([]);
   const [endgameFocus, setEndgameFocus] = useState('shooting');
-  // Human player shooting ability (endgame)
-  const [humanPlayerAbility, setHumanPlayerAbility] = useState('average');
 
   // Post-match
   const [defenseRating, setDefenseRating] = useState(0);
@@ -79,7 +77,6 @@ export function MatchScoutForm({ onSave }) {
       teleopClimb,
       pickupLocation,
       endgameFocus,
-      humanPlayerAbility,
       defenseRating,
       notes
     };
@@ -297,28 +294,6 @@ export function MatchScoutForm({ onSave }) {
             onChange={setTeleopClimb}
             levels={TELEOP_CLIMB_LEVELS}
           />
-
-          <div className="form-group">
-            <label>Human Player Shooting Ability</label>
-            <div className="focus-toggle">
-              {[
-                { value: 'none', label: 'Did Not Shoot' },
-                { value: 'poor', label: 'Poor' },
-                { value: 'average', label: 'Average' },
-                { value: 'good', label: 'Good' },
-                { value: 'excellent', label: 'Excellent' }
-              ].map(opt => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  className={`focus-btn${humanPlayerAbility === opt.value ? ' active' : ''}`}
-                  onClick={() => setHumanPlayerAbility(opt.value)}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
 
           <div className="stage-nav">
             <button className="back-button" onClick={prevStage}>← Auto</button>

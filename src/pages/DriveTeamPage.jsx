@@ -104,7 +104,6 @@ export function DriveTeamPage() {
       })),
       autonFocusMode: mode(recs.map(r => r.autonFocus).filter(Boolean)),
       endgameFocusMode: mode(recs.map(r => r.endgameFocus).filter(Boolean)),
-      humanPlayerMode: mode(recs.map(r => r.humanPlayerAbility).filter(Boolean)),
       autoPickupMode: mode(recs.flatMap(r => Array.isArray(r.autoPickupLocation) ? r.autoPickupLocation : r.autoPickupLocation ? [r.autoPickupLocation] : [])),
       teleopPickupMode: mode(recs.flatMap(r => Array.isArray(r.pickupLocation) ? r.pickupLocation : r.pickupLocation ? [r.pickupLocation] : [])),
     };
@@ -224,12 +223,6 @@ export function DriveTeamPage() {
                   <div className="dtc-stat-cell">
                     <span className="dtc-stat-label">Teleop Pickup</span>
                     <span className="dtc-stat-val">{stats.teleopPickupMode}</span>
-                  </div>
-                )}
-                {stats.humanPlayerMode && (
-                  <div className="dtc-stat-cell">
-                    <span className="dtc-stat-label">Human Player</span>
-                    <span className="dtc-stat-val dtc-capitalize">{stats.humanPlayerMode}</span>
                   </div>
                 )}
               </div>

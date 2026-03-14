@@ -26,7 +26,6 @@ export function AccuracySlider({ label, value, onChange }) {
       </div>
       <div className="accuracy-stepper">
         <button type="button" className="stepper-btn" onClick={dec} disabled={value <= 0}>−</button>
-        <span className="stepper-value">{value}%</span>
         <button type="button" className="stepper-btn" onClick={inc} disabled={value >= 100}>+</button>
       </div>
     </div>

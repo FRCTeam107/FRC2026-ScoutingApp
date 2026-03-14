@@ -22,6 +22,21 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 }
 
+/* Mobile: bottom sheet */
+@media (max-width: 520px) {
+  .epm-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .epm-modal {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+  }
+}
+
 /* Header */
 .epm-header {
   display: flex;
@@ -30,6 +45,30 @@
   padding: 20px 20px 16px;
   border-bottom: 1px solid #2a2a40;
   flex-shrink: 0;
+  position: relative;
+}
+
+/* Drag handle shown only on mobile bottom sheet */
+.epm-header::before {
+  content: '';
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  background: #3a3a50;
+  border-radius: 2px;
+}
+
+@media (max-width: 520px) {
+  .epm-header {
+    padding-top: 28px;
+  }
+  .epm-header::before {
+    display: block;
+  }
 }
 
 .epm-header h2 {
@@ -64,6 +103,8 @@
   padding: 16px 20px 24px;
   gap: 12px;
   flex: 1;
+  /* respect iPhone home bar */
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
 }
 
 /* Search row */
@@ -122,6 +163,15 @@
 .epm-search-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (max-width: 360px) {
+  .epm-search-row {
+    flex-direction: column;
+  }
+  .epm-search-btn {
+    width: 100%;
+  }
 }
 
 /* Error */

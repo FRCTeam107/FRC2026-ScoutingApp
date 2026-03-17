@@ -267,6 +267,19 @@ export function ManagerPage() {
   };
 
   const [expandedPointsTeams, setExpandedPointsTeams] = useState(new Set());
+  const [pointsSortBy, setPointsSortBy] = useState('avgTotal');
+  const [pointsSortDir, setPointsSortDir] = useState('desc');
+  const [pointsView, setPointsView] = useState('table');
+  const [pointsChartMetric, setPointsChartMetric] = useState('avgTotal');
+
+  const handlePointsSort = (field) => {
+    if (pointsSortBy === field) {
+      setPointsSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setPointsSortBy(field);
+      setPointsSortDir('desc');
+    }
+  };
 
   const togglePointsExpand = (teamNum) => {
     setExpandedPointsTeams(prev => {
@@ -324,9 +337,13 @@ export function ManagerPage() {
     return [...teamsWithMatchData].sort((a, b) => {
       const sa = getTeamPointStats(a);
       const sb = getTeamPointStats(b);
-      return (sb.avgTotal ?? 0) - (sa.avgTotal ?? 0);
+      let valA, valB;
+      if (pointsSortBy === 'teamNumber') { valA = a; valB = b; }
+      else if (pointsSortBy === 'matches') { valA = sa.matches; valB = sb.matches; }
+      else { valA = sa[pointsSortBy] ?? 0; valB = sb[pointsSortBy] ?? 0; }
+      return pointsSortDir === 'desc' ? valB - valA : valA - valB;
     });
-  }, [teamsWithMatchData, refreshKey]);
+  }, [teamsWithMatchData, refreshKey, pointsSortBy, pointsSortDir]);
 
   return (
     <div className="manager-page" key={refreshKey}>
@@ -904,74 +921,142 @@ export function ManagerPage() {
               <p className="empty-state">No match records yet</p>
             ) : (
               <>
-                <p className="table-note">Average points per match across all recorded matches. Fuel requires pit scouting data (balls/sec).</p>
-                <div className="table-scroll">
-                  <table className="points-table">
-                    <thead>
-                      <tr>
-                        <th>Team</th>
-                        <th>Matches</th>
-                        <th>Auto Fuel</th>
-                        <th>Auto Climb<br/><span className="pts-sub">(15 pts)</span></th>
-                        <th>Teleop Fuel</th>
-                        <th>Teleop Climb<br/><span className="pts-sub">(L1=10 L2=20 L3=30)</span></th>
-                        <th>Avg Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {matchPointsTeams.map(teamNum => {
-                        const pts = getTeamPointStats(teamNum);
-                        const teamMatches = getTeamMatches(teamNum);
-                        const isExpanded = expandedPointsTeams.has(teamNum);
-                        const hasMultiple = teamMatches.length > 1;
-                        return (
-                          <>
-                            <tr
-                              key={teamNum}
-                              className={`clickable-row points-team-row${isExpanded ? ' expanded' : ''}`}
-                              onClick={() => hasMultiple && togglePointsExpand(teamNum)}
-                              style={{ cursor: hasMultiple ? 'pointer' : 'default' }}
-                            >
-                              <td>
-                                <span
-                                  className="points-team-link"
-                                  onClick={(e) => { e.stopPropagation(); setSelectedTeam(teamNum); setActiveTab('lookup'); }}
-                                >
-                                  <strong>#{teamNum}</strong>
-                                </span>
-                              </td>
-                              <td>
-                                {hasMultiple && (
-                                  <span className="expand-chevron">{isExpanded ? '▾' : '▸'}</span>
-                                )}
-                                {pts.matches}
-                              </td>
-                              <td>{pts.avgAutoFuel !== null ? pts.avgAutoFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
-                              <td>{pts.avgAutoClimb.toFixed(1)}</td>
-                              <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
-                              <td>{pts.avgTeleopClimb.toFixed(1)}</td>
-                              <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
-                            </tr>
-                            {isExpanded && teamMatches.map((m) => {
-                              const mp = getMatchPointsBreakdown(m);
-                              return (
-                                <tr key={`${teamNum}-${m.matchNumber}`} className="points-match-row">
-                                  <td className="match-sub-label">Q{m.matchNumber}</td>
-                                  <td></td>
-                                  <td>{mp.autoFuel !== null ? mp.autoFuel.toFixed(1) : <span className="no-data">—</span>}</td>
-                                  <td>{mp.autoClimb}</td>
-                                  <td>{mp.teleopFuel !== null ? mp.teleopFuel.toFixed(1) : <span className="no-data">—</span>}</td>
-                                  <td>{mp.teleopClimb}</td>
-                                  <td className="total-pts">{mp.total.toFixed(1)}</td>
-                                </tr>
-                              );
-                            })}
-                          </>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                {/* View toggle */}
+                <div className="points-view-bar">
+                  <div className="points-view-toggle">
+                    <button className={`pts-view-btn${pointsView === 'table' ? ' active' : ''}`} onClick={() => setPointsView('table')}>⊞ List</button>
+                    <button className={`pts-view-btn${pointsView === 'chart' ? ' active' : ''}`} onClick={() => setPointsView('chart')}>▦ Chart</button>
+                  </div>
+                  <p className="table-note" style={{margin:0}}>Avg per match · fuel requires pit scouting data (balls/sec)</p>
                 </div>
+
+                {pointsView === 'table' && (
+                  <div className="table-scroll">
+                    <table className="points-table">
+                      <thead>
+                        <tr>
+                          {[['teamNumber','Team'],['matches','Matches'],['avgAutoFuel','Auto Fuel'],['avgAutoClimb','Auto Climb'],['avgTeleopFuel','Teleop Fuel'],['avgTeleopClimb','Teleop Climb'],['avgTotal','Avg Total']].map(([field, label]) => (
+                            <th key={field} className="sortable-th" onClick={() => handlePointsSort(field)}>
+                              {label}
+                              {field === 'avgAutoClimb' && <><br/><span className="pts-sub">(15 pts)</span></>}
+                              {field === 'avgTeleopClimb' && <><br/><span className="pts-sub">(L1=10 L2=20 L3=30)</span></>}
+                              <span className="sort-indicator">{pointsSortBy === field ? (pointsSortDir === 'desc' ? ' ↓' : ' ↑') : ' ↕'}</span>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {matchPointsTeams.map(teamNum => {
+                          const pts = getTeamPointStats(teamNum);
+                          const teamMatches = getTeamMatches(teamNum);
+                          const isExpanded = expandedPointsTeams.has(teamNum);
+                          const hasMultiple = teamMatches.length > 1;
+                          return (
+                            <>
+                              <tr
+                                key={teamNum}
+                                className={`clickable-row points-team-row${isExpanded ? ' expanded' : ''}`}
+                                onClick={() => hasMultiple && togglePointsExpand(teamNum)}
+                                style={{ cursor: hasMultiple ? 'pointer' : 'default' }}
+                              >
+                                <td>
+                                  <span
+                                    className="points-team-link"
+                                    onClick={(e) => { e.stopPropagation(); setSelectedTeam(teamNum); setActiveTab('lookup'); }}
+                                  >
+                                    <strong>#{teamNum}</strong>
+                                  </span>
+                                </td>
+                                <td>
+                                  {hasMultiple && (
+                                    <span className="expand-chevron">{isExpanded ? '▾' : '▸'}</span>
+                                  )}
+                                  {pts.matches}
+                                </td>
+                                <td>{pts.avgAutoFuel !== null ? pts.avgAutoFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
+                                <td>{pts.avgAutoClimb.toFixed(1)}</td>
+                                <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
+                                <td>{pts.avgTeleopClimb.toFixed(1)}</td>
+                                <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
+                              </tr>
+                              {isExpanded && teamMatches.map((m) => {
+                                const mp = getMatchPointsBreakdown(m);
+                                return (
+                                  <tr key={`${teamNum}-${m.matchNumber}`} className="points-match-row">
+                                    <td className="match-sub-label">Q{m.matchNumber}</td>
+                                    <td></td>
+                                    <td>{mp.autoFuel !== null ? mp.autoFuel.toFixed(1) : <span className="no-data">—</span>}</td>
+                                    <td>{mp.autoClimb}</td>
+                                    <td>{mp.teleopFuel !== null ? mp.teleopFuel.toFixed(1) : <span className="no-data">—</span>}</td>
+                                    <td>{mp.teleopClimb}</td>
+                                    <td className="total-pts">{mp.total.toFixed(1)}</td>
+                                  </tr>
+                                );
+                              })}
+                            </>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {pointsView === 'chart' && (() => {
+                  const CHART_METRICS = [
+                    { key: 'avgTotal',       label: 'Total Points',   color: '#60a5fa' },
+                    { key: 'avgAutoFuel',    label: 'Auto Fuel',      color: '#34d399' },
+                    { key: 'avgAutoClimb',   label: 'Auto Climb',     color: '#a78bfa' },
+                    { key: 'avgTeleopFuel',  label: 'Teleop Fuel',    color: '#fbbf24' },
+                    { key: 'avgTeleopClimb', label: 'Teleop Climb',   color: '#f87171' },
+                  ];
+                  const activeMetric = CHART_METRICS.find(m => m.key === pointsChartMetric);
+                  // Sort teams by selected metric descending for chart
+                  const chartTeams = [...teamsWithMatchData].sort((a, b) => {
+                    const sa = getTeamPointStats(a);
+                    const sb = getTeamPointStats(b);
+                    return (sb[pointsChartMetric] ?? 0) - (sa[pointsChartMetric] ?? 0);
+                  });
+                  const maxVal = Math.max(...chartTeams.map(t => getTeamPointStats(t)[pointsChartMetric] ?? 0), 1);
+                  return (
+                    <div className="points-chart-wrap">
+                      <div className="points-metric-tabs">
+                        {CHART_METRICS.map(m => (
+                          <button
+                            key={m.key}
+                            className={`pts-metric-btn${pointsChartMetric === m.key ? ' active' : ''}`}
+                            style={pointsChartMetric === m.key ? { borderColor: m.color, color: m.color, background: m.color + '22' } : {}}
+                            onClick={() => setPointsChartMetric(m.key)}
+                          >
+                            {m.label}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="points-bar-chart">
+                        {chartTeams.map(teamNum => {
+                          const val = getTeamPointStats(teamNum)[pointsChartMetric] ?? 0;
+                          const pct = (val / maxVal) * 100;
+                          return (
+                            <div key={teamNum} className="pts-bar-row">
+                              <span
+                                className="pts-bar-label"
+                                onClick={() => { setSelectedTeam(teamNum); setActiveTab('lookup'); }}
+                              >
+                                #{teamNum}
+                              </span>
+                              <div className="pts-bar-track">
+                                <div
+                                  className="pts-bar-fill"
+                                  style={{ width: `${pct}%`, background: activeMetric.color }}
+                                />
+                              </div>
+                              <span className="pts-bar-value">{val > 0 ? val.toFixed(1) : '—'}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
               </>
             )}
           </div>

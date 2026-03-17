@@ -53,4 +53,11 @@
   background: #12121f;
   border-radius: 16px;
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-content > * {
+  width: 100%;
 }

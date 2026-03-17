@@ -122,23 +122,21 @@ export function PitScoutForm({ teamNumber, onSave }) {
       <div className="form-group">
         <label>Ladder Climb Side</label>
         <span className="hint">Position on the ladder relative to the driver station</span>
-        <div className="toggle-group">
+        <div className="pit-choice-group">
           {[
             { value: 'left',       label: 'Left' },
             { value: 'middle',     label: 'Middle' },
             { value: 'right',      label: 'Right' },
             { value: 'doNotClimb', label: 'Do Not Climb' },
           ].map(opt => (
-            <label key={opt.value}>
-              <input
-                type="radio"
-                name="climbSide"
-                value={opt.value}
-                checked={formData.climbSide === opt.value}
-                onChange={() => handleChange('climbSide', opt.value)}
-              />
+            <button
+              key={opt.value}
+              type="button"
+              className={`pit-choice-btn${formData.climbSide === opt.value ? ' selected' : ''}`}
+              onClick={() => handleChange('climbSide', opt.value)}
+            >
               {opt.label}
-            </label>
+            </button>
           ))}
         </div>
       </div>

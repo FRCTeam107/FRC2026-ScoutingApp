@@ -38,82 +38,37 @@
   min-height: 100px;
 }
 
-/* Trench toggle */
-.trench-toggle {
+/* Multiple-choice button groups */
+.pit-choice-group {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pit-choice-btn {
+  flex: 1 1 auto;
+  padding: 16px;
+  background: #1e1e30;
   border: 2px solid #3a3a50;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 15px;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 16px;
   font-weight: 600;
-  transition: background 0.15s, border-color 0.15s;
-  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
 }
 
-.trench-toggle.can-trench {
-  background: #1a3a2a;
-  border-color: #22c55e;
-  color: #22c55e;
+.pit-choice-btn:hover:not(.selected) {
+  border-color: #4b5563;
+  background: #252540;
 }
 
-.trench-toggle.bump-only {
-  background: #3a1a1a;
-  border-color: #ef4444;
-  color: #ef4444;
+.pit-choice-btn.selected {
+  background: #7c3aed;
+  border-color: #8b5cf6;
+  color: white;
 }
-
-.trench-toggle-label {
-  font-size: 15px;
-}
-  .toggle-group {
-    display: flex;
-    gap: 16px;
-    margin-top: 8px;
-  }
-  .toggle-group label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    color: #e5e5e5;
-    background: #2a2a40;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    padding: 14px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .toggle-group input[type="checkbox"] {
-    /* removed: no longer used for trench/bump */
-  }
-  }
-  .toggle-group label:hover,
-  .toggle-group label:focus-within {
-    border-color: #3b82f6;
-    background: #1e1e30;
-  }
-  .toggle-group input[type="radio"] {
-    accent-color: #3b82f6;
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-  }
-  }
-  .toggle-group label:hover {
-    border-color: #3b82f6;
-    background: #1e1e30;
-  }
-  .toggle-group input[type="radio"] {
-    accent-color: #3b82f6;
-    width: 18px;
-    height: 18px;
-    margin-right: 6px;
-  }
-  }
 
 .hint {
   font-size: 12px;

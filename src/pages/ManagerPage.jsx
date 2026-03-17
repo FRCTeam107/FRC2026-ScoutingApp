@@ -607,6 +607,9 @@ export function ManagerPage() {
                           <p className={`trench-badge-inline ${team.trenchCapability === 'bump' ? 'bump' : 'trench'}`}>
                             {team.trenchCapability === 'bump' ? 'Bump Only' : team.trenchCapability === 'trench' ? 'Trench Only' : team.trenchCapability === 'bumpAndTrench' ? 'Bump & Trench' : 'Unknown'}
                           </p>
+                          {team.climbSide && team.climbSide !== 'doNotClimb' && (
+                            <p className="climb-side-badge">Climbs: {team.climbSide.charAt(0).toUpperCase() + team.climbSide.slice(1)}</p>
+                          )}
                         </div>
                         <button
                           className="delete-btn"
@@ -792,6 +795,16 @@ export function ManagerPage() {
                           <span className="label">Trench/Bump:</span>
                           <span className={`trench-badge-inline ${profiles[selectedTeam].trenchCapability === 'bump' ? 'bump' : profiles[selectedTeam].trenchCapability === 'trench' ? 'trench' : profiles[selectedTeam].trenchCapability === 'bumpAndTrench' ? 'both' : 'unknown'}`}>
                             {profiles[selectedTeam].trenchCapability === 'bump' ? 'Bump Only' : profiles[selectedTeam].trenchCapability === 'trench' ? 'Trench Only' : profiles[selectedTeam].trenchCapability === 'bumpAndTrench' ? 'Bump & Trench' : 'Unknown'}
+                          </span>
+                        </div>
+                        <div className="pit-stat">
+                          <span className="label">Climb Side:</span>
+                          <span className="value">
+                            {profiles[selectedTeam].climbSide === 'doNotClimb'
+                              ? 'Do Not Climb'
+                              : profiles[selectedTeam].climbSide && profiles[selectedTeam].climbSide !== 'doNotClimb'
+                              ? profiles[selectedTeam].climbSide.charAt(0).toUpperCase() + profiles[selectedTeam].climbSide.slice(1)
+                              : 'Unknown'}
                           </span>
                         </div>
                         <div className="pit-stat">

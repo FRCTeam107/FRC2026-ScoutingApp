@@ -9,7 +9,8 @@ export function PitScoutForm({ teamNumber, onSave }) {
     description: '',
     ballsPerSecond: '',
     photoBase64: null,
-    trenchCapability: 'trench' // default: can go under trench
+    trenchCapability: 'trench',
+    climbSide: 'doNotClimb'
   });
 
   useEffect(() => {
@@ -20,7 +21,8 @@ export function PitScoutForm({ teamNumber, onSave }) {
         description: existing?.description || '',
         ballsPerSecond: existing?.ballsPerSecond || '',
         photoBase64: existing?.photoBase64 || existing?.photoUrl || null,
-        trenchCapability: typeof existing?.trenchCapability === 'string' ? existing.trenchCapability : 'trench'
+        trenchCapability: typeof existing?.trenchCapability === 'string' ? existing.trenchCapability : 'trench',
+        climbSide: typeof existing?.climbSide === 'string' ? existing.climbSide : 'doNotClimb'
       });
     }
   }, [teamNumber]);
@@ -38,7 +40,8 @@ export function PitScoutForm({ teamNumber, onSave }) {
       description: formData.description,
       ballsPerSecond: formData.ballsPerSecond ? parseFloat(formData.ballsPerSecond) : null,
       photoBase64: formData.photoBase64,
-      trenchCapability: formData.trenchCapability
+      trenchCapability: formData.trenchCapability,
+      climbSide: formData.climbSide
     };
 
     saveTeamProfile(profile);
@@ -113,6 +116,30 @@ export function PitScoutForm({ teamNumber, onSave }) {
             />
             Bump and Trench
           </label>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label>Ladder Climb Side</label>
+        <span className="hint">Position on the ladder relative to the driver station</span>
+        <div className="toggle-group">
+          {[
+            { value: 'left',       label: 'Left' },
+            { value: 'middle',     label: 'Middle' },
+            { value: 'right',      label: 'Right' },
+            { value: 'doNotClimb', label: 'Do Not Climb' },
+          ].map(opt => (
+            <label key={opt.value}>
+              <input
+                type="radio"
+                name="climbSide"
+                value={opt.value}
+                checked={formData.climbSide === opt.value}
+                onChange={() => handleChange('climbSide', opt.value)}
+              />
+              {opt.label}
+            </label>
+          ))}
         </div>
       </div>
 

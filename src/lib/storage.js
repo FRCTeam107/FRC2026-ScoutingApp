@@ -6,7 +6,9 @@ const KEYS = {
   DEVICE_ID: 'frc_device_id',
   CURRENT_EVENT: 'frc_current_event',
   MATCH_SCHEDULE: 'frc_match_schedule',
-  FIELD_IMAGE: 'frc_field_image'
+  FIELD_IMAGE: 'frc_field_image',
+  SCOUTERS: 'frc_scouters',
+  SCOUTING_GROUP_SIZE: 'frc_scouting_group_size',
 };
 
 // Generate or get device ID
@@ -241,4 +243,24 @@ export function setFieldImage(base64) {
 
 export function clearFieldImage() {
   localStorage.removeItem(KEYS.FIELD_IMAGE);
+}
+
+// Scouting Schedule — scouter names
+export function getScouters() {
+  const data = localStorage.getItem(KEYS.SCOUTERS);
+  return data ? JSON.parse(data) : [];
+}
+
+export function setScouters(scouters) {
+  localStorage.setItem(KEYS.SCOUTERS, JSON.stringify(scouters));
+}
+
+// Scouting Schedule — matches-per-group
+export function getScoutingGroupSize() {
+  const val = localStorage.getItem(KEYS.SCOUTING_GROUP_SIZE);
+  return val ? parseInt(val, 10) : 3;
+}
+
+export function setScoutingGroupSize(n) {
+  localStorage.setItem(KEYS.SCOUTING_GROUP_SIZE, String(n));
 }

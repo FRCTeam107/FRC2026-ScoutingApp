@@ -1,10 +1,3 @@
-.admin-page-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
-}
-
 .back-btn {
   background: none;
   border: 1px solid #374151;
@@ -14,6 +7,7 @@
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s;
+  margin-bottom: 4px;
 }
 
 .back-btn:hover {
@@ -21,3 +15,301 @@
   color: #fff;
   border-color: #6b7280;
 }
+
+/* ── Scouting Schedule Tab ───────────────────────────────────── */
+.scouting-schedule-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.ss-config-section,
+.ss-scouters-section,
+.ss-schedule-section {
+  background: #1a1a2e;
+  border: 1px solid #2a2a40;
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.ss-config-section h3,
+.ss-scouters-section h3,
+.ss-schedule-section h3 {
+  font-size: 16px;
+  color: #fff;
+  margin: 0 0 4px 0;
+}
+
+.ss-summary-heading {
+  font-size: 16px;
+  color: #fff;
+  margin: 24px 0 12px 0;
+}
+
+.ss-hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 14px 0;
+  line-height: 1.45;
+}
+
+.ss-count {
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.ss-empty {
+  color: #6b7280;
+  font-size: 14px;
+  font-style: italic;
+  margin: 8px 0 0 0;
+}
+
+/* Config stepper */
+.ss-config-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.ss-config-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ss-label {
+  font-size: 14px;
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+.ss-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: fit-content;
+  border: 1px solid #3a3a50;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ss-step-btn {
+  background: #1e1e30;
+  border: none;
+  color: #9ca3af;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ss-step-btn:hover:not(:disabled) {
+  background: #2a2a45;
+  color: #fff;
+}
+
+.ss-step-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.ss-group-input {
+  width: 52px;
+  height: 36px;
+  text-align: center;
+  background: #12121f;
+  border: none;
+  border-left: 1px solid #3a3a50;
+  border-right: 1px solid #3a3a50;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  -moz-appearance: textfield;
+}
+
+.ss-group-input::-webkit-outer-spin-button,
+.ss-group-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* Add scouter row */
+.ss-add-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.ss-add-row .search-input {
+  flex: 1;
+}
+
+/* Scouter list */
+.ss-scouter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ss-scouter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #12121f;
+  border: 1px solid #2a2a40;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.ss-scouter-index {
+  width: 22px;
+  text-align: right;
+  font-size: 12px;
+  color: #4b5563;
+  flex-shrink: 0;
+}
+
+.ss-scouter-name {
+  flex: 1;
+  color: #e5e7eb;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ss-scouter-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.ss-move-btn {
+  background: #1e1e30;
+  border: 1px solid #3a3a50;
+  color: #9ca3af;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ss-move-btn:hover:not(:disabled) {
+  background: #2a2a45;
+  color: #fff;
+}
+
+.ss-move-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.ss-remove-btn {
+  background: transparent;
+  border: 1px solid #3a3a50;
+  color: #ef4444;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ss-remove-btn:hover {
+  background: #ef444420;
+  border-color: #ef4444;
+}
+
+/* Schedule table */
+.ss-schedule-meta {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 14px 0;
+}
+
+.ss-table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #2a2a40;
+}
+
+.ss-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.ss-table th {
+  background: #12121f;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 10px 14px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ss-table td {
+  padding: 10px 14px;
+  border-top: 1px solid #2a2a40;
+  color: #e5e7eb;
+}
+
+.ss-row-even td { background: #12121f; }
+.ss-row-odd td  { background: #0f0f1e; }
+
+.ss-shift-num  { color: #4b5563; font-size: 12px; width: 32px; }
+.ss-name-cell  { font-weight: 600; }
+.ss-range-cell { color: #a5b4fc; font-family: monospace; font-size: 13px; }
+.ss-count-cell { color: #6b7280; font-size: 13px; text-align: right; }
+
+/* Summary grid */
+.ss-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.ss-summary-card {
+  background: #12121f;
+  border: 1px solid #2a2a40;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.ss-summary-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin: 0 0 6px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ss-summary-stat {
+  font-size: 20px;
+  font-weight: 700;
+  color: #a5b4fc;
+  margin: 0 0 2px 0;
+}
+
+.ss-summary-shifts {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+

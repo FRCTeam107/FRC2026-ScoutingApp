@@ -271,10 +271,31 @@
 .ss-row-even td { background: #12121f; }
 .ss-row-odd td  { background: #0f0f1e; }
 
-.ss-shift-num  { color: #4b5563; font-size: 12px; width: 32px; }
-.ss-name-cell  { font-weight: 600; }
-.ss-range-cell { color: #a5b4fc; font-family: monospace; font-size: 13px; }
-.ss-count-cell { color: #6b7280; font-size: 13px; text-align: right; }
+.ss-shift-num  { color: #4b5563; font-size: 12px; width: 42px; white-space: nowrap; }
+.ss-range-cell { color: #a5b4fc; font-family: monospace; font-size: 13px; white-space: nowrap; }
+.ss-match-count { color: #6b7280; font-size: 12px; }
+.ss-team-cell  { padding: 8px 14px; }
+
+.ss-team-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ss-chip {
+  display: inline-block;
+  background: #1e1e38;
+  border: 1px solid #3a3a58;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #c4b5fd;
+  white-space: nowrap;
+}
+
+.ss-warn {
+  color: #f59e0b !important;
+}
 
 /* Summary grid */
 .ss-summary-grid {

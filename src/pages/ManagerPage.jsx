@@ -266,6 +266,47 @@ export function ManagerPage() {
       .sort((a, b) => a.matchNumber - b.matchNumber);
   };
 
+  const TELEOP_CLIMB_PTS = { L1: 10, L2: 20, L3: 30, None: 0 };
+
+  const getTeamPointStats = (teamNumber) => {
+    const teamRecords = records.filter(r => r.teamNumber === teamNumber);
+    const profile = profiles[teamNumber];
+    const ballsPerSecond = profile?.ballsPerSecond || null;
+
+    if (teamRecords.length === 0) {
+      return { matches: 0, avgAutoFuel: null, avgAutoClimb: 0, avgTeleopFuel: null, avgTeleopClimb: 0, avgTotal: null };
+    }
+
+    let totalAutoFuel = 0, totalTeleopFuel = 0;
+    let totalAutoClimb = 0, totalTeleopClimb = 0;
+
+    teamRecords.forEach(r => {
+      if (ballsPerSecond) {
+        totalAutoFuel += (r.autoFiringSeconds || 0) * ballsPerSecond * ((r.autoAccuracy || 0) / 100);
+        totalTeleopFuel += (r.teleopFiringSeconds || 0) * ballsPerSecond * ((r.teleopAccuracy || 0) / 100);
+      }
+      totalAutoClimb += (r.autoClimb && r.autoClimb !== 'None') ? 15 : 0;
+      totalTeleopClimb += TELEOP_CLIMB_PTS[r.teleopClimb] || 0;
+    });
+
+    const n = teamRecords.length;
+    const avgAutoFuel = ballsPerSecond ? totalAutoFuel / n : null;
+    const avgTeleopFuel = ballsPerSecond ? totalTeleopFuel / n : null;
+    const avgAutoClimb = totalAutoClimb / n;
+    const avgTeleopClimb = totalTeleopClimb / n;
+    const avgTotal = (avgAutoFuel ?? 0) + avgAutoClimb + (avgTeleopFuel ?? 0) + avgTeleopClimb;
+
+    return { matches: n, avgAutoFuel, avgAutoClimb, avgTeleopFuel, avgTeleopClimb, avgTotal };
+  };
+
+  const matchPointsTeams = useMemo(() => {
+    return [...teamsWithMatchData].sort((a, b) => {
+      const sa = getTeamPointStats(a);
+      const sb = getTeamPointStats(b);
+      return (sb.avgTotal ?? 0) - (sa.avgTotal ?? 0);
+    });
+  }, [teamsWithMatchData, refreshKey]);
+
   return (
     <div className="manager-page" key={refreshKey}>
       <PasswordModal
@@ -298,6 +339,9 @@ export function ManagerPage() {
         </button>
         <button className={`tab ${activeTab === 'lookup' ? 'active' : ''}`} onClick={() => setActiveTab('lookup')}>
           Team Lookup
+        </button>
+        <button className={`tab ${activeTab === 'points' ? 'active' : ''}`} onClick={() => setActiveTab('points')}>
+          Match Points
         </button>
         <button className={`tab ${activeTab === 'event' ? 'active' : ''}`} onClick={() => setActiveTab('event')}>
           Event Setup
@@ -829,6 +873,49 @@ export function ManagerPage() {
 
             {!selectedTeam && (
               <p className="empty-state">Enter a team number above to view their data</p>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'points' && (
+          <div className="points-tab">
+            {teamsWithMatchData.length === 0 ? (
+              <p className="empty-state">No match records yet</p>
+            ) : (
+              <>
+                <p className="table-note">Average points per match across all recorded matches. Fuel requires pit scouting data (balls/sec).</p>
+                <div className="table-scroll">
+                  <table className="points-table">
+                    <thead>
+                      <tr>
+                        <th>Team</th>
+                        <th>Matches</th>
+                        <th>Auto Fuel</th>
+                        <th>Auto Climb<br/><span className="pts-sub">(15 pts)</span></th>
+                        <th>Teleop Fuel</th>
+                        <th>Teleop Climb<br/><span className="pts-sub">(L1=10 L2=20 L3=30)</span></th>
+                        <th>Avg Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {matchPointsTeams.map(teamNum => {
+                        const pts = getTeamPointStats(teamNum);
+                        return (
+                          <tr key={teamNum} onClick={() => { setSelectedTeam(teamNum); setActiveTab('lookup'); }} className="clickable-row">
+                            <td><strong>#{teamNum}</strong></td>
+                            <td>{pts.matches}</td>
+                            <td>{pts.avgAutoFuel !== null ? pts.avgAutoFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
+                            <td>{pts.avgAutoClimb.toFixed(1)}</td>
+                            <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
+                            <td>{pts.avgTeleopClimb.toFixed(1)}</td>
+                            <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         )}

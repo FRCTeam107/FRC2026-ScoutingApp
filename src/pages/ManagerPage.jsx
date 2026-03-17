@@ -271,7 +271,7 @@ export function ManagerPage() {
   const [pointsSortDir, setPointsSortDir] = useState('desc');
   const [pointsView, setPointsView] = useState('table'); // 'table' | 'chart' | 'weights'
   const [pointsChartMetric, setPointsChartMetric] = useState('avgTotal');
-  const [weights, setWeights] = useState({ autoFuel: 1, autoClimb: 1, teleopFuel: 1, teleopClimb: 1 });
+  const [weights, setWeights] = useState({ autoFuel: 1, autoClimb: 1, teleopFuel: 1, teleopClimb: 1, defense: 1 });
 
   const updateWeight = (key, val) => {
     const num = parseFloat(val);
@@ -310,8 +310,9 @@ export function ManagerPage() {
     const autoClimb = autoClimbBase * weights.autoClimb;
     const teleopFuel = teleopFuelBase !== null ? teleopFuelBase * weights.teleopFuel : null;
     const teleopClimb = teleopClimbBase * weights.teleopClimb;
-    const total = (autoFuel ?? 0) + autoClimb + (teleopFuel ?? 0) + teleopClimb;
-    return { autoFuel, autoClimb, teleopFuel, teleopClimb, total };
+    const defense = (record.defenseRating || 0) * weights.defense;
+    const total = (autoFuel ?? 0) + autoClimb + (teleopFuel ?? 0) + teleopClimb + defense;
+    return { autoFuel, autoClimb, teleopFuel, teleopClimb, defense, total };
   };
 
   const getTeamPointStats = (teamNumber) => {
@@ -320,11 +321,11 @@ export function ManagerPage() {
     const ballsPerSecond = profile?.ballsPerSecond || null;
 
     if (teamRecords.length === 0) {
-      return { matches: 0, avgAutoFuel: null, avgAutoClimb: 0, avgTeleopFuel: null, avgTeleopClimb: 0, avgTotal: null };
+      return { matches: 0, avgAutoFuel: null, avgAutoClimb: 0, avgTeleopFuel: null, avgTeleopClimb: 0, avgDefense: 0, avgTotal: null };
     }
 
     let totalAutoFuel = 0, totalTeleopFuel = 0;
-    let totalAutoClimb = 0, totalTeleopClimb = 0;
+    let totalAutoClimb = 0, totalTeleopClimb = 0, totalDefense = 0;
 
     teamRecords.forEach(r => {
       if (ballsPerSecond) {
@@ -333,6 +334,7 @@ export function ManagerPage() {
       }
       totalAutoClimb += (r.autoClimb && r.autoClimb !== 'None') ? 15 : 0;
       totalTeleopClimb += TELEOP_CLIMB_PTS[r.teleopClimb] || 0;
+      totalDefense += (r.defenseRating || 0);
     });
 
     const n = teamRecords.length;
@@ -340,9 +342,10 @@ export function ManagerPage() {
     const avgTeleopFuel = ballsPerSecond ? (totalTeleopFuel / n) * weights.teleopFuel : null;
     const avgAutoClimb = (totalAutoClimb / n) * weights.autoClimb;
     const avgTeleopClimb = (totalTeleopClimb / n) * weights.teleopClimb;
-    const avgTotal = (avgAutoFuel ?? 0) + avgAutoClimb + (avgTeleopFuel ?? 0) + avgTeleopClimb;
+    const avgDefense = (totalDefense / n) * weights.defense;
+    const avgTotal = (avgAutoFuel ?? 0) + avgAutoClimb + (avgTeleopFuel ?? 0) + avgTeleopClimb + avgDefense;
 
-    return { matches: n, avgAutoFuel, avgAutoClimb, avgTeleopFuel, avgTeleopClimb, avgTotal };
+    return { matches: n, avgAutoFuel, avgAutoClimb, avgTeleopFuel, avgTeleopClimb, avgDefense, avgTotal };
   };
 
   const matchPointsTeams = useMemo(() => {
@@ -961,7 +964,7 @@ export function ManagerPage() {
                     <div className="weights-header">
                       <p className="weights-desc">Set a multiplier for each scoring category. A weight of <strong>2×</strong> doubles that category's contribution to the total; <strong>0×</strong> removes it entirely.</p>
                       {!weightsAreDefault && (
-                        <button className="weights-reset-btn" onClick={() => setWeights({ autoFuel: 1, autoClimb: 1, teleopFuel: 1, teleopClimb: 1 })}>Reset all to 1×</button>
+                        <button className="weights-reset-btn" onClick={() => setWeights({ autoFuel: 1, autoClimb: 1, teleopFuel: 1, teleopClimb: 1, defense: 1 })}>Reset all to 1×</button>
                       )}
                     </div>
                     <div className="weights-grid">
@@ -970,6 +973,7 @@ export function ManagerPage() {
                         { key: 'autoClimb',   label: 'Auto Climb',   desc: '15 pts per climb attempt',            color: '#a78bfa' },
                         { key: 'teleopFuel',  label: 'Teleop Fuel',  desc: 'balls/sec × firing time × accuracy', color: '#fbbf24' },
                         { key: 'teleopClimb', label: 'Teleop Climb', desc: 'L1=10 · L2=20 · L3=30',              color: '#f87171' },
+                        { key: 'defense',     label: 'Defense',      desc: 'avg defense rating (0–5 stars)',      color: '#fb923c' },
                       ].map(({ key, label, desc, color }) => (
                         <div key={key} className="weight-card" style={{ borderLeftColor: color }}>
                           <div className="weight-card-top">
@@ -1008,7 +1012,7 @@ export function ManagerPage() {
                     <table className="points-table">
                       <thead>
                         <tr>
-                          {[['teamNumber','Team'],['matches','Matches'],['avgAutoFuel','Auto Fuel'],['avgAutoClimb','Auto Climb'],['avgTeleopFuel','Teleop Fuel'],['avgTeleopClimb','Teleop Climb'],['avgTotal','Avg Total']].map(([field, label]) => (
+                          {[['teamNumber','Team'],['matches','Matches'],['avgAutoFuel','Auto Fuel'],['avgAutoClimb','Auto Climb'],['avgTeleopFuel','Teleop Fuel'],['avgTeleopClimb','Teleop Climb'],['avgDefense','Defense'],['avgTotal','Avg Total']].map(([field, label]) => (
                             <th key={field} className="sortable-th" onClick={() => handlePointsSort(field)}>
                               {label}
                               {field === 'avgAutoClimb' && <><br/><span className="pts-sub">(15 pts)</span></>}
@@ -1050,6 +1054,7 @@ export function ManagerPage() {
                                 <td>{pts.avgAutoClimb.toFixed(1)}</td>
                                 <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
                                 <td>{pts.avgTeleopClimb.toFixed(1)}</td>
+                                <td>{pts.avgDefense > 0 ? pts.avgDefense.toFixed(1) : <span className="no-data">N/A</span>}</td>
                                 <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
                               </tr>
                               {isExpanded && teamMatches.map((m) => {
@@ -1062,6 +1067,7 @@ export function ManagerPage() {
                                     <td>{mp.autoClimb}</td>
                                     <td>{mp.teleopFuel !== null ? mp.teleopFuel.toFixed(1) : <span className="no-data">—</span>}</td>
                                     <td>{mp.teleopClimb}</td>
+                                    <td>{mp.defense > 0 ? mp.defense.toFixed(1) : '—'}</td>
                                     <td className="total-pts">{mp.total.toFixed(1)}</td>
                                   </tr>
                                 );
@@ -1081,6 +1087,7 @@ export function ManagerPage() {
                     { key: 'avgAutoClimb',   label: 'Auto Climb',     color: '#a78bfa' },
                     { key: 'avgTeleopFuel',  label: 'Teleop Fuel',    color: '#fbbf24' },
                     { key: 'avgTeleopClimb', label: 'Teleop Climb',   color: '#f87171' },
+                    { key: 'avgDefense',     label: 'Defense',        color: '#fb923c' },
                   ];
                   const activeMetric = CHART_METRICS.find(m => m.key === pointsChartMetric);
                   // Sort teams by selected metric descending for chart

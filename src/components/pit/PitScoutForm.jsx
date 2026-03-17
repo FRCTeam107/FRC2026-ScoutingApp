@@ -85,37 +85,21 @@ export function PitScoutForm({ teamNumber, onSave }) {
 
       <div className="form-group">
         <label>Trench/Bump Capability</label>
-        <div className="toggle-group">
-          <label>
-            <input
-              type="radio"
-              name="trenchCapability"
-              value="bump"
-              checked={formData.trenchCapability === 'bump'}
-              onChange={() => handleChange('trenchCapability', 'bump')}
-            />
-            Bump
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="trenchCapability"
-              value="trench"
-              checked={formData.trenchCapability === 'trench'}
-              onChange={() => handleChange('trenchCapability', 'trench')}
-            />
-            Trench
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="trenchCapability"
-              value="bumpAndTrench"
-              checked={formData.trenchCapability === 'bumpAndTrench'}
-              onChange={() => handleChange('trenchCapability', 'bumpAndTrench')}
-            />
-            Bump and Trench
-          </label>
+        <div className="pit-choice-group">
+          {[
+            { value: 'bump',          label: 'Bump Only' },
+            { value: 'trench',        label: 'Trench Only' },
+            { value: 'bumpAndTrench', label: 'Bump & Trench' },
+          ].map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              className={`pit-choice-btn${formData.trenchCapability === opt.value ? ' selected' : ''}`}
+              onClick={() => handleChange('trenchCapability', opt.value)}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
       </div>
 

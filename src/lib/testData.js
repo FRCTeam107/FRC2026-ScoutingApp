@@ -57,7 +57,7 @@ const now = new Date().toISOString();
 
 export const TEST_PROFILES = {
   107:  { teamNumber: 107,  description: 'Tank drive, reliable shooter with turret, consistent L3 climber.', ballsPerSecond: 2.5, trenchCapability: 'bumpAndTrench', updatedAt: now },
-  254:  { teamNumber: 254,  description: 'Swerve drive, elite shooter, L4 hang every match. Very fast cycle time.', ballsPerSecond: 4.2, trenchCapability: 'trench', updatedAt: now },
+  254:  { teamNumber: 254,  description: 'Swerve drive, elite shooter, L3 hang every match. Very fast cycle time.', ballsPerSecond: 4.2, trenchCapability: 'trench', updatedAt: now },
   1114: { teamNumber: 1114, description: 'Swerve drive, high-accuracy hood shooter, consistent L3 climb.', ballsPerSecond: 3.1, trenchCapability: 'bump', updatedAt: now },
   1678: { teamNumber: 1678, description: 'Swerve, very fast cycles, low shooter, prefers floor pickup.', ballsPerSecond: 3.5, trenchCapability: 'bumpAndTrench', updatedAt: now },
   2767: { teamNumber: 2767, description: 'Tank drive, mid-range shooter, defense capable, L2 climb.', ballsPerSecond: 2.0, trenchCapability: 'bump', updatedAt: now },
@@ -65,40 +65,67 @@ export const TEST_PROFILES = {
   4481: { teamNumber: 4481, description: 'Swerve drive, moderate shooter, L3 capable.', ballsPerSecond: 2.2, trenchCapability: 'trench', updatedAt: now },
   5940: { teamNumber: 5940, description: 'Tank drive, solid shooter, climbs L2, plays bumper defense.', ballsPerSecond: 1.7, trenchCapability: 'bumpAndTrench', updatedAt: now },
   6328: { teamNumber: 6328, description: 'Swerve drive, consistent shooter, strong autonomous.', ballsPerSecond: 2.8, trenchCapability: 'trench', updatedAt: now },
+  7461: { teamNumber: 7461, description: 'Tank drive, low goal only, struggles with climb. Good defense when needed.', ballsPerSecond: 1.0, trenchCapability: 'bump', updatedAt: now },
+  8033: { teamNumber: 8033, description: 'West coast drive, moderate accuracy, L1 climb reliable.', ballsPerSecond: 1.3, trenchCapability: 'bumpAndTrench', updatedAt: now },
+  9153: { teamNumber: 9153, description: 'First-year team, shooter still inconsistent, no climb yet.', ballsPerSecond: 0.7, trenchCapability: 'bump', updatedAt: now },
 };
 
 // ─── Fake Match Records Generator ────────────────────────────────────────────
 function r(min, max) { return Math.random() * (max - min) + min; }
 function ri(min, max) { return Math.floor(r(min, max + 1)); }
 function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+function pick(arr) { return arr[ri(0, arr.length - 1)]; }
+function pickMulti(arr, minCount, maxCount) {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, ri(minCount, maxCount));
+}
 
-// Skill profile per team: [bps multiplier, accuracy offset, climb tier 0-3]
+// Skill profile per team: [bps multiplier, accuracy offset, climb tier 0-3, autoClimbChance 0-1]
 const SKILL = {
-  107:  [1.0,  5,  2],
-  254:  [1.3, 15,  3],
-  1114: [1.1, 10,  2],
-  1678: [1.2, 10,  2],
-  2767: [0.8, -5,  1],
-  3310: [0.3,-20,  1],
-  4481: [0.9,  0,  2],
-  5940: [0.7, -8,  1],
-  6328: [1.0,  5,  2],
-  7461: [0.6,-10,  0],
-  8033: [0.7, -5,  1],
-  9153: [0.5,-15,  0],
+  107:  [1.0,  5,  2, 0.25],
+  254:  [1.3, 15,  3, 0.60],
+  1114: [1.1, 10,  2, 0.40],
+  1678: [1.2, 10,  2, 0.35],
+  2767: [0.8, -5,  1, 0.10],
+  3310: [0.3,-20,  1, 0.05],
+  4481: [0.9,  0,  2, 0.20],
+  5940: [0.7, -8,  1, 0.10],
+  6328: [1.0,  5,  2, 0.30],
+  7461: [0.6,-10,  0, 0.00],
+  8033: [0.7, -5,  1, 0.05],
+  9153: [0.5,-15,  0, 0.00],
 };
 
 const CLIMB_TIERS = [
   ['None', 'None', 'None'],
-  ['None', 'L1', 'L1'],
-  ['L1', 'L2', 'L3'],
-  ['L2', 'L3', 'L3'],
+  ['None', 'L1',   'L1'],
+  ['L1',  'L2',   'L3'],
+  ['L2',  'L3',   'L3'],
 ];
 
-const PICKUPS = ['Ground', 'Ground', 'Station', 'Ground', 'Station'];
+const PICKUP_LOCATIONS = ['Neutral Zone', 'Depot', 'Outpost', 'Alliance Zone'];
+const AUTON_FOCUS_OPTS  = ['shooting', 'shooting', 'shooting', 'shuttling', 'both', 'neither'];
+const TELEOP_FOCUS_OPTS = ['shooting', 'shooting', 'shuttling', 'both', 'neither'];
+
+const SAMPLE_NOTES = [
+  'Smooth cycles all match.',
+  'Missed a few shots in auto but recovered well.',
+  'Defended heavily in Q2 quarter, slowed them down.',
+  'Climb attempt failed, needs more practice.',
+  'Really fast floor pickup, impressive cycle time.',
+  'Struggled with trench, only did bumper for most of match.',
+  '',
+  '',
+  '',
+  'Tipped over briefly but self-righted.',
+  'Alliance partner bumped into them during auto.',
+  'Very consistent auto path, always same route.',
+  'Played defense for last 30s after shooting all game.',
+  'Climbed in under 5 seconds.',
+];
 
 function makeRecord(teamNumber, matchNumber, allianceColor) {
-  const [bpsMult, accOffset, climbTier] = SKILL[teamNumber] || [0.7, -10, 0];
+  const [bpsMult, accOffset, climbTier, autoClimbChance] = SKILL[teamNumber] || [0.7, -10, 0, 0];
   const profile = TEST_PROFILES[teamNumber];
   const bps = profile?.ballsPerSecond || 1.5;
 
@@ -108,10 +135,24 @@ function makeRecord(teamNumber, matchNumber, allianceColor) {
   const teleopAcc = clamp(ri(55, 85) + accOffset, 20, 100);
 
   const climbs = CLIMB_TIERS[climbTier];
-  const teleopClimb = climbs[ri(0, climbs.length - 1)];
+  const teleopClimb = pick(climbs);
+  const autoClimb = Math.random() < autoClimbChance ? 'L1' : 'None';
 
-  const isDefender = (SKILL[teamNumber] || [])[0] < 0.5;
+  const isDefender = bpsMult < 0.5;
   const defenseRating = isDefender ? ri(3, 5) : (Math.random() < 0.2 ? ri(1, 3) : 0);
+
+  // autonFocus: defense-specialist teams mostly 'neither', others weighted toward shooting
+  const autonFocus = bpsMult < 0.5
+    ? pick(['neither', 'neither', 'shuttling'])
+    : pick(AUTON_FOCUS_OPTS);
+
+  const endgameFocus = bpsMult < 0.5
+    ? pick(['neither', 'shuttling'])
+    : pick(TELEOP_FOCUS_OPTS);
+
+  // Pickup locations as arrays (1-2 locations per match)
+  const autoPickupLocation = pickMulti(PICKUP_LOCATIONS, 1, 2);
+  const pickupLocation = pickMulti(PICKUP_LOCATIONS, 1, 2);
 
   return {
     teamNumber,
@@ -119,14 +160,16 @@ function makeRecord(teamNumber, matchNumber, allianceColor) {
     allianceColor,
     autoFiringSeconds: autoFiring,
     autoAccuracy: autoAcc,
-    autoClimb: 'None',
-    autoPickupLocation: PICKUPS[ri(0, PICKUPS.length - 1)],
+    autoClimb,
+    autoPickupLocation,
+    autonFocus,
     teleopFiringSeconds: teleopFiring,
     teleopAccuracy: teleopAcc,
     teleopClimb,
-    pickupLocation: PICKUPS[ri(0, PICKUPS.length - 1)],
+    pickupLocation,
+    endgameFocus,
     defenseRating,
-    notes: '',
+    notes: Math.random() < 0.35 ? pick(SAMPLE_NOTES.filter(n => n)) : '',
     scouterDeviceId: 'test_device',
     createdAt: new Date().toISOString(),
   };

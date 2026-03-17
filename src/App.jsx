@@ -6,6 +6,7 @@ import { MatchScoutPage } from './pages/MatchScoutPage';
 import { ManagerPage } from './pages/ManagerPage';
 import { DriveTeamPage } from './pages/DriveTeamPage';
 import { FieldDrawPage } from './pages/FieldDrawPage';
+import { AdminPage } from './pages/AdminPage';
 import './App.css';
 
 
@@ -22,6 +23,7 @@ function App() {
             <Route path="/manager" element={<ManagerPage />} />
             <Route path="/drive" element={<DriveTeamPage />} />
             <Route path="/field" element={<FieldDrawPage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
       </div>

@@ -1,0 +1,23 @@
+.admin-page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.back-btn {
+  background: none;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: #1e1e30;
+  color: #fff;
+  border-color: #6b7280;
+}

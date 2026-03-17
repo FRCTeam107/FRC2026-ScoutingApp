@@ -49,8 +49,14 @@ export function RoleSelectPage() {
 
         <Link to="/manager" className="role-card manager">
           <span className="role-icon">📊</span>
-          <h3>Manager</h3>
+          <h3>Data Analysis</h3>
           <p>View all data, analytics, and team comparisons</p>
+        </Link>
+
+        <Link to="/admin" className="role-card admin">
+          <span className="role-icon">⚙️</span>
+          <h3>Admin</h3>
+          <p>Event setup, field image, and developer tools</p>
         </Link>
 
         <Link to="/drive" className="role-card drive">

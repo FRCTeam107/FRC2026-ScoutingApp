@@ -65,6 +65,10 @@
   border-color: #f59e0b;
 }
 
+.role-card.admin:hover {
+  border-color: #ef4444;
+}
+
 .role-icon {
   font-size: 48px;
   margin-bottom: 16px;

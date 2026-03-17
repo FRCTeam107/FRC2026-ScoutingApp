@@ -1094,7 +1094,7 @@ td {
   background: #6b7280;
   color: #fff;
 }
-}
+
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
@@ -1304,5 +1304,44 @@ td {
 .no-data {
   color: #6b7280;
   font-style: italic;
+  font-size: 12px;
+}
+
+.points-team-row.expanded td {
+  background: #1e1e3a;
+}
+
+.points-team-link {
+  cursor: pointer;
+  color: inherit;
+}
+
+.points-team-link:hover strong {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.expand-chevron {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.points-match-row td {
+  background: #12122a;
+  color: #d1d5db;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-bottom: 1px solid #1e1e3a;
+}
+
+.points-match-row .total-pts {
+  color: #93c5fd;
+}
+
+.match-sub-label {
+  padding-left: 28px !important;
+  color: #9ca3af;
   font-size: 12px;
 }

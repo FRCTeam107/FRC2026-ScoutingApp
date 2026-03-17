@@ -266,7 +266,28 @@ export function ManagerPage() {
       .sort((a, b) => a.matchNumber - b.matchNumber);
   };
 
+  const [expandedPointsTeams, setExpandedPointsTeams] = useState(new Set());
+
+  const togglePointsExpand = (teamNum) => {
+    setExpandedPointsTeams(prev => {
+      const next = new Set(prev);
+      next.has(teamNum) ? next.delete(teamNum) : next.add(teamNum);
+      return next;
+    });
+  };
+
   const TELEOP_CLIMB_PTS = { L1: 10, L2: 20, L3: 30, None: 0 };
+
+  const getMatchPointsBreakdown = (record) => {
+    const profile = profiles[record.teamNumber];
+    const bps = profile?.ballsPerSecond || null;
+    const autoFuel = bps !== null ? (record.autoFiringSeconds || 0) * bps * ((record.autoAccuracy || 0) / 100) : null;
+    const autoClimb = (record.autoClimb && record.autoClimb !== 'None') ? 15 : 0;
+    const teleopFuel = bps !== null ? (record.teleopFiringSeconds || 0) * bps * ((record.teleopAccuracy || 0) / 100) : null;
+    const teleopClimb = TELEOP_CLIMB_PTS[record.teleopClimb] || 0;
+    const total = (autoFuel ?? 0) + autoClimb + (teleopFuel ?? 0) + teleopClimb;
+    return { autoFuel, autoClimb, teleopFuel, teleopClimb, total };
+  };
 
   const getTeamPointStats = (teamNumber) => {
     const teamRecords = records.filter(r => r.teamNumber === teamNumber);
@@ -900,16 +921,52 @@ export function ManagerPage() {
                     <tbody>
                       {matchPointsTeams.map(teamNum => {
                         const pts = getTeamPointStats(teamNum);
+                        const teamMatches = getTeamMatches(teamNum);
+                        const isExpanded = expandedPointsTeams.has(teamNum);
+                        const hasMultiple = teamMatches.length > 1;
                         return (
-                          <tr key={teamNum} onClick={() => { setSelectedTeam(teamNum); setActiveTab('lookup'); }} className="clickable-row">
-                            <td><strong>#{teamNum}</strong></td>
-                            <td>{pts.matches}</td>
-                            <td>{pts.avgAutoFuel !== null ? pts.avgAutoFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
-                            <td>{pts.avgAutoClimb.toFixed(1)}</td>
-                            <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
-                            <td>{pts.avgTeleopClimb.toFixed(1)}</td>
-                            <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
-                          </tr>
+                          <>
+                            <tr
+                              key={teamNum}
+                              className={`clickable-row points-team-row${isExpanded ? ' expanded' : ''}`}
+                              onClick={() => hasMultiple && togglePointsExpand(teamNum)}
+                              style={{ cursor: hasMultiple ? 'pointer' : 'default' }}
+                            >
+                              <td>
+                                <span
+                                  className="points-team-link"
+                                  onClick={(e) => { e.stopPropagation(); setSelectedTeam(teamNum); setActiveTab('lookup'); }}
+                                >
+                                  <strong>#{teamNum}</strong>
+                                </span>
+                              </td>
+                              <td>
+                                {hasMultiple && (
+                                  <span className="expand-chevron">{isExpanded ? '▾' : '▸'}</span>
+                                )}
+                                {pts.matches}
+                              </td>
+                              <td>{pts.avgAutoFuel !== null ? pts.avgAutoFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
+                              <td>{pts.avgAutoClimb.toFixed(1)}</td>
+                              <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
+                              <td>{pts.avgTeleopClimb.toFixed(1)}</td>
+                              <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
+                            </tr>
+                            {isExpanded && teamMatches.map((m) => {
+                              const mp = getMatchPointsBreakdown(m);
+                              return (
+                                <tr key={`${teamNum}-${m.matchNumber}`} className="points-match-row">
+                                  <td className="match-sub-label">Q{m.matchNumber}</td>
+                                  <td></td>
+                                  <td>{mp.autoFuel !== null ? mp.autoFuel.toFixed(1) : <span className="no-data">—</span>}</td>
+                                  <td>{mp.autoClimb}</td>
+                                  <td>{mp.teleopFuel !== null ? mp.teleopFuel.toFixed(1) : <span className="no-data">—</span>}</td>
+                                  <td>{mp.teleopClimb}</td>
+                                  <td className="total-pts">{mp.total.toFixed(1)}</td>
+                                </tr>
+                              );
+                            })}
+                          </>
                         );
                       })}
                     </tbody>

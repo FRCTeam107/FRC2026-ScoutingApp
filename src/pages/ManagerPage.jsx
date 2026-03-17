@@ -269,8 +269,16 @@ export function ManagerPage() {
   const [expandedPointsTeams, setExpandedPointsTeams] = useState(new Set());
   const [pointsSortBy, setPointsSortBy] = useState('avgTotal');
   const [pointsSortDir, setPointsSortDir] = useState('desc');
-  const [pointsView, setPointsView] = useState('table');
+  const [pointsView, setPointsView] = useState('table'); // 'table' | 'chart' | 'weights'
   const [pointsChartMetric, setPointsChartMetric] = useState('avgTotal');
+  const [weights, setWeights] = useState({ autoFuel: 1, autoClimb: 1, teleopFuel: 1, teleopClimb: 1 });
+
+  const updateWeight = (key, val) => {
+    const num = parseFloat(val);
+    if (!isNaN(num) && num >= 0) setWeights(w => ({ ...w, [key]: num }));
+  };
+
+  const weightsAreDefault = Object.values(weights).every(v => v === 1);
 
   const handlePointsSort = (field) => {
     if (pointsSortBy === field) {
@@ -294,10 +302,14 @@ export function ManagerPage() {
   const getMatchPointsBreakdown = (record) => {
     const profile = profiles[record.teamNumber];
     const bps = profile?.ballsPerSecond || null;
-    const autoFuel = bps !== null ? (record.autoFiringSeconds || 0) * bps * ((record.autoAccuracy || 0) / 100) : null;
-    const autoClimb = (record.autoClimb && record.autoClimb !== 'None') ? 15 : 0;
-    const teleopFuel = bps !== null ? (record.teleopFiringSeconds || 0) * bps * ((record.teleopAccuracy || 0) / 100) : null;
-    const teleopClimb = TELEOP_CLIMB_PTS[record.teleopClimb] || 0;
+    const autoFuelBase = bps !== null ? (record.autoFiringSeconds || 0) * bps * ((record.autoAccuracy || 0) / 100) : null;
+    const autoClimbBase = (record.autoClimb && record.autoClimb !== 'None') ? 15 : 0;
+    const teleopFuelBase = bps !== null ? (record.teleopFiringSeconds || 0) * bps * ((record.teleopAccuracy || 0) / 100) : null;
+    const teleopClimbBase = TELEOP_CLIMB_PTS[record.teleopClimb] || 0;
+    const autoFuel = autoFuelBase !== null ? autoFuelBase * weights.autoFuel : null;
+    const autoClimb = autoClimbBase * weights.autoClimb;
+    const teleopFuel = teleopFuelBase !== null ? teleopFuelBase * weights.teleopFuel : null;
+    const teleopClimb = teleopClimbBase * weights.teleopClimb;
     const total = (autoFuel ?? 0) + autoClimb + (teleopFuel ?? 0) + teleopClimb;
     return { autoFuel, autoClimb, teleopFuel, teleopClimb, total };
   };
@@ -324,10 +336,10 @@ export function ManagerPage() {
     });
 
     const n = teamRecords.length;
-    const avgAutoFuel = ballsPerSecond ? totalAutoFuel / n : null;
-    const avgTeleopFuel = ballsPerSecond ? totalTeleopFuel / n : null;
-    const avgAutoClimb = totalAutoClimb / n;
-    const avgTeleopClimb = totalTeleopClimb / n;
+    const avgAutoFuel = ballsPerSecond ? (totalAutoFuel / n) * weights.autoFuel : null;
+    const avgTeleopFuel = ballsPerSecond ? (totalTeleopFuel / n) * weights.teleopFuel : null;
+    const avgAutoClimb = (totalAutoClimb / n) * weights.autoClimb;
+    const avgTeleopClimb = (totalTeleopClimb / n) * weights.teleopClimb;
     const avgTotal = (avgAutoFuel ?? 0) + avgAutoClimb + (avgTeleopFuel ?? 0) + avgTeleopClimb;
 
     return { matches: n, avgAutoFuel, avgAutoClimb, avgTeleopFuel, avgTeleopClimb, avgTotal };
@@ -343,7 +355,7 @@ export function ManagerPage() {
       else { valA = sa[pointsSortBy] ?? 0; valB = sb[pointsSortBy] ?? 0; }
       return pointsSortDir === 'desc' ? valB - valA : valA - valB;
     });
-  }, [teamsWithMatchData, refreshKey, pointsSortBy, pointsSortDir]);
+  }, [teamsWithMatchData, refreshKey, pointsSortBy, pointsSortDir, weights]);
 
   return (
     <div className="manager-page" key={refreshKey}>
@@ -379,7 +391,7 @@ export function ManagerPage() {
           Team Lookup
         </button>
         <button className={`tab ${activeTab === 'points' ? 'active' : ''}`} onClick={() => setActiveTab('points')}>
-          Match Points
+          Weighted Analytics
         </button>
         <button className={`tab ${activeTab === 'event' ? 'active' : ''}`} onClick={() => setActiveTab('event')}>
           Event Setup
@@ -939,9 +951,57 @@ export function ManagerPage() {
                   <div className="points-view-toggle">
                     <button className={`pts-view-btn${pointsView === 'table' ? ' active' : ''}`} onClick={() => setPointsView('table')}>⊞ List</button>
                     <button className={`pts-view-btn${pointsView === 'chart' ? ' active' : ''}`} onClick={() => setPointsView('chart')}>▦ Chart</button>
+                    <button className={`pts-view-btn${pointsView === 'weights' ? ' active' : ''}${!weightsAreDefault ? ' weights-dirty' : ''}`} onClick={() => setPointsView('weights')} title="Configure scoring weights">⚙ Weights{!weightsAreDefault ? ' •' : ''}</button>
                   </div>
-                  <p className="table-note" style={{margin:0}}>Avg per match · fuel requires pit scouting data (balls/sec)</p>
+                  <p className="table-note" style={{margin:0}}>Avg per match · fuel requires pit scouting data (balls/sec){!weightsAreDefault ? ' · weights applied' : ''}</p>
                 </div>
+
+                {pointsView === 'weights' && (
+                  <div className="weights-panel">
+                    <div className="weights-header">
+                      <p className="weights-desc">Set a multiplier for each scoring category. A weight of <strong>2×</strong> doubles that category's contribution to the total; <strong>0×</strong> removes it entirely.</p>
+                      {!weightsAreDefault && (
+                        <button className="weights-reset-btn" onClick={() => setWeights({ autoFuel: 1, autoClimb: 1, teleopFuel: 1, teleopClimb: 1 })}>Reset all to 1×</button>
+                      )}
+                    </div>
+                    <div className="weights-grid">
+                      {[
+                        { key: 'autoFuel',    label: 'Auto Fuel',    desc: 'balls/sec × firing time × accuracy', color: '#34d399' },
+                        { key: 'autoClimb',   label: 'Auto Climb',   desc: '15 pts per climb attempt',            color: '#a78bfa' },
+                        { key: 'teleopFuel',  label: 'Teleop Fuel',  desc: 'balls/sec × firing time × accuracy', color: '#fbbf24' },
+                        { key: 'teleopClimb', label: 'Teleop Climb', desc: 'L1=10 · L2=20 · L3=30',              color: '#f87171' },
+                      ].map(({ key, label, desc, color }) => (
+                        <div key={key} className="weight-card" style={{ borderLeftColor: color }}>
+                          <div className="weight-card-top">
+                            <span className="weight-label">{label}</span>
+                            <span className="weight-desc">{desc}</span>
+                          </div>
+                          <div className="weight-input-row">
+                            <input
+                              type="range"
+                              min="0" max="5" step="0.1"
+                              value={weights[key]}
+                              onChange={e => updateWeight(key, e.target.value)}
+                              className="weight-slider"
+                              style={{ accentColor: color }}
+                            />
+                            <input
+                              type="number"
+                              min="0" max="10" step="0.1"
+                              value={weights[key]}
+                              onChange={e => updateWeight(key, e.target.value)}
+                              className="weight-number"
+                            />
+                            <span className="weight-x">×</span>
+                          </div>
+                          <div className="weight-preview">
+                            <span style={{ color }}>Effective multiplier: <strong>{weights[key]}×</strong></span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {pointsView === 'table' && (
                   <div className="table-scroll">

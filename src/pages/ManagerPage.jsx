@@ -1055,26 +1055,7 @@ export function ManagerPage() {
                                 <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
                                 <td>{pts.avgTeleopClimb.toFixed(1)}</td>
                                 <td>{pts.avgDefense > 0 ? pts.avgDefense.toFixed(1) : <span className="no-data">N/A</span>}</td>
-                                <td className="total-pts">
-                                  <strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong>
-                                  {pts.avgTotal > 0 && (() => {
-                                    const segs = [
-                                      { val: pts.avgAutoFuel ?? 0,    color: '#34d399', label: 'AF' },
-                                      { val: pts.avgAutoClimb,        color: '#a78bfa', label: 'AC' },
-                                      { val: pts.avgTeleopFuel ?? 0,  color: '#fbbf24', label: 'TF' },
-                                      { val: pts.avgTeleopClimb,      color: '#f87171', label: 'TC' },
-                                      { val: pts.avgDefense,          color: '#fb923c', label: 'D'  },
-                                    ].filter(s => s.val > 0);
-                                    const total = segs.reduce((s, x) => s + x.val, 0);
-                                    return (
-                                      <div className="pts-stack-bar">
-                                        {segs.map((s, i) => (
-                                          <div key={i} className="pts-stack-seg" style={{ width: `${(s.val/total)*100}%`, background: s.color }} title={`${s.label}: ${s.val.toFixed(1)}`} />
-                                        ))}
-                                      </div>
-                                    );
-                                  })()}
-                                </td>
+                                <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
                               </tr>
                               {isExpanded && teamMatches.map((m) => {
                                 const mp = getMatchPointsBreakdown(m);
@@ -1087,26 +1068,7 @@ export function ManagerPage() {
                                     <td>{mp.teleopFuel !== null ? mp.teleopFuel.toFixed(1) : <span className="no-data">—</span>}</td>
                                     <td>{mp.teleopClimb}</td>
                                     <td>{mp.defense > 0 ? mp.defense.toFixed(1) : '—'}</td>
-                                    <td className="total-pts">
-                                      {mp.total.toFixed(1)}
-                                      {mp.total > 0 && (() => {
-                                        const segs = [
-                                          { val: mp.autoFuel ?? 0,   color: '#34d399' },
-                                          { val: mp.autoClimb,       color: '#a78bfa' },
-                                          { val: mp.teleopFuel ?? 0, color: '#fbbf24' },
-                                          { val: mp.teleopClimb,     color: '#f87171' },
-                                          { val: mp.defense,         color: '#fb923c' },
-                                        ].filter(s => s.val > 0);
-                                        const total = segs.reduce((s, x) => s + x.val, 0);
-                                        return (
-                                          <div className="pts-stack-bar">
-                                            {segs.map((s, i) => (
-                                              <div key={i} className="pts-stack-seg" style={{ width: `${(s.val/total)*100}%`, background: s.color }} />
-                                            ))}
-                                          </div>
-                                        );
-                                      })()}
-                                    </td>
+                                    <td className="total-pts">{mp.total.toFixed(1)}</td>
                                   </tr>
                                 );
                               })}
@@ -1151,8 +1113,17 @@ export function ManagerPage() {
                       </div>
                       <div className="points-bar-chart">
                         {chartTeams.map(teamNum => {
-                          const val = getTeamPointStats(teamNum)[pointsChartMetric] ?? 0;
+                          const pts = getTeamPointStats(teamNum);
+                          const val = pts[pointsChartMetric] ?? 0;
                           const pct = (val / maxVal) * 100;
+                          const isTotal = pointsChartMetric === 'avgTotal';
+                          const SEGS = [
+                            { key: 'avgAutoFuel',    color: '#34d399', label: 'Auto Fuel' },
+                            { key: 'avgAutoClimb',   color: '#a78bfa', label: 'Auto Climb' },
+                            { key: 'avgTeleopFuel',  color: '#fbbf24', label: 'Teleop Fuel' },
+                            { key: 'avgTeleopClimb', color: '#f87171', label: 'Teleop Climb' },
+                            { key: 'avgDefense',     color: '#fb923c', label: 'Defense' },
+                          ];
                           return (
                             <div key={teamNum} className="pts-bar-row">
                               <span
@@ -1162,10 +1133,23 @@ export function ManagerPage() {
                                 #{teamNum}
                               </span>
                               <div className="pts-bar-track">
-                                <div
-                                  className="pts-bar-fill"
-                                  style={{ width: `${pct}%`, background: activeMetric.color }}
-                                />
+                                {isTotal ? (
+                                  <div className="pts-bar-fill pts-bar-stacked" style={{ width: `${pct}%` }}>
+                                    {SEGS.filter(s => (pts[s.key] ?? 0) > 0).map(s => (
+                                      <div
+                                        key={s.key}
+                                        className="pts-stack-seg"
+                                        style={{ flex: pts[s.key], background: s.color }}
+                                        title={`${s.label}: ${(pts[s.key] ?? 0).toFixed(1)}`}
+                                      />
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="pts-bar-fill"
+                                    style={{ width: `${pct}%`, background: activeMetric.color }}
+                                  />
+                                )}
                               </div>
                               <span className="pts-bar-value">{val > 0 ? val.toFixed(1) : '—'}</span>
                             </div>

@@ -1623,3 +1623,19 @@ td {
   min-width: 3px;
   transition: width 0.2s ease;
 }
+
+/* Stacked bar inside the chart track */
+.pts-bar-stacked {
+  display: flex;
+  gap: 1px;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.pts-bar-stacked .pts-stack-seg {
+  border-radius: 0;
+  height: 100%;
+  min-width: 2px;
+  flex-shrink: 0;
+}

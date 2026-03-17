@@ -53,16 +53,16 @@ export function RoleSelectPage() {
           <p>View all data, analytics, and team comparisons</p>
         </Link>
 
-        <Link to="/admin" className="role-card admin">
-          <span className="role-icon">⚙️</span>
-          <h3>Admin</h3>
-          <p>Event setup, field image, and developer tools</p>
-        </Link>
-
         <Link to="/drive" className="role-card drive">
           <span className="role-icon">🎮</span>
           <h3>Drive Team</h3>
           <p>Look up your next match, see opponent stats, and get predictions</p>
+        </Link>
+
+        <Link to="/admin" className="role-card admin">
+          <span className="role-icon">⚙️</span>
+          <h3>Admin</h3>
+          <p>Event setup, field image, and developer tools</p>
         </Link>
       </div>
 

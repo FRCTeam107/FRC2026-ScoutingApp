@@ -33,8 +33,8 @@
   max-width: 480px;
 }
 
-/* Drive Team spans the full width at the bottom */
-.role-card.drive {
+/* Admin spans the full width at the bottom */
+.role-card.admin {
   grid-column: 1 / -1;
 }
 
@@ -90,9 +90,9 @@
   line-height: 1.45;
 }
 
-/* Drive Team card — slightly taller feel when spanning full width */
-.role-card.drive .role-icon { font-size: 38px; }
-.role-card.drive h3 { font-size: 18px; }
+/* Admin card — slightly taller feel when spanning full width */
+.role-card.admin .role-icon { font-size: 38px; }
+.role-card.admin h3 { font-size: 18px; }
 
 /* ── Footer ─────────────────────────────────────────── */
 .role-footer {
@@ -159,7 +159,7 @@
     grid-template-columns: 1fr;
   }
 
-  .role-card.drive {
+  .role-card.admin {
     grid-column: auto;
   }
 }

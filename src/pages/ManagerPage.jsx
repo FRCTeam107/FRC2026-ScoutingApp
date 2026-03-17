@@ -1055,7 +1055,26 @@ export function ManagerPage() {
                                 <td>{pts.avgTeleopFuel !== null ? pts.avgTeleopFuel.toFixed(1) : <span className="no-data">No pit data</span>}</td>
                                 <td>{pts.avgTeleopClimb.toFixed(1)}</td>
                                 <td>{pts.avgDefense > 0 ? pts.avgDefense.toFixed(1) : <span className="no-data">N/A</span>}</td>
-                                <td className="total-pts"><strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong></td>
+                                <td className="total-pts">
+                                  <strong>{pts.avgTotal !== null ? pts.avgTotal.toFixed(1) : '—'}</strong>
+                                  {pts.avgTotal > 0 && (() => {
+                                    const segs = [
+                                      { val: pts.avgAutoFuel ?? 0,    color: '#34d399', label: 'AF' },
+                                      { val: pts.avgAutoClimb,        color: '#a78bfa', label: 'AC' },
+                                      { val: pts.avgTeleopFuel ?? 0,  color: '#fbbf24', label: 'TF' },
+                                      { val: pts.avgTeleopClimb,      color: '#f87171', label: 'TC' },
+                                      { val: pts.avgDefense,          color: '#fb923c', label: 'D'  },
+                                    ].filter(s => s.val > 0);
+                                    const total = segs.reduce((s, x) => s + x.val, 0);
+                                    return (
+                                      <div className="pts-stack-bar">
+                                        {segs.map((s, i) => (
+                                          <div key={i} className="pts-stack-seg" style={{ width: `${(s.val/total)*100}%`, background: s.color }} title={`${s.label}: ${s.val.toFixed(1)}`} />
+                                        ))}
+                                      </div>
+                                    );
+                                  })()}
+                                </td>
                               </tr>
                               {isExpanded && teamMatches.map((m) => {
                                 const mp = getMatchPointsBreakdown(m);
@@ -1068,7 +1087,26 @@ export function ManagerPage() {
                                     <td>{mp.teleopFuel !== null ? mp.teleopFuel.toFixed(1) : <span className="no-data">—</span>}</td>
                                     <td>{mp.teleopClimb}</td>
                                     <td>{mp.defense > 0 ? mp.defense.toFixed(1) : '—'}</td>
-                                    <td className="total-pts">{mp.total.toFixed(1)}</td>
+                                    <td className="total-pts">
+                                      {mp.total.toFixed(1)}
+                                      {mp.total > 0 && (() => {
+                                        const segs = [
+                                          { val: mp.autoFuel ?? 0,   color: '#34d399' },
+                                          { val: mp.autoClimb,       color: '#a78bfa' },
+                                          { val: mp.teleopFuel ?? 0, color: '#fbbf24' },
+                                          { val: mp.teleopClimb,     color: '#f87171' },
+                                          { val: mp.defense,         color: '#fb923c' },
+                                        ].filter(s => s.val > 0);
+                                        const total = segs.reduce((s, x) => s + x.val, 0);
+                                        return (
+                                          <div className="pts-stack-bar">
+                                            {segs.map((s, i) => (
+                                              <div key={i} className="pts-stack-seg" style={{ width: `${(s.val/total)*100}%`, background: s.color }} />
+                                            ))}
+                                          </div>
+                                        );
+                                      })()}
+                                    </td>
                                   </tr>
                                 );
                               })}

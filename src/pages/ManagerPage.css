@@ -1607,3 +1607,19 @@ td {
   font-size: 13px;
   color: #6b7280;
 }
+
+/* Stacked color bar in total-pts cell */
+.pts-stack-bar {
+  display: flex;
+  height: 5px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 5px;
+  gap: 1px;
+}
+
+.pts-stack-seg {
+  border-radius: 2px;
+  min-width: 3px;
+  transition: width 0.2s ease;
+}

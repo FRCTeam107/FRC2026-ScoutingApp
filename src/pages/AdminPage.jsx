@@ -24,28 +24,61 @@ import './AdminPage.css';
 
 // ── Scouting Schedule helpers ────────────────────────────────────────────────
 
+const POSITIONS = ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'];
+const POS_COLORS = { R1: '#f87171', R2: '#fb923c', R3: '#fbbf24', B1: '#60a5fa', B2: '#818cf8', B3: '#a78bfa' };
+
+// Generates a shift-based schedule for exactly 6 active scouters per shift.
+// Each scouter keeps their robot position (R1-B3) when they carry over to the next shift.
+// With N > 6 scouters, the active window advances by (N-6) each shift so that
+// (N-6) people rotate out and fresh ones rotate in holding the vacated slots.
+// Falls back to 80 matches when no live schedule is loaded.
 function buildSchedule(matchSchedule, scouters, groupSize) {
-  if (!matchSchedule || !scouters.length || groupSize < 1) return [];
+  if (scouters.length < 6 || groupSize < 1) return [];
 
-  // Only qualification matches, sorted by match number
-  const quals = matchSchedule
-    .filter(m => m.comp_level === 'qm')
-    .sort((a, b) => a.match_number - b.match_number);
+  // Build a flat list of match numbers to schedule against
+  let matchNums;
+  if (matchSchedule) {
+    matchNums = matchSchedule
+      .filter(m => m.comp_level === 'qm')
+      .sort((a, b) => a.match_number - b.match_number)
+      .map(m => m.match_number);
+  }
+  if (!matchNums || !matchNums.length) {
+    matchNums = Array.from({ length: 80 }, (_, i) => i + 1);
+  }
 
-  if (!quals.length) return [];
-
+  const n = scouters.length;
+  const step = n === 6 ? 0 : n - 6;
   const result = [];
-  let groupIndex = 0;
-  for (let i = 0; i < quals.length; i += groupSize) {
-    const chunk = quals.slice(i, i + groupSize);
-    const scouter = scouters[groupIndex % scouters.length];
+  let positionMap = {}; // scouter name → position label
+  let windowStart = 0;
+
+  for (let i = 0; i < matchNums.length; i += groupSize) {
+    const chunk = matchNums.slice(i, i + groupSize);
+    const active = Array.from({ length: 6 }, (_, j) => scouters[(windowStart + j) % n]);
+
+    // Which active scouters are carrying over (had a position last shift)?
+    const carryOver = active.filter(s => positionMap[s] !== undefined);
+    const incoming = active.filter(s => positionMap[s] === undefined);
+    const vacated = POSITIONS.filter(p => !carryOver.some(s => positionMap[s] === p));
+
+    // Build the new map for this shift
+    const newMap = {};
+    carryOver.forEach(s => { newMap[s] = positionMap[s]; });
+    incoming.forEach((s, idx) => { newMap[s] = vacated[idx]; });
+    positionMap = newMap;
+
     result.push({
-      scouter,
-      from: chunk[0].match_number,
-      to: chunk[chunk.length - 1].match_number,
+      team: POSITIONS.map(pos => ({
+        pos,
+        name: active.find(s => positionMap[s] === pos),
+      })),
+      from: chunk[0],
+      to: chunk[chunk.length - 1],
       count: chunk.length,
     });
-    groupIndex++;
+
+    if (step > 0) windowStart = (windowStart + step) % n;
   }
   return result;
 }
@@ -75,6 +108,9 @@ export function AdminPage() {
   const [matchSchedule] = useState(() => getMatchSchedule());
 
   const schedule = buildSchedule(matchSchedule, scouters, groupSize);
+  const totalMatchCount = matchSchedule
+    ? matchSchedule.filter(m => m.comp_level === 'qm').length
+    : 80;
 
   // ── Event Setup handlers ─────────────────────────────────────────────────
   const loadEvent = async () => {
@@ -313,7 +349,7 @@ export function AdminPage() {
               <div className="ss-config-row">
                 <div className="ss-config-item">
                   <label className="ss-label">Matches per shift</label>
-                  <p className="ss-hint">How many consecutive qual matches each scouter covers before rotating.</p>
+                  <p className="ss-hint">How many consecutive qual matches each team of 6 covers before rotating.</p>
                   <div className="ss-stepper">
                     <button className="ss-step-btn" onClick={() => updateGroupSize(groupSize - 1)} disabled={groupSize <= 1}>−</button>
                     <input
@@ -333,7 +369,11 @@ export function AdminPage() {
             {/* Scouter list */}
             <div className="ss-scouters-section">
               <h3>Scouters <span className="ss-count">({scouters.length})</span></h3>
-              <p className="ss-hint">Add each person who will be scouting. Drag the order to control rotation.</p>
+              <p className="ss-hint">
+                6 scouters are active per shift — one per robot.
+                {scouters.length > 6 && ` With ${scouters.length} scouters, ${scouters.length - 6} rotate out each shift.`}
+                {scouters.length < 6 && scouters.length > 0 && ` ⚠ Need at least 6 scouters to generate a schedule.`}
+              </p>
 
               <div className="ss-add-row">
                 <input
@@ -370,65 +410,79 @@ export function AdminPage() {
             <div className="ss-schedule-section">
               <h3>Generated Schedule</h3>
 
-              {!matchSchedule && (
-                <p className="ss-empty">No match schedule loaded — load an event from the Event Setup tab first.</p>
-              )}
-
-              {matchSchedule && scouters.length === 0 && (
+              {scouters.length === 0 && (
                 <p className="ss-empty">Add scouters above to generate a schedule.</p>
               )}
-
-              {matchSchedule && scouters.length > 0 && schedule.length === 0 && (
-                <p className="ss-empty">No qualification matches found in the loaded schedule.</p>
+              {scouters.length > 0 && scouters.length < 6 && (
+                <p className="ss-empty ss-warn">⚠ At least 6 scouters are required (one per robot). Add {6 - scouters.length} more.</p>
               )}
 
-              {schedule.length > 0 && (
-                <>
-                  <p className="ss-schedule-meta">
-                    {schedule.length} shifts · {matchSchedule.filter(m => m.comp_level === 'qm').length} qual matches · rotating every {groupSize} match{groupSize !== 1 ? 'es' : ''}
-                  </p>
-                  <div className="ss-table-wrap">
-                    <table className="ss-table">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Scouter</th>
-                          <th>Matches</th>
-                          <th>Count</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {schedule.map((row, i) => (
-                          <tr key={i} className={i % 2 === 0 ? 'ss-row-even' : 'ss-row-odd'}>
-                            <td className="ss-shift-num">{i + 1}</td>
-                            <td className="ss-name-cell">{row.scouter}</td>
-                            <td className="ss-range-cell">
-                              {row.from === row.to ? `Q${row.from}` : `Q${row.from} – Q${row.to}`}
-                            </td>
-                            <td className="ss-count-cell">{row.count}</td>
+              {schedule.length > 0 && (() => {
+                const step = scouters.length - 6;
+                return (
+                  <>
+                    <p className="ss-schedule-meta">
+                      {schedule.length} shifts · {totalMatchCount} qual matches · {groupSize} match{groupSize !== 1 ? 'es' : ''} per shift
+                      {step === 0 ? ' · same 6 scouters every shift' : ` · ${step} scouter${step !== 1 ? 's' : ''} rotate in/out each shift`}
+                      {!matchSchedule && ' · (using 80-match estimate)'}
+                    </p>
+                    <div className="ss-table-wrap">
+                      <table className="ss-table ss-pos-table">
+                        <thead>
+                          <tr>
+                            <th>Shift</th>
+                            <th>Matches</th>
+                            {POSITIONS.map(p => (
+                              <th key={p} style={{ color: POS_COLORS[p] }}>{p}</th>
+                            ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody>
+                          {schedule.map((row, i) => (
+                            <tr key={i} className={i % 2 === 0 ? 'ss-row-even' : 'ss-row-odd'}>
+                              <td className="ss-shift-num">{i + 1}</td>
+                              <td className="ss-range-cell">
+                                {row.from === row.to ? `Q${row.from}` : `Q${row.from}–Q${row.to}`}
+                                <span className="ss-match-count"> ({row.count})</span>
+                              </td>
+                              {row.team.map(({ pos, name }) => (
+                                <td key={pos} className="ss-pos-cell" style={{ borderTop: `2px solid ${POS_COLORS[pos]}22` }}>
+                                  {name}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
 
-                  {/* Per-scouter summary */}
-                  <h3 className="ss-summary-heading">Summary by Scouter</h3>
-                  <div className="ss-summary-grid">
-                    {scouters.map(name => {
-                      const rows = schedule.filter(r => r.scouter === name);
-                      const total = rows.reduce((sum, r) => sum + r.count, 0);
-                      return (
-                        <div key={name} className="ss-summary-card">
-                          <p className="ss-summary-name">{name}</p>
-                          <p className="ss-summary-stat">{total} matches</p>
-                          <p className="ss-summary-shifts">{rows.length} shift{rows.length !== 1 ? 's' : ''}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
+                    {/* Per-scouter summary */}
+                    <h3 className="ss-summary-heading">Summary by Scouter</h3>
+                    <div className="ss-summary-grid">
+                      {scouters.map(name => {
+                        const myShifts = schedule.filter(r => r.team.some(t => t.name === name));
+                        const total = myShifts.reduce((sum, r) => sum + r.count, 0);
+                        // Find all positions this scouter holds across shifts
+                        const positions = [...new Set(myShifts.flatMap(r =>
+                          r.team.filter(t => t.name === name).map(t => t.pos)
+                        ))];
+                        return (
+                          <div key={name} className="ss-summary-card">
+                            <p className="ss-summary-name">{name}</p>
+                            <p className="ss-summary-stat">{total} matches</p>
+                            <p className="ss-summary-shifts">{myShifts.length} shift{myShifts.length !== 1 ? 's' : ''}</p>
+                            <div className="ss-summary-pos">
+                              {positions.map(p => (
+                                <span key={p} className="ss-pos-badge" style={{ background: POS_COLORS[p] + '33', color: POS_COLORS[p], borderColor: POS_COLORS[p] + '66' }}>{p}</span>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
         )}

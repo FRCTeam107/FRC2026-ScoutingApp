@@ -274,23 +274,40 @@
 .ss-shift-num  { color: #4b5563; font-size: 12px; width: 42px; white-space: nowrap; }
 .ss-range-cell { color: #a5b4fc; font-family: monospace; font-size: 13px; white-space: nowrap; }
 .ss-match-count { color: #6b7280; font-size: 12px; }
-.ss-team-cell  { padding: 8px 14px; }
 
-.ss-team-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+/* Position columns */
+.ss-pos-table th:nth-child(n+3) {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+  white-space: nowrap;
+  min-width: 80px;
 }
 
-.ss-chip {
-  display: inline-block;
-  background: #1e1e38;
-  border: 1px solid #3a3a58;
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 12px;
-  color: #c4b5fd;
+.ss-pos-cell {
+  text-align: center;
+  font-size: 13px;
+  color: #e5e7eb;
+  padding: 8px 10px;
   white-space: nowrap;
+}
+
+/* Summary position badges */
+.ss-summary-pos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.ss-pos-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid;
+  letter-spacing: 0.04em;
 }
 
 .ss-warn {

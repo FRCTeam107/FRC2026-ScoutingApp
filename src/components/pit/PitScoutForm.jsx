@@ -64,7 +64,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
           placeholder="e.g., 107"
           required
           min="1"
-          max="9999"
+          max="99999"
         />
       </div>
 

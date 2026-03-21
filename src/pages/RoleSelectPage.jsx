@@ -1,8 +1,55 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCurrentEvent } from '../lib/storage';
+import { getCurrentEvent, getMatchSchedule, getScouters, getScoutingGroupSize } from '../lib/storage';
 import { EventPickerModal } from '../components/common/EventPickerModal';
+import { POSITIONS, POS_COLORS, buildSchedule } from '../lib/scheduleHelpers';
 import './RoleSelectPage.css';
+
+function ScoutingPreview() {
+  const scouters = getScouters();
+  const groupSize = getScoutingGroupSize();
+  const matchSchedule = getMatchSchedule();
+  const schedule = buildSchedule(matchSchedule, scouters, groupSize);
+
+  if (!schedule.length) return null;
+
+  return (
+    <div className="scouting-preview">
+      <h3 className="sp-heading">Scouting Assignments</h3>
+      <div className="sp-shifts">
+        {schedule.map((row, i) => (
+          <div key={i} className="sp-shift">
+            <div className="sp-shift-label">
+              Shift {i + 1}
+              <span className="sp-shift-range">
+                {row.from === row.to ? ` Q${row.from}` : ` Q${row.from}–Q${row.to}`}
+              </span>
+            </div>
+            <div className="sp-alliances">
+              <div className="sp-alliance sp-red">
+                {row.team.filter(t => t.pos.startsWith('R')).map(({ pos, name }) => (
+                  <div key={pos} className="sp-assignment">
+                    <span className="sp-pos" style={{ background: POS_COLORS[pos] }}>{pos}</span>
+                    <span className="sp-name">{name}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="sp-divider" />
+              <div className="sp-alliance sp-blue">
+                {row.team.filter(t => t.pos.startsWith('B')).map(({ pos, name }) => (
+                  <div key={pos} className="sp-assignment">
+                    <span className="sp-pos" style={{ background: POS_COLORS[pos] }}>{pos}</span>
+                    <span className="sp-name">{name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function RoleSelectPage() {
   const [showEventPicker, setShowEventPicker] = useState(false);
@@ -71,6 +118,8 @@ export function RoleSelectPage() {
           Works offline - data syncs when WiFi available
         </p>
       </div>
+
+      <ScoutingPreview />
 
       {showEventPicker && (
         <EventPickerModal

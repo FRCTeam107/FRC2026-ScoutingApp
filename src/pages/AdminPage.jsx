@@ -19,71 +19,11 @@ import { deleteAllMatchRecords } from '../lib/supabase';
 import { getEventTeams, getEventInfo, getEventMatches } from '../lib/tba';
 import { PasswordModal } from '../components/common/PasswordModal';
 import { isTestModeActive, loadTestData, unloadTestData } from '../lib/testData';
+import { POSITIONS, POS_COLORS, buildSchedule } from '../lib/scheduleHelpers';
 import './ManagerPage.css';
 import './AdminPage.css';
 
-// ── Scouting Schedule helpers ────────────────────────────────────────────────
-
-const POSITIONS = ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'];
-const POS_COLORS = { R1: '#f87171', R2: '#fb923c', R3: '#fbbf24', B1: '#60a5fa', B2: '#818cf8', B3: '#a78bfa' };
-
-// Generates a shift-based schedule for exactly 6 active scouters per shift.
-// Each scouter keeps their robot position (R1-B3) when they carry over to the next shift.
-// With N > 6 scouters, the active window advances by (N-6) each shift so that
-// (N-6) people rotate out and fresh ones rotate in holding the vacated slots.
-// Falls back to 80 matches when no live schedule is loaded.
-function buildSchedule(matchSchedule, scouters, groupSize) {
-  if (scouters.length < 6 || groupSize < 1) return [];
-
-  // Build a flat list of match numbers to schedule against
-  let matchNums;
-  if (matchSchedule) {
-    matchNums = matchSchedule
-      .filter(m => m.comp_level === 'qm')
-      .sort((a, b) => a.match_number - b.match_number)
-      .map(m => m.match_number);
-  }
-  if (!matchNums || !matchNums.length) {
-    matchNums = Array.from({ length: 80 }, (_, i) => i + 1);
-  }
-
-  const n = scouters.length;
-  const step = n === 6 ? 0 : n - 6;
-  const result = [];
-  let positionMap = {}; // scouter name → position label
-  let windowStart = 0;
-
-  for (let i = 0; i < matchNums.length; i += groupSize) {
-    const chunk = matchNums.slice(i, i + groupSize);
-    const active = Array.from({ length: 6 }, (_, j) => scouters[(windowStart + j) % n]);
-
-    // Which active scouters are carrying over (had a position last shift)?
-    const carryOver = active.filter(s => positionMap[s] !== undefined);
-    const incoming = active.filter(s => positionMap[s] === undefined);
-    const vacated = POSITIONS.filter(p => !carryOver.some(s => positionMap[s] === p));
-
-    // Build the new map for this shift
-    const newMap = {};
-    carryOver.forEach(s => { newMap[s] = positionMap[s]; });
-    incoming.forEach((s, idx) => { newMap[s] = vacated[idx]; });
-    positionMap = newMap;
-
-    result.push({
-      team: POSITIONS.map(pos => ({
-        pos,
-        name: active.find(s => positionMap[s] === pos),
-      })),
-      from: chunk[0],
-      to: chunk[chunk.length - 1],
-      count: chunk.length,
-    });
-
-    if (step > 0) windowStart = (windowStart + step) % n;
-  }
-  return result;
-}
-
-// ── Component ────────────────────────────────────────────────────────────────
+// ── Component ────────────────────────────────────────────────────────────────────────────────
 
 export function AdminPage() {
   const navigate = useNavigate();

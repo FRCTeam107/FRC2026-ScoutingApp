@@ -129,3 +129,29 @@ export async function fetchMatchRecords() {
   if (error) throw error;
   return data;
 }
+
+// Publish scouting schedule config so all devices receive it
+export async function publishScoutingSchedule(scouters, groupSize) {
+  const { error } = await supabase.from('app_settings').upsert([
+    { key: 'scouting_scouters',   value: JSON.stringify(scouters) },
+    { key: 'scouting_group_size', value: String(groupSize) },
+  ], { onConflict: 'key' });
+
+  if (error) throw error;
+}
+
+// Fetch the currently published scouting schedule config
+export async function fetchScoutingSchedule() {
+  const { data, error } = await supabase
+    .from('app_settings')
+    .select('key, value')
+    .in('key', ['scouting_scouters', 'scouting_group_size']);
+
+  if (error) throw error;
+
+  const row = (key) => data?.find(r => r.key === key)?.value;
+  return {
+    scouters:  JSON.parse(row('scouting_scouters')  || '[]'),
+    groupSize: parseInt(row('scouting_group_size')  || '3', 10),
+  };
+}

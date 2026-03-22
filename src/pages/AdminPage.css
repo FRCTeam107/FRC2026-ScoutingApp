@@ -351,3 +351,43 @@
   margin: 0;
 }
 
+/* ── Publish section ────────────────────────────────────────────── */
+.ss-publish-section {
+  background: #1a1a2e;
+  border: 1px solid #2a2a40;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.ss-publish-btn {
+  padding: 12px 24px;
+  background: #4f46e5;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.ss-publish-btn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.ss-publish-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ss-publish-btn.ss-publish-done {
+  background: #059669;
+}
+
+.ss-publish-btn.ss-publish-error {
+  background: #dc2626;
+}

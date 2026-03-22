@@ -141,6 +141,15 @@ export async function publishScoutingSchedule(scouters, groupSize, totalMatchCou
   if (error) throw error;
 }
 
+// Publish the full match schedule so all devices receive it without reloading the event
+export async function publishMatchSchedule(matches) {
+  const { error } = await supabase.from('app_settings').upsert(
+    { key: 'match_schedule', value: JSON.stringify(matches) },
+    { onConflict: 'key' }
+  );
+  if (error) throw error;
+}
+
 // Remove the published schedule from all devices
 export async function unpublishScoutingSchedule() {
   const { error } = await supabase.from('app_settings').upsert([
@@ -157,14 +166,16 @@ export async function fetchScoutingSchedule() {
   const { data, error } = await supabase
     .from('app_settings')
     .select('key, value')
-    .in('key', ['scouting_scouters', 'scouting_group_size', 'scouting_total_matches']);
+    .in('key', ['scouting_scouters', 'scouting_group_size', 'scouting_total_matches', 'match_schedule']);
 
   if (error) throw error;
 
   const row = (key) => data?.find(r => r.key === key)?.value;
+  const rawSchedule = row('match_schedule');
   return {
     scouters:        JSON.parse(row('scouting_scouters')      || '[]'),
     groupSize:       parseInt(row('scouting_group_size')      || '3',  10),
     totalMatchCount: parseInt(row('scouting_total_matches')   || '80', 10),
+    matchSchedule:   rawSchedule ? JSON.parse(rawSchedule) : null,
   };
 }

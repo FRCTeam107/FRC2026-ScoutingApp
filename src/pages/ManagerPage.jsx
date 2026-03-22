@@ -2,9 +2,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { getTeamProfiles, getMatchRecords, deleteTeamProfile, getCurrentEvent, getMatchSchedule } from '../lib/storage';
 import { deleteTeamProfileFromCloud } from '../lib/supabase';
 import { PasswordModal } from '../components/common/PasswordModal';
+import { useTeamProfileSync } from '../hooks/useTeamProfileSync';
 import './ManagerPage.css';
 
 export function ManagerPage() {
+  useTeamProfileSync();
   const [activeTab, setActiveTab] = useState('analytics');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('teamNumber');

@@ -15,7 +15,7 @@ import {
   getScoutingGroupSize,
   setScoutingGroupSize,
 } from '../lib/storage';
-import { deleteAllMatchRecords, publishScoutingSchedule, unpublishScoutingSchedule } from '../lib/supabase';
+import { deleteAllMatchRecords, publishScoutingSchedule, unpublishScoutingSchedule, publishMatchSchedule } from '../lib/supabase';
 import { getEventTeams, getEventInfo, getEventMatches } from '../lib/tba';
 import { PasswordModal } from '../components/common/PasswordModal';
 import { isTestModeActive, loadTestData, unloadTestData } from '../lib/testData';
@@ -45,7 +45,7 @@ export function AdminPage() {
   const [scouters, setScoutersState] = useState(() => getScouters());
   const [groupSize, setGroupSizeState] = useState(() => getScoutingGroupSize());
   const [newScouterName, setNewScouterName] = useState('');
-  const [matchSchedule] = useState(() => getMatchSchedule());
+  const [matchSchedule, setMatchScheduleState] = useState(() => getMatchSchedule());
   const [publishStatus, setPublishStatus] = useState('idle'); // idle | publishing | done | error
 
   const schedule = buildSchedule(matchSchedule, scouters, groupSize);
@@ -71,6 +71,8 @@ export function AdminPage() {
         loadedAt: new Date().toISOString(),
       });
       setMatchSchedule(eventMatches);
+      setMatchScheduleState(eventMatches);
+      publishMatchSchedule(eventMatches).catch(err => console.error('Failed to publish match schedule:', err));
       setEventKey('');
     } catch (err) {
       setEventError(err.message);

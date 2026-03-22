@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCurrentEvent, getMatchSchedule } from '../lib/storage';
+import { getCurrentEvent } from '../lib/storage';
 import { EventPickerModal } from '../components/common/EventPickerModal';
 import { POS_COLORS, buildSchedule } from '../lib/scheduleHelpers';
 import { useScoutingSchedule } from '../hooks/useScoutingSchedule';
 import './RoleSelectPage.css';
 
-function ScoutingPreview({ scouters, groupSize, totalMatchCount }) {
-  const matchSchedule = getMatchSchedule();
+function ScoutingPreview({ scouters, groupSize, totalMatchCount, matchSchedule }) {
   const schedule = buildSchedule(matchSchedule, scouters, groupSize, totalMatchCount);
 
   if (!schedule.length) return null;
@@ -53,7 +52,7 @@ function ScoutingPreview({ scouters, groupSize, totalMatchCount }) {
 export function RoleSelectPage() {
   const [showEventPicker, setShowEventPicker] = useState(false);
   const [currentEvent, setCurrentEventState] = useState(() => getCurrentEvent());
-  const { scouters, groupSize, totalMatchCount } = useScoutingSchedule();
+  const { scouters, groupSize, totalMatchCount, matchSchedule } = useScoutingSchedule();
 
   const handleEventLoaded = (eventData) => {
     setCurrentEventState(eventData);
@@ -119,7 +118,7 @@ export function RoleSelectPage() {
         </p>
       </div>
 
-      <ScoutingPreview scouters={scouters} groupSize={groupSize} totalMatchCount={totalMatchCount} />
+      <ScoutingPreview scouters={scouters} groupSize={groupSize} totalMatchCount={totalMatchCount} matchSchedule={matchSchedule} />
 
       {showEventPicker && (
         <EventPickerModal

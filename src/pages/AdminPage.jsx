@@ -67,6 +67,7 @@ export function AdminPage() {
       .map(t => ({ teamNumber: t.team_number, nickname: t.nickname || `Team ${t.team_number}` }));
   });
   const [scratched, setScratchedState] = useState(() => new Set(getScratchedTeams()));
+  const [selectedPickIndex, setSelectedPickIndex] = useState(null);
 
   const schedule = buildSchedule(matchSchedule, scouters, groupSize);
   const totalMatchCount = matchSchedule
@@ -246,6 +247,23 @@ export function AdminPage() {
   const clearScratches = () => {
     setScratchedState(new Set());
     clearScratchedTeams();
+  };
+
+  const handlePickTap = (i) => {
+    const isScratched = scratched.has(pickList[i].teamNumber);
+    if (selectedPickIndex === null) {
+      if (!isScratched) setSelectedPickIndex(i);
+    } else if (selectedPickIndex === i) {
+      setSelectedPickIndex(null);
+    } else {
+      const updated = [...pickList];
+      const [removed] = updated.splice(selectedPickIndex, 1);
+      const insertAt = selectedPickIndex < i ? i - 1 : i;
+      updated.splice(insertAt, 0, removed);
+      setPickListState(updated);
+      setPickList(updated);
+      setSelectedPickIndex(null);
+    }
   };
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -593,7 +611,11 @@ export function AdminPage() {
                         </thead>
                         <tbody>
                           {rankings.map(r => (
-                            <tr key={r.teamNumber} className={scratched.has(r.teamNumber) ? 'as-row-scratched' : ''}>
+                            <tr
+                              key={r.teamNumber}
+                              className={`as-rank-row${scratched.has(r.teamNumber) ? ' as-row-scratched' : ''}`}
+                              onClick={() => toggleScratch(r.teamNumber)}
+                            >
                               <td className="as-rank-cell">{r.rank}</td>
                               <td className="as-team-cell">
                                 <span className="as-team-num">{r.teamNumber}</span>
@@ -601,6 +623,7 @@ export function AdminPage() {
                               </td>
                               <td className="as-record-cell">{r.wins}-{r.losses}-{r.ties}</td>
                               <td className="as-rp-cell">{typeof r.rankingScore === 'number' ? r.rankingScore.toFixed(2) : '—'}</td>
+                              <td className="as-scratch-indicator">{scratched.has(r.teamNumber) ? '↩' : ''}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -625,31 +648,41 @@ export function AdminPage() {
                   {pickList.length === 0 ? (
                     <p className="as-empty">Fetch rankings or the list will appear here automatically.</p>
                   ) : (
-                    <ul className="as-pick-list">
-                      {pickList.map((item, i) => {
-                        const isScratched = scratched.has(item.teamNumber);
-                        return (
-                          <li key={item.teamNumber} className={`as-pick-item${isScratched ? ' as-scratched' : ''}`}>
-                            <span className="as-pick-pos">{i + 1}</span>
-                            <div className="as-pick-info">
-                              <span className="as-pick-num">#{item.teamNumber}</span>
-                              <span className="as-pick-name">{item.nickname}</span>
-                            </div>
-                            <div className="as-pick-controls">
-                              <button className="as-move-btn" onClick={() => movePickTeam(i, -1)} disabled={i === 0 || isScratched}>↑</button>
-                              <button className="as-move-btn" onClick={() => movePickTeam(i, 1)} disabled={i === pickList.length - 1 || isScratched}>↓</button>
+                    <>
+                      {selectedPickIndex !== null && (
+                        <div className="as-move-banner">
+                          Moving <strong>#{pickList[selectedPickIndex]?.teamNumber}</strong> — tap destination, or tap again to cancel
+                        </div>
+                      )}
+                      <ul className="as-pick-list">
+                        {pickList.map((item, i) => {
+                          const isScratched = scratched.has(item.teamNumber);
+                          const isSelected = selectedPickIndex === i;
+                          const isTarget = selectedPickIndex !== null && !isSelected && !isScratched;
+                          return (
+                            <li
+                              key={item.teamNumber}
+                              className={`as-pick-item${isScratched ? ' as-scratched' : ''}${isSelected ? ' as-selected' : ''}${isTarget ? ' as-target' : ''}`}
+                              onClick={() => handlePickTap(i)}
+                            >
+                              <span className="as-drag-handle">☰</span>
+                              <span className="as-pick-pos">{i + 1}</span>
+                              <div className="as-pick-info">
+                                <span className="as-pick-num">#{item.teamNumber}</span>
+                                <span className="as-pick-name">{item.nickname}</span>
+                              </div>
                               <button
                                 className={`as-scratch-btn${isScratched ? ' as-unscratch' : ''}`}
-                                onClick={() => toggleScratch(item.teamNumber)}
+                                onClick={(e) => { e.stopPropagation(); toggleScratch(item.teamNumber); }}
                                 title={isScratched ? 'Restore team' : 'Mark as picked/gone'}
                               >
                                 {isScratched ? '↩' : '✕'}
                               </button>
-                            </div>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </>
                   )}
                 </div>
 

@@ -145,3 +145,35 @@ export async function getEventInfo(eventKey) {
     end_date: event.end_date
   };
 }
+
+/**
+ * Fetch qual rankings for an event
+ * @param {string} eventKey - Event key (e.g., '2026miket')
+ * @returns {Promise<Array<{rank, teamNumber, wins, losses, ties, rankingScore}>>}
+ */
+export async function getEventRankings(eventKey) {
+  if (!TBA_KEY) {
+    throw new Error('TBA API key not configured. Add VITE_TBA_KEY to your .env.local file.');
+  }
+
+  const response = await fetch(`${TBA_BASE}/event/${eventKey}/rankings`, {
+    headers: { 'X-TBA-Auth-Key': TBA_KEY }
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) throw new Error(`Rankings not yet available for "${eventKey}".`);
+    throw new Error(`Failed to fetch rankings: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  if (!data?.rankings?.length) throw new Error('Rankings not yet available for this event.');
+
+  return data.rankings.map(r => ({
+    rank:         r.rank,
+    teamNumber:   parseInt(r.team_key.replace('frc', ''), 10),
+    wins:         r.record?.wins   ?? 0,
+    losses:       r.record?.losses ?? 0,
+    ties:         r.record?.ties   ?? 0,
+    rankingScore: r.sort_orders?.[0] ?? 0,
+  }));
+}

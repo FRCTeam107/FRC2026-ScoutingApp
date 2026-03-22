@@ -9,6 +9,8 @@ const KEYS = {
   FIELD_IMAGE: 'frc_field_image',
   SCOUTERS: 'frc_scouters',
   SCOUTING_GROUP_SIZE: 'frc_scouting_group_size',
+  PICK_LIST: 'frc_pick_list',
+  SCRATCHED_TEAMS: 'frc_scratched_teams',
 };
 
 // Generate or get device ID
@@ -263,4 +265,32 @@ export function getScoutingGroupSize() {
 
 export function setScoutingGroupSize(n) {
   localStorage.setItem(KEYS.SCOUTING_GROUP_SIZE, String(n));
+}
+
+// Alliance Selection — pick list (ordered array of team numbers)
+export function getPickList() {
+  const data = localStorage.getItem(KEYS.PICK_LIST);
+  return data ? JSON.parse(data) : [];
+}
+
+export function setPickList(list) {
+  localStorage.setItem(KEYS.PICK_LIST, JSON.stringify(list));
+}
+
+export function clearPickList() {
+  localStorage.removeItem(KEYS.PICK_LIST);
+}
+
+// Alliance Selection — scratched teams (array of team numbers marked as picked/unavailable)
+export function getScratchedTeams() {
+  const data = localStorage.getItem(KEYS.SCRATCHED_TEAMS);
+  return data ? JSON.parse(data) : [];
+}
+
+export function setScratchedTeams(teams) {
+  localStorage.setItem(KEYS.SCRATCHED_TEAMS, JSON.stringify(teams));
+}
+
+export function clearScratchedTeams() {
+  localStorage.removeItem(KEYS.SCRATCHED_TEAMS);
 }

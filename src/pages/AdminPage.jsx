@@ -14,9 +14,14 @@ import {
   setScouters,
   getScoutingGroupSize,
   setScoutingGroupSize,
+  getPickList,
+  setPickList,
+  getScratchedTeams,
+  setScratchedTeams,
+  clearScratchedTeams,
 } from '../lib/storage';
 import { deleteAllMatchRecords, publishScoutingSchedule, unpublishScoutingSchedule, publishMatchSchedule } from '../lib/supabase';
-import { getEventTeams, getEventInfo, getEventMatches } from '../lib/tba';
+import { getEventTeams, getEventInfo, getEventMatches, getEventRankings } from '../lib/tba';
 import { PasswordModal } from '../components/common/PasswordModal';
 import { isTestModeActive, loadTestData, unloadTestData } from '../lib/testData';
 import { POSITIONS, POS_COLORS, buildSchedule } from '../lib/scheduleHelpers';
@@ -47,6 +52,21 @@ export function AdminPage() {
   const [newScouterName, setNewScouterName] = useState('');
   const [matchSchedule, setMatchScheduleState] = useState(() => getMatchSchedule());
   const [publishStatus, setPublishStatus] = useState('idle'); // idle | publishing | done | error
+
+  // ── Alliance Selection state ───────────────────────────────────────────────
+  const [rankings, setRankings] = useState([]);
+  const [rankingsLoading, setRankingsLoading] = useState(false);
+  const [rankingsError, setRankingsError] = useState(null);
+  const [pickList, setPickListState] = useState(() => {
+    const stored = getPickList();
+    if (stored.length > 0) return stored;
+    const ev = getCurrentEvent();
+    if (!ev?.teams) return [];
+    return [...ev.teams]
+      .sort((a, b) => a.team_number - b.team_number)
+      .map(t => ({ teamNumber: t.team_number, nickname: t.nickname || `Team ${t.team_number}` }));
+  });
+  const [scratched, setScratchedState] = useState(() => new Set(getScratchedTeams()));
 
   const schedule = buildSchedule(matchSchedule, scouters, groupSize);
   const totalMatchCount = matchSchedule
@@ -173,6 +193,61 @@ export function AdminPage() {
     }
   };
 
+  // ── Alliance Selection handlers ────────────────────────────────────────────
+  const fetchRankings = async () => {
+    if (!currentEvent) return;
+    setRankingsLoading(true);
+    setRankingsError(null);
+    try {
+      const data = await getEventRankings(currentEvent.key);
+      setRankings(data);
+      // If pick list is still in default team-number order, reset to ranking order
+      if (pickList.length === 0 || getPickList().length === 0) {
+        const newList = data.map(r => ({
+          teamNumber: r.teamNumber,
+          nickname: currentEvent.teams?.find(t => t.team_number === r.teamNumber)?.nickname || `Team ${r.teamNumber}`,
+        }));
+        setPickListState(newList);
+        setPickList(newList);
+      }
+    } catch (err) {
+      setRankingsError(err.message);
+    } finally {
+      setRankingsLoading(false);
+    }
+  };
+
+  const resetPickToRankings = () => {
+    const newList = rankings.map(r => ({
+      teamNumber: r.teamNumber,
+      nickname: currentEvent?.teams?.find(t => t.team_number === r.teamNumber)?.nickname || `Team ${r.teamNumber}`,
+    }));
+    setPickListState(newList);
+    setPickList(newList);
+  };
+
+  const movePickTeam = (index, dir) => {
+    const updated = [...pickList];
+    const swap = index + dir;
+    if (swap < 0 || swap >= updated.length) return;
+    [updated[index], updated[swap]] = [updated[swap], updated[index]];
+    setPickListState(updated);
+    setPickList(updated);
+  };
+
+  const toggleScratch = (teamNumber) => {
+    const updated = new Set(scratched);
+    if (updated.has(teamNumber)) updated.delete(teamNumber);
+    else updated.add(teamNumber);
+    setScratchedState(updated);
+    setScratchedTeams([...updated]);
+  };
+
+  const clearScratches = () => {
+    setScratchedState(new Set());
+    clearScratchedTeams();
+  };
+
   // ── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="manager-page">
@@ -195,6 +270,9 @@ export function AdminPage() {
         </button>
         <button className={`tab ${activeTab === 'scouting' ? 'active' : ''}`} onClick={() => setActiveTab('scouting')}>
           Scouting Schedule
+        </button>
+        <button className={`tab ${activeTab === 'alliance' ? 'active' : ''}`} onClick={() => setActiveTab('alliance')}>
+          Alliance Selection
         </button>
       </div>
 
@@ -478,6 +556,105 @@ export function AdminPage() {
                 );
               })()}
             </div>
+          </div>
+        )}
+
+        {/* ── Alliance Selection tab ───────────────────────────────────── */}
+        {activeTab === 'alliance' && (
+          <div className="alliance-tab">
+            {!currentEvent && (
+              <p className="ss-empty">Load an event first to use alliance selection.</p>
+            )}
+            {currentEvent && (
+              <div className="as-panels">
+
+                {/* Left — rankings */}
+                <div className="as-panel">
+                  <div className="as-panel-header">
+                    <h3>Live Rankings</h3>
+                    <button className="as-fetch-btn" onClick={fetchRankings} disabled={rankingsLoading}>
+                      {rankingsLoading ? 'Loading…' : rankings.length ? '↻ Refresh' : 'Fetch Rankings'}
+                    </button>
+                  </div>
+                  {rankingsError && <p className="as-error">{rankingsError}</p>}
+                  {!rankingsError && rankings.length === 0 && (
+                    <p className="as-empty">Hit "Fetch Rankings" to pull live standings from TBA.</p>
+                  )}
+                  {rankings.length > 0 && (
+                    <div className="as-table-wrap">
+                      <table className="as-table">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Team</th>
+                            <th>W-L-T</th>
+                            <th>RP</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {rankings.map(r => (
+                            <tr key={r.teamNumber} className={scratched.has(r.teamNumber) ? 'as-row-scratched' : ''}>
+                              <td className="as-rank-cell">{r.rank}</td>
+                              <td className="as-team-cell">
+                                <span className="as-team-num">{r.teamNumber}</span>
+                                <span className="as-team-name">{currentEvent.teams?.find(t => t.team_number === r.teamNumber)?.nickname || ''}</span>
+                              </td>
+                              <td className="as-record-cell">{r.wins}-{r.losses}-{r.ties}</td>
+                              <td className="as-rp-cell">{typeof r.rankingScore === 'number' ? r.rankingScore.toFixed(2) : '—'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right — pick list */}
+                <div className="as-panel">
+                  <div className="as-panel-header">
+                    <h3>Pick List <span className="as-count">({pickList.filter(t => !scratched.has(t.teamNumber)).length} available)</span></h3>
+                    <div className="as-panel-actions">
+                      {rankings.length > 0 && (
+                        <button className="as-reset-btn" onClick={resetPickToRankings}>Reset to Rankings</button>
+                      )}
+                      {scratched.size > 0 && (
+                        <button className="as-clear-btn" onClick={clearScratches}>Clear Scratches</button>
+                      )}
+                    </div>
+                  </div>
+                  {pickList.length === 0 ? (
+                    <p className="as-empty">Fetch rankings or the list will appear here automatically.</p>
+                  ) : (
+                    <ul className="as-pick-list">
+                      {pickList.map((item, i) => {
+                        const isScratched = scratched.has(item.teamNumber);
+                        return (
+                          <li key={item.teamNumber} className={`as-pick-item${isScratched ? ' as-scratched' : ''}`}>
+                            <span className="as-pick-pos">{i + 1}</span>
+                            <div className="as-pick-info">
+                              <span className="as-pick-num">#{item.teamNumber}</span>
+                              <span className="as-pick-name">{item.nickname}</span>
+                            </div>
+                            <div className="as-pick-controls">
+                              <button className="as-move-btn" onClick={() => movePickTeam(i, -1)} disabled={i === 0 || isScratched}>↑</button>
+                              <button className="as-move-btn" onClick={() => movePickTeam(i, 1)} disabled={i === pickList.length - 1 || isScratched}>↓</button>
+                              <button
+                                className={`as-scratch-btn${isScratched ? ' as-unscratch' : ''}`}
+                                onClick={() => toggleScratch(item.teamNumber)}
+                                title={isScratched ? 'Restore team' : 'Mark as picked/gone'}
+                              >
+                                {isScratched ? '↩' : '✕'}
+                              </button>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+
+              </div>
+            )}
           </div>
         )}
 

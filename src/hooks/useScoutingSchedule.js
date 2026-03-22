@@ -3,31 +3,31 @@ import { supabase, fetchScoutingSchedule } from '../lib/supabase';
 import { getScouters, setScouters, getScoutingGroupSize, setScoutingGroupSize } from '../lib/storage';
 
 /**
- * Returns { scouters, groupSize } kept in sync with Supabase in real-time.
- * When the admin publishes a new schedule it broadcasts via Supabase Realtime
- * and every subscribed device updates its local state + localStorage instantly.
+ * Returns { scouters, groupSize, totalMatchCount } kept in sync with Supabase Realtime.
+ * When the admin publishes or unpublishes, every subscribed device updates instantly.
+ * totalMatchCount ensures all devices use the same match range (not a local fallback).
  */
 export function useScoutingSchedule() {
-  const [scouters, setScoutersState]     = useState(() => getScouters());
-  const [groupSize, setGroupSizeState]   = useState(() => getScoutingGroupSize());
+  const [scouters, setScoutersState]           = useState(() => getScouters());
+  const [groupSize, setGroupSizeState]         = useState(() => getScoutingGroupSize());
+  const [totalMatchCount, setTotalMatchCount]  = useState(80);
 
   // On mount: pull the latest published schedule from Supabase
   useEffect(() => {
     fetchScoutingSchedule()
-      .then(({ scouters: s, groupSize: g }) => {
-        if (s.length > 0) {
-          setScoutersState(s);
-          setScouters(s);
-        }
+      .then(({ scouters: s, groupSize: g, totalMatchCount: t }) => {
+        setScoutersState(s);
+        setScouters(s);
         if (g > 0) {
           setGroupSizeState(g);
           setScoutingGroupSize(g);
         }
+        if (t > 0) setTotalMatchCount(t);
       })
       .catch(() => { /* stay with localStorage values on error */ });
   }, []);
 
-  // Realtime subscription — reacts when admin publishes
+  // Realtime subscription — reacts when admin publishes or unpublishes
   useEffect(() => {
     const channel = supabase
       .channel('scouting-schedule-sync')
@@ -50,6 +50,10 @@ export function useScoutingSchedule() {
               setScoutingGroupSize(g);
             }
           }
+          if (key === 'scouting_total_matches') {
+            const t = parseInt(value, 10);
+            if (!isNaN(t)) setTotalMatchCount(t);
+          }
         }
       )
       .subscribe();
@@ -57,5 +61,5 @@ export function useScoutingSchedule() {
     return () => { supabase.removeChannel(channel); };
   }, []);
 
-  return { scouters, groupSize };
+  return { scouters, groupSize, totalMatchCount };
 }

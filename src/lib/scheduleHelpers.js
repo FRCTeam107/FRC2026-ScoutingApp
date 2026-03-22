@@ -13,8 +13,8 @@ export const POS_COLORS = {
 // Each scouter keeps their robot position (R1–B3) when they carry into the next shift.
 // With N > 6 scouters, the active window advances by (N-6) each shift so that
 // (N-6) people rotate out and fresh ones rotate in holding the vacated slots.
-// Falls back to 80 matches when no live schedule is loaded.
-export function buildSchedule(matchSchedule, scouters, groupSize) {
+// Falls back to totalMatchOverride (default 80) when no live schedule is loaded.
+export function buildSchedule(matchSchedule, scouters, groupSize, totalMatchOverride = 80) {
   if (scouters.length < 6 || groupSize < 1) return [];
 
   let matchNums;
@@ -25,7 +25,7 @@ export function buildSchedule(matchSchedule, scouters, groupSize) {
       .map(m => m.match_number);
   }
   if (!matchNums || !matchNums.length) {
-    matchNums = Array.from({ length: 80 }, (_, i) => i + 1);
+    matchNums = Array.from({ length: totalMatchOverride }, (_, i) => i + 1);
   }
 
   const n = scouters.length;

@@ -15,7 +15,7 @@ import {
   getScoutingGroupSize,
   setScoutingGroupSize,
 } from '../lib/storage';
-import { deleteAllMatchRecords, publishScoutingSchedule } from '../lib/supabase';
+import { deleteAllMatchRecords, publishScoutingSchedule, unpublishScoutingSchedule } from '../lib/supabase';
 import { getEventTeams, getEventInfo, getEventMatches } from '../lib/tba';
 import { PasswordModal } from '../components/common/PasswordModal';
 import { isTestModeActive, loadTestData, unloadTestData } from '../lib/testData';
@@ -149,11 +149,23 @@ export function AdminPage() {
   const handlePublish = async () => {
     setPublishStatus('publishing');
     try {
-      await publishScoutingSchedule(scouters, groupSize);
+      await publishScoutingSchedule(scouters, groupSize, totalMatchCount);
       setPublishStatus('done');
       setTimeout(() => setPublishStatus('idle'), 3000);
     } catch (err) {
       console.error('Publish failed:', err);
+      setPublishStatus('error');
+      setTimeout(() => setPublishStatus('idle'), 4000);
+    }
+  };
+
+  const handleUnpublish = async () => {
+    setPublishStatus('publishing');
+    try {
+      await unpublishScoutingSchedule();
+      setPublishStatus('idle');
+    } catch (err) {
+      console.error('Unpublish failed:', err);
       setPublishStatus('error');
       setTimeout(() => setPublishStatus('idle'), 4000);
     }
@@ -362,16 +374,25 @@ export function AdminPage() {
 
             {/* Publish */}
             <div className="ss-publish-section">
-              <button
-                className={`ss-publish-btn${publishStatus === 'done' ? ' ss-publish-done' : publishStatus === 'error' ? ' ss-publish-error' : ''}`}
-                onClick={handlePublish}
-                disabled={scouters.length < 6 || publishStatus === 'publishing'}
-              >
-                {publishStatus === 'publishing' ? 'Publishing…'
-                  : publishStatus === 'done' ? '✓ Published to all devices'
-                  : publishStatus === 'error' ? '✗ Publish failed'
-                  : '📡 Publish Schedule'}
-              </button>
+              <div className="ss-publish-row">
+                <button
+                  className={`ss-publish-btn${publishStatus === 'done' ? ' ss-publish-done' : publishStatus === 'error' ? ' ss-publish-error' : ''}`}
+                  onClick={handlePublish}
+                  disabled={scouters.length < 6 || publishStatus === 'publishing'}
+                >
+                  {publishStatus === 'publishing' ? 'Publishing…'
+                    : publishStatus === 'done' ? '✓ Published to all devices'
+                    : publishStatus === 'error' ? '✗ Publish failed'
+                    : '📡 Publish Schedule'}
+                </button>
+                <button
+                  className="ss-unpublish-btn"
+                  onClick={handleUnpublish}
+                  disabled={publishStatus === 'publishing'}
+                >
+                  Clear from devices
+                </button>
+              </div>
               {scouters.length < 6 && (
                 <p className="ss-hint">Add at least 6 scouters before publishing.</p>
               )}

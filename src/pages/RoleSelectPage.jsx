@@ -6,9 +6,9 @@ import { POS_COLORS, buildSchedule } from '../lib/scheduleHelpers';
 import { useScoutingSchedule } from '../hooks/useScoutingSchedule';
 import './RoleSelectPage.css';
 
-function ScoutingPreview({ scouters, groupSize }) {
+function ScoutingPreview({ scouters, groupSize, totalMatchCount }) {
   const matchSchedule = getMatchSchedule();
-  const schedule = buildSchedule(matchSchedule, scouters, groupSize);
+  const schedule = buildSchedule(matchSchedule, scouters, groupSize, totalMatchCount);
 
   if (!schedule.length) return null;
 
@@ -53,7 +53,7 @@ function ScoutingPreview({ scouters, groupSize }) {
 export function RoleSelectPage() {
   const [showEventPicker, setShowEventPicker] = useState(false);
   const [currentEvent, setCurrentEventState] = useState(() => getCurrentEvent());
-  const { scouters, groupSize } = useScoutingSchedule();
+  const { scouters, groupSize, totalMatchCount } = useScoutingSchedule();
 
   const handleEventLoaded = (eventData) => {
     setCurrentEventState(eventData);
@@ -119,7 +119,7 @@ export function RoleSelectPage() {
         </p>
       </div>
 
-      <ScoutingPreview scouters={scouters} groupSize={groupSize} />
+      <ScoutingPreview scouters={scouters} groupSize={groupSize} totalMatchCount={totalMatchCount} />
 
       {showEventPicker && (
         <EventPickerModal

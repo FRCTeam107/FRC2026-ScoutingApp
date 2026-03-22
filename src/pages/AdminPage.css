@@ -555,25 +555,15 @@
   border-bottom: 1px solid #2a2a40;
 }
 
-.as-rank-row {
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: background 0.15s;
-}
-
-.as-rank-row:hover { background: #1e1e30; }
-.as-rank-row:active { background: #2a2a40; }
-
 .as-table td {
-  padding: 12px 12px;
+  padding: 10px 12px;
   border-bottom: 1px solid #1e1e30;
   color: #e5e7eb;
   vertical-align: middle;
-  /* min-height via line-height trick for touch */
-  line-height: 1.4;
 }
 
 .as-table tr:last-child td { border-bottom: none; }
+.as-table tr:hover { background: #1e1e30; }
 
 .as-row-scratched td {
   opacity: 0.3;
@@ -594,7 +584,7 @@
 .as-team-num {
   font-weight: 700;
   color: #f9fafb;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .as-team-name {
@@ -614,78 +604,31 @@
   font-weight: 600;
 }
 
-.as-scratch-indicator {
-  text-align: center;
-  color: #6b7280;
-  font-size: 16px;
-  width: 32px;
-}
-
 /* ── Pick list ────────────────────────────────── */
-.as-move-banner {
-  background: #312e81;
-  border-bottom: 1px solid #4338ca;
-  color: #c7d2fe;
-  font-size: 13px;
-  padding: 10px 16px;
-  text-align: center;
-}
-
-.as-move-banner strong {
-  color: #fff;
-}
-
 .as-pick-list {
   list-style: none;
   margin: 0;
   padding: 0;
   max-height: 600px;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .as-pick-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 56px;
-  padding: 8px 0 8px 4px;
+  padding: 8px 12px;
   border-bottom: 1px solid #1e1e30;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: background 0.15s;
-  user-select: none;
 }
 
 .as-pick-item:last-child { border-bottom: none; }
-.as-pick-item:active { background: #1e1e30; }
 
 .as-pick-item.as-scratched {
   opacity: 0.35;
-  cursor: default;
 }
 
 .as-pick-item.as-scratched .as-pick-info {
   text-decoration: line-through;
-}
-
-.as-pick-item.as-selected {
-  background: #1e1b4b;
-  border-left: 3px solid #6366f1;
-}
-
-.as-pick-item.as-target:hover,
-.as-pick-item.as-target:active {
-  background: #1a2540;
-  border-left: 3px solid #3b82f6;
-}
-
-.as-drag-handle {
-  color: #374151;
-  font-size: 16px;
-  padding: 0 6px 0 8px;
-  flex-shrink: 0;
-  cursor: grab;
 }
 
 .as-pick-pos {
@@ -707,7 +650,7 @@
 
 .as-pick-num {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   color: #f9fafb;
 }
 
@@ -719,25 +662,45 @@
   text-overflow: ellipsis;
 }
 
-/* Large thumb-friendly scratch button */
-.as-scratch-btn {
+.as-pick-controls {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.as-move-btn {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  align-self: stretch;
-  background: transparent;
-  border: none;
-  border-left: 1px solid #1e1e30;
-  color: #6b7280;
-  font-size: 18px;
+  background: #1e1e30;
+  border: 1px solid #2a2a40;
+  border-radius: 6px;
+  color: #9ca3af;
+  font-size: 14px;
   cursor: pointer;
-  flex-shrink: 0;
-  touch-action: manipulation;
   transition: all 0.15s;
 }
 
-.as-scratch-btn:hover { background: #2a0f0f; color: #ef4444; }
-.as-scratch-btn:active { background: #3f0f0f; }
-.as-scratch-btn.as-unscratch { color: #4b5563; }
-.as-scratch-btn.as-unscratch:hover { background: #0f2a1a; color: #10b981; }
+.as-move-btn:hover:not(:disabled) { background: #2a2a50; color: #e5e7eb; }
+.as-move-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.as-scratch-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid #3f3f60;
+  border-radius: 6px;
+  color: #6b7280;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.as-scratch-btn:hover { background: #2a0f0f; border-color: #ef4444; color: #ef4444; }
+.as-scratch-btn.as-unscratch { color: #4b5563; border-color: #1f3a2a; }
+.as-scratch-btn.as-unscratch:hover { background: #0f2a1a; border-color: #10b981; color: #10b981; }

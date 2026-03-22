@@ -48,9 +48,11 @@
 }
 
 .rating-labels {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
   margin-top: 8px;
   font-size: 11px;
   color: #6b7280;
+  text-align: center;
 }

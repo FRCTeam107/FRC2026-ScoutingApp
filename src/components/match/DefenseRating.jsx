@@ -24,8 +24,11 @@ export function DefenseRating({ value, onChange }) {
         ))}
       </div>
       <div className="rating-labels">
-        <span>No defense</span>
+        <span></span>
         <span>Poor</span>
+        <span></span>
+        <span>Average</span>
+        <span></span>
         <span>Excellent</span>
       </div>
     </div>

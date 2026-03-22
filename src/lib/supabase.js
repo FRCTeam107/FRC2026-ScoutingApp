@@ -129,3 +129,42 @@ export async function fetchMatchRecords() {
   if (error) throw error;
   return data;
 }
+
+// Publish scouting schedule config so all devices receive it
+export async function publishScoutingSchedule(scouters, groupSize, totalMatchCount) {
+  const { error } = await supabase.from('app_settings').upsert([
+    { key: 'scouting_scouters',      value: JSON.stringify(scouters) },
+    { key: 'scouting_group_size',    value: String(groupSize) },
+    { key: 'scouting_total_matches', value: String(totalMatchCount) },
+  ], { onConflict: 'key' });
+
+  if (error) throw error;
+}
+
+// Remove the published schedule from all devices
+export async function unpublishScoutingSchedule() {
+  const { error } = await supabase.from('app_settings').upsert([
+    { key: 'scouting_scouters',      value: '[]' },
+    { key: 'scouting_group_size',    value: '3' },
+    { key: 'scouting_total_matches', value: '0' },
+  ], { onConflict: 'key' });
+
+  if (error) throw error;
+}
+
+// Fetch the currently published scouting schedule config
+export async function fetchScoutingSchedule() {
+  const { data, error } = await supabase
+    .from('app_settings')
+    .select('key, value')
+    .in('key', ['scouting_scouters', 'scouting_group_size', 'scouting_total_matches']);
+
+  if (error) throw error;
+
+  const row = (key) => data?.find(r => r.key === key)?.value;
+  return {
+    scouters:        JSON.parse(row('scouting_scouters')      || '[]'),
+    groupSize:       parseInt(row('scouting_group_size')      || '3',  10),
+    totalMatchCount: parseInt(row('scouting_total_matches')   || '80', 10),
+  };
+}

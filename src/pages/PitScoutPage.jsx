@@ -2,9 +2,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { PitScoutForm } from '../components/pit/PitScoutForm';
 import { TeamList } from '../components/pit/TeamList';
 import { getCurrentEvent, getTeamProfiles } from '../lib/storage';
+import { useTeamProfileSync } from '../hooks/useTeamProfileSync';
 import './PitScoutPage.css';
 
 export function PitScoutPage() {
+  useTeamProfileSync();
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
 

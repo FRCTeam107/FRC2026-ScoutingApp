@@ -161,6 +161,22 @@ export async function unpublishScoutingSchedule() {
   if (error) throw error;
 }
 
+// Export all scouting data from Supabase (returns raw DB rows)
+export async function exportAllData() {
+  const [matchRes, profileRes] = await Promise.all([
+    supabase.from('match_records').select('*').order('match_number', { ascending: true }),
+    supabase.from('team_profiles').select('*').order('team_number'),
+  ]);
+
+  if (matchRes.error) throw matchRes.error;
+  if (profileRes.error) throw profileRes.error;
+
+  return {
+    matchRecords: matchRes.data,
+    teamProfiles: profileRes.data,
+  };
+}
+
 // Fetch the currently published scouting schedule config
 export async function fetchScoutingSchedule() {
   const { data, error } = await supabase

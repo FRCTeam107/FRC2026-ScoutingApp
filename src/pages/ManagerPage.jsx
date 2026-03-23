@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { getTeamProfiles, getMatchRecords, deleteTeamProfile, getCurrentEvent, getMatchSchedule } from '../lib/storage';
-import { deleteTeamProfileFromCloud } from '../lib/supabase';
+import { getTeamProfiles, getMatchRecords, deleteTeamProfile, getCurrentEvent, getMatchSchedule, restoreMatchRecords, restoreTeamProfiles } from '../lib/storage';
+import { deleteTeamProfileFromCloud, exportAllData } from '../lib/supabase';
 import { PasswordModal } from '../components/common/PasswordModal';
 import { useTeamProfileSync } from '../hooks/useTeamProfileSync';
 import './ManagerPage.css';
@@ -15,6 +15,12 @@ export function ManagerPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [expandedNotes, setExpandedNotes] = useState(null);
   const [scheduleData, setScheduleData] = useState(() => getMatchSchedule());
+
+  // Export / Import state
+  const [exportStatus, setExportStatus] = useState(null); // null | 'loading' | 'done' | 'error'
+  const [exportMessage, setExportMessage] = useState('');
+  const [importStatus, setImportStatus] = useState(null);
+  const [importMessage, setImportMessage] = useState('');
 
   useEffect(() => {
     const handler = () => setRefreshKey(k => k + 1);
@@ -148,6 +154,134 @@ export function ManagerPage() {
       setSortBy(field);
       setSortDir('desc');
     }
+  };
+
+  // ── Export / Import handlers ──────────────────────────────────────────────
+  const handleDownloadJSON = async () => {
+    setExportStatus('loading');
+    setExportMessage('');
+    try {
+      const { matchRecords, teamProfiles } = await exportAllData();
+      const event = getCurrentEvent();
+      const payload = {
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        eventKey: event?.key || null,
+        eventName: event?.name || null,
+        matchRecords,
+        teamProfiles,
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `scouting-backup-${(event?.key || 'unknown')}-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setExportStatus('done');
+      setExportMessage(`Downloaded ${matchRecords.length} match records and ${teamProfiles.length} pit profiles.`);
+    } catch (err) {
+      setExportStatus('error');
+      setExportMessage(err.message || 'Export failed.');
+    }
+  };
+
+  const handleDownloadCSV = async () => {
+    setExportStatus('loading');
+    setExportMessage('');
+    try {
+      const { matchRecords } = await exportAllData();
+      if (matchRecords.length === 0) {
+        setExportStatus('done');
+        setExportMessage('No match records to export.');
+        return;
+      }
+      const cols = Object.keys(matchRecords[0]);
+      const escape = (v) => {
+        if (v === null || v === undefined) return '';
+        const s = String(v);
+        return s.includes(',') || s.includes('"') || s.includes('\n')
+          ? `"${s.replace(/"/g, '""')}"`
+          : s;
+      };
+      const csv = [
+        cols.join(','),
+        ...matchRecords.map(r => cols.map(c => escape(r[c])).join(','))
+      ].join('\n');
+      const event = getCurrentEvent();
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `match-records-${(event?.key || 'unknown')}-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      setExportStatus('done');
+      setExportMessage(`Downloaded ${matchRecords.length} rows as CSV.`);
+    } catch (err) {
+      setExportStatus('error');
+      setExportMessage(err.message || 'CSV export failed.');
+    }
+  };
+
+  const handleImportJSON = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportStatus('loading');
+    setImportMessage('');
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const backup = JSON.parse(ev.target.result);
+        if (!backup.version || !Array.isArray(backup.matchRecords) || !Array.isArray(backup.teamProfiles)) {
+          throw new Error('Invalid backup file format.');
+        }
+        // Convert snake_case DB rows back to camelCase app format
+        const appRecords = backup.matchRecords.map(r => ({
+          teamNumber: r.team_number,
+          matchNumber: r.match_number,
+          allianceColor: r.alliance_color,
+          autoFiringSeconds: r.auto_firing_seconds,
+          autoAccuracy: r.auto_accuracy,
+          autoClimb: r.auto_climb || 'None',
+          autoPickupLocation: r.auto_pickup_location,
+          autonFocus: r.auton_focus,
+          teleopFiringSeconds: r.teleop_firing_seconds,
+          teleopAccuracy: r.teleop_accuracy,
+          teleopClimb: r.teleop_climb || 'None',
+          pickupLocation: r.pickup_location,
+          endgameFocus: r.endgame_focus,
+          defenseRating: r.defense_rating,
+          notes: r.notes,
+          scouterDeviceId: r.scouter_device_id,
+          createdAt: r.created_at,
+        }));
+        const appProfiles = {};
+        backup.teamProfiles.forEach(p => {
+          appProfiles[p.team_number] = {
+            teamNumber: p.team_number,
+            description: p.description,
+            ballsPerSecond: p.balls_per_second,
+            photoUrl: p.photo_url,
+            trenchCapability: p.trench_capability || 'trench',
+            updatedAt: p.updated_at,
+          };
+        });
+        restoreMatchRecords(appRecords);
+        restoreTeamProfiles(appProfiles);
+        setRefreshKey(k => k + 1);
+        setImportStatus('done');
+        setImportMessage(
+          `Restored ${appRecords.length} match records and ${backup.teamProfiles.length} pit profiles` +
+          (backup.eventName ? ` from "${backup.eventName}"` : '') + '.'
+        );
+      } catch (err) {
+        setImportStatus('error');
+        setImportMessage(err.message || 'Import failed.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   };
 
   // Password-protected actions
@@ -307,6 +441,9 @@ export function ManagerPage() {
         </button>
         <button className={`tab ${activeTab === 'points' ? 'active' : ''}`} onClick={() => setActiveTab('points')}>
           Weighted Analytics
+        </button>
+        <button className={`tab ${activeTab === 'export' ? 'active' : ''}`} onClick={() => setActiveTab('export')}>
+          Export / Import
         </button>
       </div>
 
@@ -1073,6 +1210,68 @@ export function ManagerPage() {
           </div>
         )}
 
+
+        {activeTab === 'export' && (
+          <div className="export-tab">
+            {/* Download section */}
+            <div className="export-section">
+              <h3>Download Backup</h3>
+              <p className="export-desc">
+                Fetches the latest data from the database and saves it to your device.
+                Use this to archive an event before loading a new one.
+              </p>
+              <div className="export-actions">
+                <button
+                  className="export-btn export-btn-primary"
+                  onClick={handleDownloadJSON}
+                  disabled={exportStatus === 'loading'}
+                >
+                  {exportStatus === 'loading' ? 'Downloading…' : '⬇ Download Full Backup (JSON)'}
+                </button>
+                <button
+                  className="export-btn export-btn-secondary"
+                  onClick={handleDownloadCSV}
+                  disabled={exportStatus === 'loading'}
+                >
+                  {exportStatus === 'loading' ? 'Downloading…' : '⬇ Download Match Records (CSV)'}
+                </button>
+              </div>
+              {exportStatus === 'done' && (
+                <p className="export-status export-status-ok">✓ {exportMessage}</p>
+              )}
+              {exportStatus === 'error' && (
+                <p className="export-status export-status-err">✗ {exportMessage}</p>
+              )}
+            </div>
+
+            {/* Import section */}
+            <div className="export-section">
+              <h3>Restore from Backup</h3>
+              <p className="export-desc">
+                Load a previously downloaded JSON backup file onto this device.
+                This will <strong>overwrite</strong> the current local data — it does not push to the database.
+              </p>
+              <label className="export-btn export-btn-import">
+                📂 Choose Backup File (.json)
+                <input
+                  type="file"
+                  accept=".json,application/json"
+                  style={{ display: 'none' }}
+                  onChange={handleImportJSON}
+                />
+              </label>
+              {importStatus === 'loading' && (
+                <p className="export-status">Reading file…</p>
+              )}
+              {importStatus === 'done' && (
+                <p className="export-status export-status-ok">✓ {importMessage}</p>
+              )}
+              {importStatus === 'error' && (
+                <p className="export-status export-status-err">✗ {importMessage}</p>
+              )}
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

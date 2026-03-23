@@ -267,6 +267,16 @@ export function setScoutingGroupSize(n) {
   localStorage.setItem(KEYS.SCOUTING_GROUP_SIZE, String(n));
 }
 
+// Restore match records from a backup (camelCase app format — overwrites local)
+export function restoreMatchRecords(records) {
+  localStorage.setItem(KEYS.MATCH_RECORDS, JSON.stringify(records));
+}
+
+// Restore team profiles from a backup (keyed object by teamNumber — overwrites local)
+export function restoreTeamProfiles(profilesObj) {
+  localStorage.setItem(KEYS.TEAM_PROFILES, JSON.stringify(profilesObj));
+}
+
 // Alliance Selection — pick list (ordered array of team numbers)
 export function getPickList() {
   const data = localStorage.getItem(KEYS.PICK_LIST);

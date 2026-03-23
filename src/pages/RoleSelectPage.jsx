@@ -93,7 +93,7 @@ export function RoleSelectPage() {
           <p>Track performance during matches with firing timer</p>
         </Link>
 
-        <Link to="/manager" className="role-card manager">
+        <Link to="/analytics" className="role-card manager">
           <span className="role-icon">📊</span>
           <h3>Data Analysis</h3>
           <p>View all data, analytics, and team comparisons</p>

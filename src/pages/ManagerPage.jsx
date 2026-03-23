@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { getTeamProfiles, getMatchRecords, deleteTeamProfile, getCurrentEvent, getMatchSchedule } from '../lib/storage';
+import { getTeamProfiles, getMatchRecords, deleteTeamProfile, getCurrentEvent, getMatchSchedule, getBackupView, clearBackupView } from '../lib/storage';
 import { deleteTeamProfileFromCloud } from '../lib/supabase';
 import { PasswordModal } from '../components/common/PasswordModal';
 import { useTeamProfileSync } from '../hooks/useTeamProfileSync';
@@ -7,6 +7,7 @@ import './ManagerPage.css';
 
 export function ManagerPage() {
   useTeamProfileSync();
+  const [backupView] = useState(() => getBackupView());
   const [activeTab, setActiveTab] = useState('analytics');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('teamNumber');
@@ -28,10 +29,14 @@ export function ManagerPage() {
   const [pendingAction, setPendingAction] = useState(null);
 
   // Event setup state
-  const [currentEvent, setCurrentEventState] = useState(() => getCurrentEvent());
+  const [currentEvent, setCurrentEventState] = useState(() => {
+    const bv = getBackupView();
+    if (bv) return { key: bv.eventKey, name: bv.eventName, teams: [] };
+    return getCurrentEvent();
+  });
 
-  const profiles = getTeamProfiles();
-  const records = getMatchRecords();
+  const profiles = backupView ? backupView.appProfiles : getTeamProfiles();
+  const records = backupView ? backupView.appRecords : getMatchRecords();
   const teams = Object.values(profiles);
 
   // Teams for rankings: use event teams if loaded, otherwise teams with match data
@@ -285,6 +290,12 @@ export function ManagerPage() {
 
       <div className="page-header">
         <h1>Data Analysis</h1>
+        {backupView && (
+          <div className="backup-banner">
+            <span>📦 Viewing backup — <strong>{backupView.eventName || backupView.eventKey || 'Unknown Event'}</strong>{backupView.exportedAt ? ` · saved ${new Date(backupView.exportedAt).toLocaleDateString()}` : ''}</span>
+            <button className="backup-exit-btn" onClick={() => { clearBackupView(); window.location.reload(); }}>Return to Live Data</button>
+          </div>
+        )}
         <p>
           {currentEvent ? `${currentEvent.name} · ${currentEvent.teams?.length || 0} teams` : 'No event loaded'}
           {' · '}{records.length} match records · {teams.length} pit scouted

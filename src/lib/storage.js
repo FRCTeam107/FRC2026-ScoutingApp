@@ -304,3 +304,17 @@ export function setScratchedTeams(teams) {
 export function clearScratchedTeams() {
   localStorage.removeItem(KEYS.SCRATCHED_TEAMS);
 }
+
+// Backup View (sessionStorage — auto-clears on tab close, never touches live data)
+export function setBackupView(payload) {
+  sessionStorage.setItem('frc_backup_view', JSON.stringify(payload));
+}
+
+export function getBackupView() {
+  const d = sessionStorage.getItem('frc_backup_view');
+  return d ? JSON.parse(d) : null;
+}
+
+export function clearBackupView() {
+  sessionStorage.removeItem('frc_backup_view');
+}

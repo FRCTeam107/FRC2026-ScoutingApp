@@ -18,6 +18,34 @@
   color: #9ca3af;
 }
 
+.backup-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #2d2006;
+  border: 1px solid #92400e;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #fbbf24;
+}
+
+.backup-exit-btn {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  background: #92400e;
+  border: none;
+  border-radius: 6px;
+  color: #fef3c7;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.backup-exit-btn:hover { background: #b45309; }
+
 /* Tabs */
 .tab-bar {
   display: flex;

@@ -19,8 +19,7 @@ import {
   getScratchedTeams,
   setScratchedTeams,
   clearScratchedTeams,
-  restoreMatchRecords,
-  restoreTeamProfiles,
+  setBackupView,
 } from '../lib/storage';
 import { deleteAllMatchRecords, publishScoutingSchedule, unpublishScoutingSchedule, publishMatchSchedule, exportAllData } from '../lib/supabase';
 import { getEventTeams, getEventInfo, getEventMatches, getEventRankings } from '../lib/tba';
@@ -324,7 +323,7 @@ export function AdminPage() {
     }
   };
 
-  const handleImportJSON = (e) => {
+  const handleViewBackup = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setImportStatus('loading');
@@ -366,16 +365,11 @@ export function AdminPage() {
             updatedAt: p.updated_at,
           };
         });
-        restoreMatchRecords(appRecords);
-        restoreTeamProfiles(appProfiles);
-        setImportStatus('done');
-        setImportMessage(
-          `Restored ${appRecords.length} match records and ${backup.teamProfiles.length} pit profiles` +
-          (backup.eventName ? ` from "${backup.eventName}"` : '') + '.'
-        );
+        setBackupView({ appRecords, appProfiles, eventKey: backup.eventKey, eventName: backup.eventName, exportedAt: backup.exportedAt });
+        navigate('/analytics');
       } catch (err) {
         setImportStatus('error');
-        setImportMessage(err.message || 'Import failed.');
+        setImportMessage(err.message || 'Could not read backup file.');
       }
     };
     reader.readAsText(file);
@@ -829,25 +823,23 @@ export function AdminPage() {
             </div>
 
             <div className="export-section">
-              <h3>Restore from Backup</h3>
+              <h3>View Old Event Backup</h3>
               <p className="export-desc">
-                Load a previously downloaded JSON backup file onto this device.
-                This will <strong>overwrite</strong> the current local data — it does not push to the database.
+                Open a previously downloaded JSON backup and view it in Data Analysis.
+                Your live data is <strong>not changed</strong> — the viewer uses the file directly.
+                Close or refresh the tab to return to live data.
               </p>
               <label className="export-btn export-btn-import">
-                📂 Choose Backup File (.json)
+                📂 Open Backup File (.json)
                 <input
                   type="file"
                   accept=".json,application/json"
                   style={{ display: 'none' }}
-                  onChange={handleImportJSON}
+                  onChange={handleViewBackup}
                 />
               </label>
               {importStatus === 'loading' && (
                 <p className="export-status">Reading file…</p>
-              )}
-              {importStatus === 'done' && (
-                <p className="export-status export-status-ok">✓ {importMessage}</p>
               )}
               {importStatus === 'error' && (
                 <p className="export-status export-status-err">✗ {importMessage}</p>

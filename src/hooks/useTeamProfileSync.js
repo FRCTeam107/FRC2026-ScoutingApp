@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { supabase, fetchTeamProfiles } from '../lib/supabase';
-import { mergeTeamProfiles } from '../lib/storage';
+import { mergeTeamProfiles, getBackupView } from '../lib/storage';
 
 function applyCloudRow(row) {
   // Map a single Supabase team_profiles row into localStorage via mergeTeamProfiles
@@ -17,7 +17,7 @@ function applyCloudRow(row) {
 export function useTeamProfileSync() {
   // Option A — initial pull on mount
   useEffect(() => {
-    fetchTeamProfiles()
+    if (getBackupView()) return; // skip sync when viewing a backup
       .then((profiles) => {
         if (profiles?.length) {
           mergeTeamProfiles(profiles);
@@ -29,6 +29,7 @@ export function useTeamProfileSync() {
 
   // Option B — Realtime push
   useEffect(() => {
+    if (getBackupView()) return; // skip realtime when viewing a backup
     const channel = supabase
       .channel('team-profiles-sync')
       .on(

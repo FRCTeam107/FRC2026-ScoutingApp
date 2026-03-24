@@ -1,6 +1,18 @@
 import { useState, useEffect } from 'react';
-import { getCurrentEvent } from '../lib/storage';
-import { getEventMatches, getEventRankings, getEventWebcasts } from '../lib/tba';
+import { getTeamEvents, getEventMatches, getEventRankings, getEventWebcasts } from '../lib/tba';
+
+function pickEvent(events) {
+  const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
+  // 1. Currently ongoing
+  const ongoing = events.find(e => e.start_date <= today && e.end_date >= today);
+  if (ongoing) return ongoing;
+  // 2. Next upcoming
+  const upcoming = events.filter(e => e.start_date > today).sort((a, b) => a.start_date.localeCompare(b.start_date));
+  if (upcoming.length) return upcoming[0];
+  // 3. Most recently completed
+  const past = events.filter(e => e.end_date < today).sort((a, b) => b.end_date.localeCompare(a.end_date));
+  return past[0] ?? null;
+}
 import './FanPage.css';
 
 const TEAM_NUMBER = 107;
@@ -80,25 +92,23 @@ export function FanPage() {
   const [error, setError]     = useState(null);
 
   useEffect(() => {
-    const event = getCurrentEvent();
-    if (!event?.key) {
-      setError('No event loaded. Ask an admin to load an event first.');
-      setLoading(false);
-      return;
-    }
-
-    Promise.all([
-      getEventMatches(event.key),
-      getEventRankings(event.key).catch(() => null),
-      getEventWebcasts(event.key).catch(() => []),
-    ])
-      .then(([matches, rankings, webcasts]) => {
-        const myMatches = matches.filter(m =>
-          m.alliances.red.team_keys.includes(TEAM_KEY) ||
-          m.alliances.blue.team_keys.includes(TEAM_KEY)
-        );
-        const myRank = rankings?.find(r => r.teamNumber === TEAM_NUMBER) ?? null;
-        setData({ matches: myMatches, rank: myRank, webcasts, eventKey: event.key, eventName: event.name });
+    const year = new Date().getFullYear();
+    getTeamEvents(TEAM_NUMBER, year)
+      .then(events => {
+        const event = pickEvent(events);
+        if (!event) throw new Error('No events found for Team 107 this season.');
+        return Promise.all([
+          getEventMatches(event.key),
+          getEventRankings(event.key).catch(() => null),
+          getEventWebcasts(event.key).catch(() => []),
+        ]).then(([matches, rankings, webcasts]) => {
+          const myMatches = matches.filter(m =>
+            m.alliances.red.team_keys.includes(TEAM_KEY) ||
+            m.alliances.blue.team_keys.includes(TEAM_KEY)
+          );
+          const myRank = rankings?.find(r => r.teamNumber === TEAM_NUMBER) ?? null;
+          setData({ matches: myMatches, rank: myRank, webcasts, eventKey: event.key, eventName: event.name });
+        });
       })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));

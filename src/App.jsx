@@ -7,6 +7,7 @@ import { ManagerPage } from './pages/ManagerPage';
 import { DriveTeamPage } from './pages/DriveTeamPage';
 import { FieldDrawPage } from './pages/FieldDrawPage';
 import { AdminPage } from './pages/AdminPage';
+import { FanPage } from './pages/FanPage';
 import './App.css';
 
 
@@ -24,6 +25,7 @@ function App() {
             <Route path="/drive" element={<DriveTeamPage />} />
             <Route path="/field" element={<FieldDrawPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/fan" element={<FanPage />} />
           </Routes>
         </main>
       </div>

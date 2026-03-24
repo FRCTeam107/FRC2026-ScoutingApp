@@ -18,6 +18,7 @@ export function useTeamProfileSync() {
   // Option A — initial pull on mount
   useEffect(() => {
     if (getBackupView()) return; // skip sync when viewing a backup
+    fetchTeamProfiles()
       .then((profiles) => {
         if (profiles?.length) {
           mergeTeamProfiles(profiles);

@@ -267,6 +267,16 @@ export function setScoutingGroupSize(n) {
   localStorage.setItem(KEYS.SCOUTING_GROUP_SIZE, String(n));
 }
 
+// Restore match records from a backup (camelCase app format — overwrites local)
+export function restoreMatchRecords(records) {
+  localStorage.setItem(KEYS.MATCH_RECORDS, JSON.stringify(records));
+}
+
+// Restore team profiles from a backup (keyed object by teamNumber — overwrites local)
+export function restoreTeamProfiles(profilesObj) {
+  localStorage.setItem(KEYS.TEAM_PROFILES, JSON.stringify(profilesObj));
+}
+
 // Alliance Selection — pick list (ordered array of team numbers)
 export function getPickList() {
   const data = localStorage.getItem(KEYS.PICK_LIST);
@@ -293,4 +303,18 @@ export function setScratchedTeams(teams) {
 
 export function clearScratchedTeams() {
   localStorage.removeItem(KEYS.SCRATCHED_TEAMS);
+}
+
+// Backup View (sessionStorage — auto-clears on tab close, never touches live data)
+export function setBackupView(payload) {
+  sessionStorage.setItem('frc_backup_view', JSON.stringify(payload));
+}
+
+export function getBackupView() {
+  const d = sessionStorage.getItem('frc_backup_view');
+  return d ? JSON.parse(d) : null;
+}
+
+export function clearBackupView() {
+  sessionStorage.removeItem('frc_backup_view');
 }

@@ -20,7 +20,7 @@ function App() {
             <Route path="/" element={<RoleSelectPage />} />
             <Route path="/pit" element={<PitScoutPage />} />
             <Route path="/match" element={<MatchScoutPage />} />
-            <Route path="/manager" element={<ManagerPage />} />
+            <Route path="/analytics" element={<ManagerPage />} />
             <Route path="/drive" element={<DriveTeamPage />} />
             <Route path="/field" element={<FieldDrawPage />} />
             <Route path="/admin" element={<AdminPage />} />

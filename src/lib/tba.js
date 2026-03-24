@@ -147,6 +147,30 @@ export async function getEventInfo(eventKey) {
 }
 
 /**
+ * Fetch event webcasts (livestream links)
+ * @param {string} eventKey - Event key (e.g., '2026miket')
+ * @returns {Promise<Array<{type: string, channel: string, url: string}>>}
+ */
+export async function getEventWebcasts(eventKey) {
+  if (!TBA_KEY) return [];
+
+  const response = await fetch(`${TBA_BASE}/event/${eventKey}`, {
+    headers: { 'X-TBA-Auth-Key': TBA_KEY }
+  });
+
+  if (!response.ok) return [];
+
+  const data = await response.json();
+  return (data.webcasts || []).map(w => {
+    let url = null;
+    if (w.type === 'twitch') url = `https://www.twitch.tv/${w.channel}`;
+    else if (w.type === 'youtube') url = `https://www.youtube.com/watch?v=${w.channel}`;
+    else if (w.type === 'livestream') url = `https://livestream.com/${w.channel}`;
+    return { type: w.type, channel: w.channel, url };
+  }).filter(w => w.url);
+}
+
+/**
  * Fetch qual rankings for an event
  * @param {string} eventKey - Event key (e.g., '2026miket')
  * @returns {Promise<Array<{rank, teamNumber, wins, losses, ties, rankingScore}>>}

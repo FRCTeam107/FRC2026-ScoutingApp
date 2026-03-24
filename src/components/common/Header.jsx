@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { SyncStatus } from './SyncStatus';
+import { Team107Dropdown } from './Team107Dropdown';
 import './Header.css';
 
 export function Header() {
@@ -17,7 +18,10 @@ export function Header() {
           </Link>
         )}
       </div>
-      <SyncStatus />
+      <div className="header-right">
+        <Team107Dropdown />
+        <SyncStatus />
+      </div>
     </header>
   );
 }

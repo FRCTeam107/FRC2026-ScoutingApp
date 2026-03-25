@@ -23,7 +23,7 @@ export function Header() {
         )}
       </div>
       <div className="header-right">
-        {!isScoutingArea && <Team107Dropdown />}
+        {!isScoutingArea && <Link to="/scouting" className="scouting-nav-link">🔬 Scouting</Link>}
         {isScoutingArea && <Link to="/" className="fan-nav-link">Fan View</Link>}
         <SyncStatus />
       </div>

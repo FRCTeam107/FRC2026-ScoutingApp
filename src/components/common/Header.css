@@ -36,7 +36,8 @@
   text-decoration: underline;
 }
 
-.fan-nav-link {
+.fan-nav-link,
+.scouting-nav-link {
   color: #60a5fa;
   font-size: 13px;
   font-weight: 600;
@@ -47,7 +48,8 @@
   transition: background 0.15s, border-color 0.15s;
 }
 
-.fan-nav-link:hover {
+.fan-nav-link:hover,
+.scouting-nav-link:hover {
   background: #1e2a40;
   border-color: #3b82f6;
 }

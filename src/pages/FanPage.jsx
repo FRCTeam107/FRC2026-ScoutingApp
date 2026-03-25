@@ -136,7 +136,7 @@ export function FanPage() {
       <div className="fan-hero">
         <div className="fan-hero-number">107</div>
         <div className="fan-hero-info">
-          <h1 className="fan-hero-name">R.O.B.O. Rangers</h1>
+          <h1 className="fan-hero-name">Team R.O.B.O.T.I.C.S.</h1>
           {data?.eventName && (
             <p className="fan-hero-event">{data.eventName}</p>
           )}

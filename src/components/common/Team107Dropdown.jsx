@@ -3,7 +3,7 @@ import './Team107Dropdown.css';
 
 export function Team107Dropdown() {
   return (
-    <Link to="/fan" className="t107-fan-btn">
+    <Link to="/" className="t107-fan-btn">
       107 Fan
     </Link>
   );

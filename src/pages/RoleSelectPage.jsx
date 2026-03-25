@@ -110,12 +110,6 @@ export function RoleSelectPage() {
           <h3>Admin</h3>
           <p>Event setup, field image, and developer tools</p>
         </Link>
-
-        <Link to="/fan" className="role-card fan">
-          <span className="role-icon">📣</span>
-          <h3>107 Fan</h3>
-          <p>Livestream links, match schedule, and current standings for Team 107</p>
-        </Link>
       </div>
 
       <div className="role-footer">

@@ -54,6 +54,26 @@
   border-color: #3b82f6;
 }
 
+/* ── Theme toggle ── */
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid #2a2a40;
+  border-radius: 6px;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.theme-toggle-btn:hover {
+  background: #1e1e30;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
 @media (max-width: 600px) {
   .app-header {
     flex-direction: column;

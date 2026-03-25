@@ -12,6 +12,7 @@ import { FanPage } from './pages/FanPage';
 import { PasswordModal } from './components/common/PasswordModal';
 import { verifyScoutingPassword } from './lib/supabase';
 import './App.css';
+import './pinkTheme.css';
 
 const SESSION_KEY = 'scouting_auth';
 

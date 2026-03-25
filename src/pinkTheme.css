@@ -259,6 +259,61 @@ html.pink-mode .fan-ext-link:hover {
   border-color: #ec4899;
 }
 
+/* ── Event picker ── */
+html.pink-mode .fan-change-event-btn {
+  border-color: #5c1840;
+  color: #7a3858;
+}
+
+html.pink-mode .fan-change-event-btn:hover {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .fan-change-event-btn.overriding {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .fan-event-picker {
+  background: #2e0a22;
+  border-color: #5c1840;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+html.pink-mode .fan-picker-option:hover {
+  background: #3a0a2a;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-picker-option.active {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: #ec4899;
+}
+
+html.pink-mode .fan-picker-option-label { color: #fce7f3; }
+html.pink-mode .fan-picker-option-sub   { color: #7a3858; }
+html.pink-mode .fan-picker-heading      { color: #7a3858; }
+html.pink-mode .fan-picker-subheading   { color: #5c2040; }
+
+html.pink-mode .fan-picker-input {
+  background: #1e0018;
+  border-color: #5c1840;
+  color: #fce7f3;
+}
+
+html.pink-mode .fan-picker-input:focus {
+  border-color: #ec4899;
+}
+
+html.pink-mode .fan-picker-load-btn {
+  background: #db2777;
+}
+
+html.pink-mode .fan-picker-load-btn:hover {
+  background: #9d174d;
+}
+
 html.pink-mode .t107-fan-btn {
   border-color: #ec4899;
   color: #f472b6;

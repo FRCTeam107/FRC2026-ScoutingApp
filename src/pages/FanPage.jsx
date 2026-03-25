@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { getTeamEvents, getEventMatches, getEventRankings, getEventWebcasts } from '../lib/tba';
+import { useState, useEffect, useRef } from 'react';
+import { getTeamEvents, getEventMatches, getEventRankings, getEventWebcasts, getEventInfo } from '../lib/tba';
+import './FanPage.css';
 
 function pickEvent(events) {
   const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
@@ -13,7 +14,8 @@ function pickEvent(events) {
   const past = events.filter(e => e.end_date < today).sort((a, b) => b.end_date.localeCompare(a.end_date));
   return past[0] ?? null;
 }
-import './FanPage.css';
+
+const EVENT_OVERRIDE_KEY = 'fan_event_override';
 
 const TEAM_NUMBER = 107;
 const TEAM_KEY = `frc${TEAM_NUMBER}`;
@@ -87,33 +89,123 @@ function MatchRow({ match }) {
 }
 
 export function FanPage() {
+  const year = new Date().getFullYear();
+
+  // All of Team 107's events this season (populated after first fetch)
+  const [allEvents, setAllEvents]       = useState([]);
+  // Auto-detected event key from Team 107's schedule (null until loaded)
+  const [autoEventKey, setAutoEventKey] = useState(null);
+  // Manual override stored in localStorage (null = follow auto-detect)
+  const [overrideKey, setOverrideKey]   = useState(
+    () => localStorage.getItem(EVENT_OVERRIDE_KEY) || null
+  );
+
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
 
+  // Event picker UI state
+  const [showPicker, setShowPicker]     = useState(false);
+  const [customInput, setCustomInput]   = useState('');
+  const [pickerError, setPickerError]   = useState('');
+  const pickerRef = useRef(null);
+
+  const activeKey = overrideKey ?? autoEventKey;
+
+  // ── Step 1: Load Team 107's events once ──────────────────────────────
   useEffect(() => {
-    const year = new Date().getFullYear();
     getTeamEvents(TEAM_NUMBER, year)
       .then(events => {
-        const event = pickEvent(events);
-        if (!event) throw new Error('No events found for Team 107 this season.');
-        return Promise.all([
-          getEventMatches(event.key),
-          getEventRankings(event.key).catch(() => null),
-          getEventWebcasts(event.key).catch(() => []),
-        ]).then(([matches, rankings, webcasts]) => {
-          const myMatches = matches.filter(m =>
-            m.alliances.red.team_keys.includes(TEAM_KEY) ||
-            m.alliances.blue.team_keys.includes(TEAM_KEY)
-          );
-          const myRank = rankings?.find(r => r.teamNumber === TEAM_NUMBER) ?? null;
-          setData({ matches: myMatches, rank: myRank, webcasts, eventKey: event.key, eventName: event.name });
-        });
+        setAllEvents(events);
+        const def = pickEvent(events);
+        if (def) {
+          setAutoEventKey(def.key);
+        } else if (!overrideKey) {
+          setError('No events found for Team 107 this season.');
+          setLoading(false);
+        }
       })
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false));
-  }, []);
+      .catch(e => {
+        if (!overrideKey) {
+          setError(e.message);
+          setLoading(false);
+        }
+      });
+  }, [year]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Step 2: Load event data when the active key is determined/changed ─
+  useEffect(() => {
+    if (!activeKey) return;
+    setLoading(true);
+    setData(null);
+    setError(null);
+    Promise.all([
+      getEventMatches(activeKey),
+      getEventRankings(activeKey).catch(() => null),
+      getEventWebcasts(activeKey).catch(() => []),
+      getEventInfo(activeKey).catch(() => null),
+    ]).then(([matches, rankings, webcasts, eventInfo]) => {
+      const myMatches = matches.filter(m =>
+        m.alliances.red.team_keys.includes(TEAM_KEY) ||
+        m.alliances.blue.team_keys.includes(TEAM_KEY)
+      );
+      const myRank = rankings?.find(r => r.teamNumber === TEAM_NUMBER) ?? null;
+      const knownEvent = allEvents.find(e => e.key === activeKey);
+      setData({
+        matches: myMatches,
+        rank: myRank,
+        webcasts,
+        eventKey: activeKey,
+        eventName: knownEvent?.name ?? eventInfo?.name ?? activeKey,
+      });
+    })
+    .catch(e => setError(e.message))
+    .finally(() => setLoading(false));
+  }, [activeKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Fix event name once allEvents arrives (handles override on first load) ──
+  useEffect(() => {
+    if (!allEvents.length || !data) return;
+    const eventInfo = allEvents.find(e => e.key === data.eventKey);
+    if (eventInfo && data.eventName === data.eventKey) {
+      setData(prev => prev ? { ...prev, eventName: eventInfo.name } : prev);
+    }
+  }, [allEvents]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Close picker when clicking outside ───────────────────────────────
+  useEffect(() => {
+    if (!showPicker) return;
+    function handler(e) {
+      if (pickerRef.current && !pickerRef.current.contains(e.target)) {
+        setShowPicker(false);
+      }
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showPicker]);
+
+  function selectEvent(key) {
+    if (!key) return;
+    if (key === '__auto__') {
+      localStorage.removeItem(EVENT_OVERRIDE_KEY);
+      setOverrideKey(null);
+    } else {
+      localStorage.setItem(EVENT_OVERRIDE_KEY, key);
+      setOverrideKey(key);
+    }
+    setShowPicker(false);
+    setCustomInput('');
+    setPickerError('');
+  }
+
+  function handleCustomLoad() {
+    const key = customInput.trim().toLowerCase();
+    if (!key) { setPickerError('Enter an event key (e.g. 2026miket).'); return; }
+    setPickerError('');
+    selectEvent(key);
+  }
+
+  const isOverriding = !!overrideKey;
   const playedMatches   = data?.matches.filter(m => {
     const s = m.alliances.red.score;
     return s !== null && s !== -1;
@@ -137,12 +229,82 @@ export function FanPage() {
         <div className="fan-hero-number">107</div>
         <div className="fan-hero-info">
           <h1 className="fan-hero-name">Team R.O.B.O.T.I.C.S.</h1>
-          {data?.eventName && (
-            <p className="fan-hero-event">{data.eventName}</p>
-          )}
+          <div className="fan-event-row">
+            {data?.eventName && (
+              <p className="fan-hero-event">{data.eventName}</p>
+            )}
+            {loading && !data && (
+              <p className="fan-hero-event fan-muted">Loading…</p>
+            )}
+            <div className="fan-event-change-wrap" ref={pickerRef}>
+              <button
+                className={`fan-change-event-btn ${isOverriding ? 'overriding' : ''}`}
+                onClick={() => setShowPicker(p => !p)}
+                title="Change event"
+              >
+                {isOverriding ? '📅 Custom Event' : '📅 Change Event'}
+              </button>
+
+              {showPicker && (
+                <div className="fan-event-picker">
+                  <p className="fan-picker-heading">Select an event to view</p>
+
+                  {/* Auto-detect option */}
+                  <button
+                    className={`fan-picker-option ${!overrideKey ? 'active' : ''}`}
+                    onClick={() => selectEvent('__auto__')}
+                  >
+                    <span className="fan-picker-option-label">
+                      🤖 Auto-detect (Team 107)
+                    </span>
+                    {autoEventKey && (
+                      <span className="fan-picker-option-sub">
+                        {allEvents.find(e => e.key === autoEventKey)?.name ?? autoEventKey}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Team 107's events this season */}
+                  {allEvents.length > 0 && (
+                    <>
+                      <p className="fan-picker-subheading">Team 107 events this season</p>
+                      <div className="fan-picker-list">
+                        {allEvents.map(ev => (
+                          <button
+                            key={ev.key}
+                            className={`fan-picker-option ${overrideKey === ev.key ? 'active' : ''}`}
+                            onClick={() => selectEvent(ev.key)}
+                          >
+                            <span className="fan-picker-option-label">{ev.name}</span>
+                            <span className="fan-picker-option-sub">{ev.start_date}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Custom event key */}
+                  <p className="fan-picker-subheading">Or enter any event key</p>
+                  <div className="fan-picker-custom-row">
+                    <input
+                      className="fan-picker-input"
+                      type="text"
+                      placeholder="e.g. 2026miket"
+                      value={customInput}
+                      onChange={e => { setCustomInput(e.target.value); setPickerError(''); }}
+                      onKeyDown={e => e.key === 'Enter' && handleCustomLoad()}
+                    />
+                    <button className="fan-picker-load-btn" onClick={handleCustomLoad}>Load</button>
+                  </div>
+                  {pickerError && <p className="fan-picker-error">{pickerError}</p>}
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="fan-hero-links">
             <a
-              href={`https://www.thebluealliance.com/team/107/${new Date().getFullYear()}`}
+              href={`https://www.thebluealliance.com/team/107/${year}`}
               target="_blank"
               rel="noopener noreferrer"
               className="fan-ext-link"

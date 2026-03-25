@@ -1,6 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
 import { SyncStatus } from './SyncStatus';
-import { Team107Dropdown } from './Team107Dropdown';
 import './Header.css';
 
 const SCOUTING_PATHS = ['/scouting', '/pit', '/match', '/analytics', '/drive', '/field', '/admin'];

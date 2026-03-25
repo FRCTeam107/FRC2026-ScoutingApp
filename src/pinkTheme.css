@@ -1,0 +1,275 @@
+/* ============================================================
+   PINK MODE — applied via html.pink-mode class
+   ============================================================ */
+
+/* ── Global / body ── */
+html.pink-mode,
+html.pink-mode body {
+  background: #18000f;
+  color: #f9e8f3;
+}
+
+html.pink-mode .app {
+  background: #18000f;
+}
+
+/* ── Header ── */
+html.pink-mode .app-header {
+  background: #220014;
+  border-bottom-color: #5c1840;
+}
+
+html.pink-mode .logo {
+  color: #fce7f3;
+}
+
+html.pink-mode .back-link,
+html.pink-mode .fan-nav-link,
+html.pink-mode .scouting-nav-link {
+  color: #f472b6;
+  border-color: #5c1840;
+}
+
+html.pink-mode .back-link:hover,
+html.pink-mode .fan-nav-link:hover,
+html.pink-mode .scouting-nav-link:hover {
+  background: #3a0a28;
+  border-color: #ec4899;
+}
+
+/* ── Theme toggle button ── */
+html.pink-mode .theme-toggle-btn {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .theme-toggle-btn:hover {
+  background: #ec4899;
+  color: #fff;
+}
+
+/* ── Sync status ── */
+html.pink-mode .sync-status {
+  background: #2e0a20;
+}
+
+html.pink-mode .sync-button {
+  background: #ec4899;
+}
+
+html.pink-mode .sync-button:hover:not(:disabled) {
+  background: #db2777;
+}
+
+/* ── Role select page ── */
+html.pink-mode .role-card {
+  background: #2e0a22;
+}
+
+html.pink-mode .role-card h3 { color: #fce7f3; }
+html.pink-mode .role-card p  { color: #c084a0; }
+
+html.pink-mode .role-card.pit    { border-top-color: #22c55e; }
+html.pink-mode .role-card.match  { border-top-color: #ec4899; }
+html.pink-mode .role-card.manager{ border-top-color: #c084fc; }
+html.pink-mode .role-card.admin  { border-top-color: #f87171; }
+html.pink-mode .role-card.drive  { border-top-color: #fb923c; }
+
+html.pink-mode .role-card.pit:hover    { border-color: #22c55e; border-top-color: #22c55e; }
+html.pink-mode .role-card.match:hover  { border-color: #ec4899; border-top-color: #ec4899; }
+html.pink-mode .role-card.manager:hover{ border-color: #c084fc; border-top-color: #c084fc; }
+html.pink-mode .role-card.admin:hover  { border-color: #f87171; border-top-color: #f87171; }
+html.pink-mode .role-card.drive:hover  { border-color: #fb923c; border-top-color: #fb923c; }
+
+html.pink-mode .event-status-btn {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .event-status-btn:hover {
+  border-color: #ec4899;
+  color: #fce7f3;
+}
+
+html.pink-mode .event-status-btn.loaded {
+  border-color: #22c55e;
+  color: #fce7f3;
+}
+
+html.pink-mode .offline-note { color: #7a3858; }
+
+/* ── Modal ── */
+html.pink-mode .modal-content {
+  background: #2e0a22;
+}
+
+html.pink-mode .modal-content h3 { color: #fce7f3; }
+
+html.pink-mode .modal-content input {
+  background: #1e0018;
+  border-color: #7a2860;
+  color: #fce7f3;
+}
+
+html.pink-mode .modal-content input:focus {
+  border-color: #ec4899;
+}
+
+html.pink-mode .confirm-btn {
+  background: #ec4899;
+}
+
+html.pink-mode .confirm-btn:hover:not(:disabled) {
+  background: #db2777;
+}
+
+/* ── Forms / inputs (global) ── */
+html.pink-mode input,
+html.pink-mode select,
+html.pink-mode textarea {
+  background: #1e0018;
+  border-color: #7a2860;
+  color: #fce7f3;
+}
+
+html.pink-mode input:focus,
+html.pink-mode select:focus,
+html.pink-mode textarea:focus {
+  border-color: #ec4899;
+  outline-color: #ec4899;
+}
+
+/* ── Buttons ── */
+html.pink-mode button[style*="background: #3b82f6"],
+html.pink-mode button[style*="background:#3b82f6"] {
+  background: #ec4899 !important;
+}
+
+/* ── Common panel / card backgrounds ── */
+html.pink-mode .section-card,
+html.pink-mode .panel,
+html.pink-mode .card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Admin page ── */
+html.pink-mode .admin-section,
+html.pink-mode .as-card,
+html.pink-mode .as-sub-card {
+  background: #2e0a22 !important;
+  border-color: #5c1840 !important;
+}
+
+html.pink-mode .as-table th {
+  background: #3a0a2a;
+  border-bottom-color: #5c1840;
+}
+
+html.pink-mode .as-table tr:hover {
+  background: #3a0a2a;
+}
+
+html.pink-mode .as-table td {
+  border-bottom-color: #3a0a2a;
+}
+
+/* ── Manager / analytics page ── */
+html.pink-mode .team-card,
+html.pink-mode .stat-box,
+html.pink-mode .analytics-panel,
+html.pink-mode .manager-section {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Drive team page ── */
+html.pink-mode .dt-panel,
+html.pink-mode .dt-card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Match scout form ── */
+html.pink-mode .match-section,
+html.pink-mode .phase-panel,
+html.pink-mode .scout-field {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Pit scout form ── */
+html.pink-mode .pit-form-section,
+html.pink-mode .pit-card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Event picker modal ── */
+html.pink-mode .ep-modal,
+html.pink-mode .event-picker-modal {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .ep-input,
+html.pink-mode .event-search-input {
+  background: #1e0018;
+  border-color: #7a2860;
+  color: #fce7f3;
+}
+
+/* ── Scouting preview ── */
+html.pink-mode .scouting-preview,
+html.pink-mode .sp-shift {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Fan page (if present) ── */
+html.pink-mode .fan-hero {
+  background: linear-gradient(135deg, #2e0a22, #18000f);
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-hero-number { color: #f472b6; }
+
+html.pink-mode .fan-section {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-stat-card {
+  background: #18000f;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-match-row {
+  background: #18000f;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-ext-link {
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-ext-link:hover {
+  background: #3a0a28;
+  border-color: #ec4899;
+}
+
+html.pink-mode .t107-fan-btn {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .t107-fan-btn:hover {
+  background: #ec4899;
+  color: #fff;
+}
+
+/* ── Scrollbar ── */
+html.pink-mode ::-webkit-scrollbar-track { background: #18000f; }
+html.pink-mode ::-webkit-scrollbar-thumb { background: #5c1840; border-radius: 4px; }
+html.pink-mode ::-webkit-scrollbar-thumb:hover { background: #ec4899; }

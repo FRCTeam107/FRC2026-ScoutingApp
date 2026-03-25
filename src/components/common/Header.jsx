@@ -1,9 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
 import { SyncStatus } from './SyncStatus';
+import { useTheme } from '../../hooks/useTheme';
 import './Header.css';
 
 export function Header() {
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="app-header">
@@ -17,7 +19,16 @@ export function Header() {
           </Link>
         )}
       </div>
-      <SyncStatus />
+      <div className="header-right">
+        <button
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          title={theme === 'pink' ? 'Switch to dark mode' : 'Switch to pink mode'}
+        >
+          {theme === 'pink' ? '🌑 Dark' : '🩷 Pink'}
+        </button>
+        <SyncStatus />
+      </div>
     </header>
   );
 }

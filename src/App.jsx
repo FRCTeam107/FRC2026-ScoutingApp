@@ -8,6 +8,7 @@ import { DriveTeamPage } from './pages/DriveTeamPage';
 import { FieldDrawPage } from './pages/FieldDrawPage';
 import { AdminPage } from './pages/AdminPage';
 import './App.css';
+import './pinkTheme.css';
 
 
 function App() {

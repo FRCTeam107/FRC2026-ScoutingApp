@@ -98,6 +98,18 @@ export async function verifyAdminPassword(password) {
   return data.value === password;
 }
 
+// Verify scouting area password (set in Supabase app_settings, key = 'scouting_password')
+export async function verifyScoutingPassword(password) {
+  const { data, error } = await supabase
+    .from('app_settings')
+    .select('value')
+    .eq('key', 'scouting_password')
+    .single();
+
+  if (error) throw error;
+  return data.value === password;
+}
+
 // Delete all match records from Supabase
 export async function deleteAllMatchRecords() {
   const { error } = await supabase

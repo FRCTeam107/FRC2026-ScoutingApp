@@ -1,0 +1,640 @@
+/* ============================================================
+   PINK MODE — applied via html.pink-mode class
+   ============================================================ */
+
+/* ── Global / body ── */
+html.pink-mode,
+html.pink-mode body {
+  background: #18000f;
+  color: #f9e8f3;
+}
+
+html.pink-mode .app {
+  background: #18000f;
+}
+
+/* ── Header ── */
+html.pink-mode .app-header {
+  background: #220014;
+  border-bottom-color: #5c1840;
+}
+
+html.pink-mode .logo {
+  color: #fce7f3;
+}
+
+html.pink-mode .back-link,
+html.pink-mode .fan-nav-link,
+html.pink-mode .scouting-nav-link {
+  color: #f472b6;
+  border-color: #5c1840;
+}
+
+html.pink-mode .back-link:hover,
+html.pink-mode .fan-nav-link:hover,
+html.pink-mode .scouting-nav-link:hover {
+  background: #3a0a28;
+  border-color: #ec4899;
+}
+
+/* ── Theme toggle button ── */
+html.pink-mode .theme-toggle-btn {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .theme-toggle-btn:hover {
+  background: #ec4899;
+  color: #fff;
+}
+
+/* ── Sync status ── */
+html.pink-mode .sync-status {
+  background: #2e0a20;
+}
+
+html.pink-mode .sync-button {
+  background: #ec4899;
+}
+
+html.pink-mode .sync-button:hover:not(:disabled) {
+  background: #db2777;
+}
+
+/* ── Role select page ── */
+html.pink-mode .role-card {
+  background: #2e0a22;
+}
+
+html.pink-mode .role-card h3 { color: #fce7f3; }
+html.pink-mode .role-card p  { color: #c084a0; }
+
+html.pink-mode .role-card.pit    { border-top-color: #22c55e; }
+html.pink-mode .role-card.match  { border-top-color: #ec4899; }
+html.pink-mode .role-card.manager{ border-top-color: #c084fc; }
+html.pink-mode .role-card.admin  { border-top-color: #f87171; }
+html.pink-mode .role-card.drive  { border-top-color: #fb923c; }
+
+html.pink-mode .role-card.pit:hover    { border-color: #22c55e; border-top-color: #22c55e; }
+html.pink-mode .role-card.match:hover  { border-color: #ec4899; border-top-color: #ec4899; }
+html.pink-mode .role-card.manager:hover{ border-color: #c084fc; border-top-color: #c084fc; }
+html.pink-mode .role-card.admin:hover  { border-color: #f87171; border-top-color: #f87171; }
+html.pink-mode .role-card.drive:hover  { border-color: #fb923c; border-top-color: #fb923c; }
+
+html.pink-mode .event-status-btn {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .event-status-btn:hover {
+  border-color: #ec4899;
+  color: #fce7f3;
+}
+
+html.pink-mode .event-status-btn.loaded {
+  border-color: #22c55e;
+  color: #fce7f3;
+}
+
+html.pink-mode .offline-note { color: #7a3858; }
+
+/* ── Modal ── */
+html.pink-mode .modal-content {
+  background: #2e0a22;
+}
+
+html.pink-mode .modal-content h3 { color: #fce7f3; }
+
+html.pink-mode .modal-content input {
+  background: #1e0018;
+  border-color: #7a2860;
+  color: #fce7f3;
+}
+
+html.pink-mode .modal-content input:focus {
+  border-color: #ec4899;
+}
+
+html.pink-mode .confirm-btn {
+  background: #ec4899;
+}
+
+html.pink-mode .confirm-btn:hover:not(:disabled) {
+  background: #db2777;
+}
+
+/* ── Forms / inputs (global) ── */
+html.pink-mode input,
+html.pink-mode select,
+html.pink-mode textarea {
+  background: #1e0018;
+  border-color: #7a2860;
+  color: #fce7f3;
+}
+
+html.pink-mode input:focus,
+html.pink-mode select:focus,
+html.pink-mode textarea:focus {
+  border-color: #ec4899;
+  outline-color: #ec4899;
+}
+
+/* ── Buttons ── */
+html.pink-mode button[style*="background: #3b82f6"],
+html.pink-mode button[style*="background:#3b82f6"] {
+  background: #ec4899 !important;
+}
+
+/* ── Common panel / card backgrounds ── */
+html.pink-mode .section-card,
+html.pink-mode .panel,
+html.pink-mode .card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Admin page ── */
+html.pink-mode .admin-section,
+html.pink-mode .as-card,
+html.pink-mode .as-sub-card {
+  background: #2e0a22 !important;
+  border-color: #5c1840 !important;
+}
+
+html.pink-mode .as-table th {
+  background: #3a0a2a;
+  border-bottom-color: #5c1840;
+}
+
+html.pink-mode .as-table tr:hover {
+  background: #3a0a2a;
+}
+
+html.pink-mode .as-table td {
+  border-bottom-color: #3a0a2a;
+}
+
+/* ── Manager / analytics page ── */
+html.pink-mode .team-card,
+html.pink-mode .stat-box,
+html.pink-mode .analytics-panel,
+html.pink-mode .manager-section {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Drive team page ── */
+html.pink-mode .dt-panel,
+html.pink-mode .dt-card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Match scout form ── */
+html.pink-mode .match-section,
+html.pink-mode .phase-panel,
+html.pink-mode .scout-field {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Pit scout form ── */
+html.pink-mode .pit-form-section,
+html.pink-mode .pit-card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Event picker modal ── */
+html.pink-mode .ep-modal,
+html.pink-mode .event-picker-modal {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .ep-input,
+html.pink-mode .event-search-input {
+  background: #1e0018;
+  border-color: #7a2860;
+  color: #fce7f3;
+}
+
+/* ── Scouting preview ── */
+html.pink-mode .scouting-preview,
+html.pink-mode .sp-shift {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+/* ── Fan page (if present) ── */
+html.pink-mode .fan-hero {
+  background: linear-gradient(135deg, #2e0a22, #18000f);
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-hero-number { color: #f472b6; }
+
+html.pink-mode .fan-section {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-stat-card {
+  background: #18000f;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-match-row {
+  background: #18000f;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-ext-link {
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-ext-link:hover {
+  background: #3a0a28;
+  border-color: #ec4899;
+}
+
+/* ── Event picker ── */
+html.pink-mode .fan-change-event-btn {
+  border-color: #5c1840;
+  color: #7a3858;
+}
+
+html.pink-mode .fan-change-event-btn:hover {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .fan-change-event-btn.overriding {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .fan-event-picker {
+  background: #2e0a22;
+  border-color: #5c1840;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+html.pink-mode .fan-picker-option:hover {
+  background: #3a0a2a;
+  border-color: #5c1840;
+}
+
+html.pink-mode .fan-picker-option.active {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: #ec4899;
+}
+
+html.pink-mode .fan-picker-option-label { color: #fce7f3; }
+html.pink-mode .fan-picker-option-sub   { color: #7a3858; }
+html.pink-mode .fan-picker-heading      { color: #7a3858; }
+html.pink-mode .fan-picker-subheading   { color: #5c2040; }
+
+html.pink-mode .fan-picker-input {
+  background: #1e0018;
+  border-color: #5c1840;
+  color: #fce7f3;
+}
+
+html.pink-mode .fan-picker-input:focus {
+  border-color: #ec4899;
+}
+
+html.pink-mode .fan-picker-load-btn {
+  background: #db2777;
+}
+
+html.pink-mode .fan-picker-load-btn:hover {
+  background: #9d174d;
+}
+
+html.pink-mode .t107-fan-btn {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .t107-fan-btn:hover {
+  background: #ec4899;
+  color: #fff;
+}
+
+/* ── Page containers ── */
+html.pink-mode .page-content {
+  background: #1e0018;
+}
+
+html.pink-mode .recent-matches {
+  border-top-color: #5c1840;
+}
+
+html.pink-mode .recent-matches h3 { color: #fce7f3; }
+
+html.pink-mode .record-item {
+  background: #2e0a22;
+}
+
+/* ── Match Scout Form ── */
+html.pink-mode .match-scout-form .form-group input,
+html.pink-mode .match-scout-form .form-group textarea,
+html.pink-mode .match-scout-form .form-group .team-select,
+html.pink-mode .match-scout-form .form-group .team-select option {
+  background: #1e0018;
+  border-color: #7a2860;
+  color: #fce7f3;
+}
+
+html.pink-mode .match-scout-form .form-group input:focus,
+html.pink-mode .match-scout-form .form-group textarea:focus,
+html.pink-mode .match-scout-form .form-group .team-select:focus {
+  border-color: #ec4899;
+}
+
+html.pink-mode .stage-dot {
+  background: #3a0a2a;
+}
+
+html.pink-mode .stage-dot.active {
+  background: #ec4899;
+}
+
+html.pink-mode .stage-dot.current {
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+}
+
+html.pink-mode .stage-title { color: #fce7f3; }
+html.pink-mode .stage-subtitle { color: #c084a0; }
+html.pink-mode .form-group label { color: #fce7f3; }
+
+html.pink-mode .alliance-btn {
+  background: #2e0a22;
+  color: #7a3858;
+}
+
+html.pink-mode .summary-stats .stat {
+  background: #2e0a22;
+}
+
+/* ── Focus / Climb / Choice buttons ── */
+html.pink-mode .focus-btn,
+html.pink-mode .climb-option,
+html.pink-mode .pit-choice-btn {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .focus-btn:hover:not(.active),
+html.pink-mode .climb-option:hover:not(.selected),
+html.pink-mode .pit-choice-btn:hover:not(.selected) {
+  border-color: #ec4899;
+  background: #3a0a2a;
+}
+
+html.pink-mode .focus-btn.active,
+html.pink-mode .climb-option.selected,
+html.pink-mode .pit-choice-btn.selected {
+  background: #db2777;
+  border-color: #ec4899;
+}
+
+/* ── Mode Toggle (Auton/Teleop) ── */
+html.pink-mode .mode-toggle {
+  background: #2e0a22;
+}
+
+html.pink-mode .mode-button {
+  color: #7a3858;
+}
+
+html.pink-mode .mode-button:hover:not(.active) {
+  background: #3a0a2a;
+}
+
+/* ── Accuracy Slider ── */
+html.pink-mode .slider {
+  background: #2e0a22;
+}
+
+html.pink-mode .stepper-btn {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #fce7f3;
+}
+
+/* ── Defense Rating ── */
+html.pink-mode .rating-option {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #7a3858;
+}
+
+html.pink-mode .rating-option:hover {
+  border-color: #ec4899;
+}
+
+html.pink-mode .rating-labels { color: #7a3858; }
+
+/* ── Firing Button ── */
+html.pink-mode .firing-button {
+  background: linear-gradient(180deg, #2e0a22 0%, #18000f 100%);
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .firing-button.active.teleop {
+  background: linear-gradient(180deg, #db2777 0%, #9d174d 100%);
+  border-color: #ec4899;
+  box-shadow: 0 0 40px rgba(236, 72, 153, 0.5);
+}
+
+/* ── Team List (Pit) ── */
+html.pink-mode .checklist-item {
+  background: #2e0a22;
+}
+
+html.pink-mode .checklist-item:hover {
+  background: #3a0a2a;
+}
+
+html.pink-mode .team-list-header h3 { color: #fce7f3; }
+html.pink-mode .team-list-count { color: #7a3858; }
+html.pink-mode .team-list-empty { color: #7a3858; }
+
+/* ── Drive Team Page ── */
+html.pink-mode .drive-tip {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .drive-tip strong { color: #fce7f3; }
+
+html.pink-mode .match-type-select,
+html.pink-mode .match-number-input {
+  background: #1e0018;
+  border-color: #5c1840;
+  color: #fce7f3;
+}
+
+html.pink-mode .field-link-btn {
+  background: #2e0a22;
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .field-link-btn:hover {
+  background: #3a0a2a;
+}
+
+html.pink-mode .dtc {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .dtc.red { border-color: rgba(239, 68, 68, 0.5); }
+html.pink-mode .dtc.blue { border-color: rgba(59, 130, 246, 0.5); }
+
+html.pink-mode .match-label { color: #c084a0; }
+
+/* ── Role Select Page ── */
+html.pink-mode .role-select-page { background: #18000f; }
+html.pink-mode .role-header h1 { color: #fce7f3; }
+html.pink-mode .role-header h2 { color: #7a3858; }
+
+/* ── Manager / analytics page — extended ── */
+html.pink-mode .stat-card {
+  background: #2e0a22;
+}
+
+html.pink-mode .stat-card.accent {
+  background: linear-gradient(135deg, #9d174d 0%, #db2777 100%);
+}
+
+html.pink-mode .stat-value { color: #f472b6; }
+html.pink-mode .stat-label { color: #7a3858; }
+
+html.pink-mode .tab-btn {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .tab-btn.active {
+  background: #db2777;
+  border-color: #ec4899;
+  color: #fff;
+}
+
+html.pink-mode .weight-card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .schedule-table thead tr { background: #2e0a22; }
+html.pink-mode .schedule-table tbody tr:nth-child(even) { background: #270820; }
+html.pink-mode .schedule-table tbody tr:nth-child(odd) { background: #220618; }
+
+html.pink-mode .event-setup-section,
+html.pink-mode .current-event-section,
+html.pink-mode .event-teams-section,
+html.pink-mode .event-actions-section {
+  background: #2e0a22;
+}
+
+html.pink-mode .admin-section {
+  border-top-color: #5c1840;
+}
+
+html.pink-mode .test-toggle-btn {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .test-toggle-btn:hover,
+html.pink-mode .test-toggle-btn.active {
+  border-color: #ec4899;
+  color: #f472b6;
+}
+
+html.pink-mode .test-toggle-btn.active {
+  background: #3a0a2a;
+}
+
+html.pink-mode .export-btn-import {
+  background: #2e0a22;
+  color: #f472b6;
+  border-color: #5c1840;
+}
+
+html.pink-mode .export-btn-import:hover {
+  background: #3a0a2a;
+  border-color: #ec4899;
+}
+
+/* ── Admin/Scouting Schedule ── */
+html.pink-mode .ss-config-section,
+html.pink-mode .ss-scouters-section,
+html.pink-mode .ss-schedule-section {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .ss-table th { background: #270820; }
+html.pink-mode .ss-table td { border-top-color: #5c1840; }
+html.pink-mode .ss-row-even td { background: #270820; }
+html.pink-mode .ss-row-odd td  { background: #220618; }
+
+html.pink-mode .ss-summary-card {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .ss-summary-stat { color: #f472b6; }
+html.pink-mode .ss-summary-shifts { color: #7a3858; }
+
+html.pink-mode .ss-publish-section {
+  background: #2e0a22;
+  border-color: #5c1840;
+}
+
+html.pink-mode .back-btn {
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .back-btn:hover {
+  background: #2e0a22;
+  color: #fce7f3;
+  border-color: #ec4899;
+}
+
+html.pink-mode .as-move-btn {
+  background: #2e0a22;
+  border-color: #5c1840;
+  color: #c084a0;
+}
+
+html.pink-mode .as-move-btn:hover:not(:disabled) {
+  background: #3a0a2a;
+  color: #fce7f3;
+}
+
+html.pink-mode .as-scratch-btn {
+  border-color: #5c1840;
+  color: #7a3858;
+}
+
+/* ── Field Draw Page ── */
+html.pink-mode .field-toolbar-hint { color: #7a3858; }
+
+/* ── Scrollbar ── */
+html.pink-mode ::-webkit-scrollbar-track { background: #18000f; }
+html.pink-mode ::-webkit-scrollbar-thumb { background: #5c1840; border-radius: 4px; }
+html.pink-mode ::-webkit-scrollbar-thumb:hover { background: #ec4899; }

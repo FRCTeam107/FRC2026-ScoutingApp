@@ -63,12 +63,14 @@
 .role-card.manager{ border-top-color: #8b5cf6; }
 .role-card.admin  { border-top-color: #ef4444; }
 .role-card.drive  { border-top-color: #f59e0b; }
+.role-card.fan    { border-top-color: #ec4899; }
 
 .role-card.pit:hover    { border-color: #22c55e; border-top-color: #22c55e; }
 .role-card.match:hover  { border-color: #3b82f6; border-top-color: #3b82f6; }
 .role-card.manager:hover{ border-color: #8b5cf6; border-top-color: #8b5cf6; }
 .role-card.admin:hover  { border-color: #ef4444; border-top-color: #ef4444; }
 .role-card.drive:hover  { border-color: #f59e0b; border-top-color: #f59e0b; }
+.role-card.fan:hover    { border-color: #ec4899; border-top-color: #ec4899; }
 
 .role-icon {
   font-size: 36px;

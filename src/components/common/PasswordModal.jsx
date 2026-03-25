@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { verifyAdminPassword } from '../../lib/supabase';
 import './PasswordModal.css';
 
-export function PasswordModal({ isOpen, onClose, onSuccess, title = 'Enter Admin Password' }) {
+export function PasswordModal({ isOpen, onClose, onSuccess, title = 'Enter Admin Password', verifyFn }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
+
+  const verify = verifyFn ?? verifyAdminPassword;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +17,7 @@ export function PasswordModal({ isOpen, onClose, onSuccess, title = 'Enter Admin
     setLoading(true);
 
     try {
-      const isValid = await verifyAdminPassword(password);
+      const isValid = await verify(password);
       if (isValid) {
         setPassword('');
         onSuccess();

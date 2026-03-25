@@ -36,6 +36,24 @@
   text-decoration: underline;
 }
 
+.fan-nav-link,
+.scouting-nav-link {
+  color: #60a5fa;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #2a2a40;
+  border-radius: 6px;
+  padding: 5px 12px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fan-nav-link:hover,
+.scouting-nav-link:hover {
+  background: #1e2a40;
+  border-color: #3b82f6;
+}
+
 /* ── Theme toggle ── */
 .theme-toggle-btn {
   background: transparent;

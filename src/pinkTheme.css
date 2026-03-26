@@ -478,8 +478,7 @@ html.pink-mode .drive-tip {
 
 html.pink-mode .drive-tip strong { color: #fce7f3; }
 
-html.pink-mode .match-type-select,
-html.pink-mode .match-number-input {
+html.pink-mode .match-select {
   background: #1e0018;
   border-color: #5c1840;
   color: #fce7f3;

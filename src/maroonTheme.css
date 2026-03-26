@@ -302,3 +302,293 @@ html.maroon-mode .fan-last-updated { color: #5c2028; }
 html.maroon-mode ::-webkit-scrollbar-track { background: #0f0608; }
 html.maroon-mode ::-webkit-scrollbar-thumb { background: #5c1020; border-radius: 4px; }
 html.maroon-mode ::-webkit-scrollbar-thumb:hover { background: #c0392b; }
+
+
+/* ----------------------------------------------------------
+   MAROON MODE — Extended coverage pass 2
+   ---------------------------------------------------------- */
+
+/* -- Global table elements -- */
+html.maroon-mode th { color: #c07080; border-bottom-color: #3a1018; }
+html.maroon-mode td { color: #f9e8ec; border-bottom-color: #3a1018; }
+html.maroon-mode tr:hover td { background: #2e0810; }
+
+/* -- Manager page -- */
+html.maroon-mode .manager-page { background: #0f0608; }
+html.maroon-mode .page-header h1 { color: #f9e8ec; }
+html.maroon-mode .page-header p { color: #7a3040; }
+html.maroon-mode .backup-banner { background: #2e1800; border-color: #92400e; color: #fbbf24; }
+html.maroon-mode .backup-exit-btn { background: #92400e; color: #fff; }
+
+html.maroon-mode .tab-bar { background: #2e0810; }
+html.maroon-mode .tab { color: #7a3040; }
+html.maroon-mode .tab.active { background: #c0392b; color: #fff; }
+html.maroon-mode .tab:hover:not(.active) { background: #3a1018; }
+html.maroon-mode .tab-content { background: #1e0810; }
+
+html.maroon-mode .analytics-section h3 { color: #f9e8ec; }
+html.maroon-mode .schedule-level-heading { color: #f9e8ec; }
+
+html.maroon-mode .top-item { background: #2e0810; }
+html.maroon-mode .top-item:hover { background: #3a1018; }
+html.maroon-mode .top-item .team-num { color: #f9e8ec; }
+
+html.maroon-mode .search-input {
+  background: #1e0810;
+  border-color: #5c1020;
+  color: #f9e8ec;
+}
+html.maroon-mode .search-input:focus { border-color: #c0392b; }
+html.maroon-mode .sort-select {
+  background: #1e0810;
+  border-color: #5c1020;
+  color: #f9e8ec;
+}
+html.maroon-mode .sort-dir-btn { background: #c0392b; }
+html.maroon-mode .clickable-row:hover td { background: #2e0810; }
+
+html.maroon-mode .team-card { background: #2e0810; }
+html.maroon-mode .team-card-info h3 { color: #f9e8ec; }
+html.maroon-mode .balls-sec { color: #7a3040; }
+html.maroon-mode .team-desc { color: #7a3040; }
+html.maroon-mode .team-photo-placeholder { background: #3a1018; color: #7a3040; }
+html.maroon-mode .view-btn { background: #c0392b; }
+html.maroon-mode .view-btn:hover { background: #922b21; }
+
+html.maroon-mode .detail-section { background: #2e0810; }
+html.maroon-mode .detail-section.missing { background: #2e0810; border-color: #5c1020; }
+html.maroon-mode .detail-section.missing p { color: #7a3040; }
+html.maroon-mode .detail-section h3 { color: #f9e8ec; }
+html.maroon-mode .team-detail-header h2 { color: #f9e8ec; }
+
+html.maroon-mode .pit-stat .label { color: #7a3040; }
+html.maroon-mode .pit-stat .value { color: #f9e8ec; }
+
+html.maroon-mode .stat-box { background: #1e0608; }
+html.maroon-mode .stat-box .stat-value { color: #f9e8ec; }
+html.maroon-mode .stat-box.highlight .stat-value { color: #22c55e; }
+
+html.maroon-mode .climb-bar-bg { background: #2e0810; }
+html.maroon-mode .climb-column h4 { color: #7a3040; }
+html.maroon-mode .climb-level { color: #f9e8ec; }
+html.maroon-mode .climb-count { color: #7a3040; }
+html.maroon-mode .climb-badge { background: #2e0810; color: #b08090; }
+
+html.maroon-mode .climb-toggle { background: #1e0608; }
+html.maroon-mode .toggle-btn { color: #7a3040; }
+html.maroon-mode .toggle-btn.active { background: #c0392b; color: #fff; }
+html.maroon-mode .toggle-btn:hover:not(.active) { color: #b08090; }
+html.maroon-mode .level-label-h { color: #f9e8ec; }
+html.maroon-mode .level-bar-h-container { background: #1e0608; }
+html.maroon-mode .level-count-h { color: #7a3040; }
+html.maroon-mode .team-legend-item { color: #b08090; }
+html.maroon-mode .team-legend-item:hover { background: #2e0810; }
+
+html.maroon-mode .segment-tooltip {
+  background: #2e0810;
+  color: #f9e8ec;
+  border-color: #5c1020;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+html.maroon-mode .no-event-state { background: #2e0810; }
+html.maroon-mode .no-event-state p { color: #7a3040; }
+html.maroon-mode .event-card { background: #1e0608; }
+html.maroon-mode .event-team-item { background: #1e0608; }
+html.maroon-mode .event-team-number { color: #e57373; }
+html.maroon-mode .event-team-name { color: #7a3040; }
+html.maroon-mode .more-teams { color: #7a3040; }
+html.maroon-mode .event-hint { color: #7a3040; }
+html.maroon-mode .event-dates { color: #7a3040; }
+
+/* Points table */
+html.maroon-mode .points-table th {
+  background: #2e0810;
+  color: #b08090;
+  border-bottom-color: #3a1018;
+}
+html.maroon-mode .points-table td { border-bottom-color: #3a1018; }
+html.maroon-mode .points-table tbody tr:hover td { background: #3a1018; }
+html.maroon-mode .points-team-row.expanded td { background: #3a1018; }
+html.maroon-mode .points-match-row td {
+  background: #160408;
+  color: #c07080;
+  border-bottom-color: #3a1018;
+}
+
+html.maroon-mode .points-view-toggle { background: #2e0810; }
+html.maroon-mode .pts-view-btn { color: #7a3040; }
+html.maroon-mode .pts-view-btn.active { background: #3a1018; color: #f9e8ec; }
+
+html.maroon-mode .pts-bar-track { background: #2e0810; }
+html.maroon-mode .pts-bar-label { color: #7a3040; }
+html.maroon-mode .pts-bar-value { color: #c07080; }
+html.maroon-mode .pts-metric-btn { border-color: #5c1020; color: #7a3040; }
+html.maroon-mode .pts-metric-btn:hover { border-color: #7a3040; color: #b08090; }
+
+html.maroon-mode .weights-desc { color: #7a3040; }
+html.maroon-mode .weights-reset-btn { border-color: #5c1020; color: #7a3040; }
+html.maroon-mode .weights-reset-btn:hover { border-color: #7a3040; color: #b08090; }
+html.maroon-mode .weight-card { background: #2e0810; border-color: #5c1020; border-left-color: #7a2030; }
+html.maroon-mode .weight-label { color: #f9e8ec; }
+html.maroon-mode .weight-desc { color: #7a3040; }
+html.maroon-mode .weight-number {
+  background: #1e0608;
+  border-color: #5c1020;
+  color: #f9e8ec;
+}
+html.maroon-mode .weight-number:focus { border-color: #c0392b; }
+html.maroon-mode .weight-x { color: #7a3040; }
+html.maroon-mode .weight-preview { color: #7a3040; }
+
+html.maroon-mode .export-section { background: #2e0810; border-color: #5c1020; }
+html.maroon-mode .export-section h3 { color: #f9e8ec; }
+html.maroon-mode .export-desc { color: #7a3040; }
+
+/* -- Admin / Dev Tools -- */
+html.maroon-mode .field-image-section { background: #1e0608; border-color: #5c1020; }
+html.maroon-mode .field-image-section h3 { color: #b08090; }
+html.maroon-mode .dev-tools-section { background: #1e0608; border-color: #3a1018; }
+html.maroon-mode .dev-tools-header h3 { color: #b08090; }
+html.maroon-mode .dev-note { color: #7a3040; }
+
+/* -- Drive Team — detailed cards -- */
+html.maroon-mode .dtc { background: #1e0608; border-color: #3a1018; }
+html.maroon-mode .dtc.red  { border-color: rgba(239,68,68,0.4); }
+html.maroon-mode .dtc.blue { border-color: rgba(59,130,246,0.4); }
+html.maroon-mode .dtc-header { background: rgba(255,255,255,0.03); }
+html.maroon-mode .dtc.red  .dtc-header { background: rgba(239,68,68,0.08); }
+html.maroon-mode .dtc.blue .dtc-header { background: rgba(59,130,246,0.08); }
+html.maroon-mode .dtc-number { color: #f9e8ec; }
+html.maroon-mode .dtc-name   { color: #7a3040; }
+html.maroon-mode .dtc-stat-cell { background: #2a0a10; }
+html.maroon-mode .dtc-stat-label { color: #7a3040; }
+html.maroon-mode .dtc-stat-val   { color: #f9e8ec; }
+html.maroon-mode .dtc-perf-row { border-top-color: #3a1018; }
+html.maroon-mode .dtc-perf-label { color: #7a3040; }
+html.maroon-mode .dtc-perf-val   { color: #f9e8ec; }
+html.maroon-mode .dtc-match-count { color: #5c1020; }
+html.maroon-mode .dtc-desc { color: #7a3040; }
+html.maroon-mode .dtc-section-label { color: #7a3040; border-top-color: #3a1018; }
+html.maroon-mode .dtc-no-pit, html.maroon-mode .dtc-no-data { color: #7a3040; }
+html.maroon-mode .dtc-defense-num { color: #7a3040; }
+html.maroon-mode .dtc-badge.neutral { background: #2a0a10; color: #b08090; border-color: #3a1018; }
+html.maroon-mode .dtc-badge.unknown { background: #2a0a10; color: #7a3040; border-color: #3a1018; }
+
+html.maroon-mode .prediction-section { background: #1e0608; border-color: #3a1018; }
+html.maroon-mode .prediction-header  { color: #7a3040; }
+html.maroon-mode .prediction-bar-track { background: rgba(59,130,246,0.2); }
+html.maroon-mode .pred-even { color: #7a3040; }
+html.maroon-mode .prediction-note { color: #5c1020; }
+
+html.maroon-mode .drive-empty-state h2 { color: #f9e8ec; }
+html.maroon-mode .drive-empty-state > p { color: #7a3040; }
+
+/* -- EventPickerModal -- */
+html.maroon-mode .epm-modal {
+  background: #2e0810;
+  border-color: #5c1020;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+}
+html.maroon-mode .epm-header { border-bottom-color: #5c1020; }
+html.maroon-mode .epm-header h2 { color: #f9e8ec; }
+html.maroon-mode .epm-header::before { background: #5c1020; }
+html.maroon-mode .epm-close { color: #7a3040; }
+html.maroon-mode .epm-close:hover { color: #f9e8ec; background: #3a1018; }
+html.maroon-mode .epm-input {
+  background: #1e0608;
+  border-color: #5c1020;
+  color: #f9e8ec;
+}
+html.maroon-mode .epm-input:focus { border-color: #c0392b; }
+html.maroon-mode .epm-input::placeholder { color: #5c2028; }
+html.maroon-mode .epm-search-btn { background: #c0392b; }
+html.maroon-mode .epm-search-btn:hover:not(:disabled) { background: #922b21; }
+html.maroon-mode .epm-event-item {
+  background: #1e0608;
+  border-color: #3a1018;
+}
+html.maroon-mode .epm-event-item:hover { border-color: #c0392b; background: rgba(192,57,43,0.08); }
+html.maroon-mode .epm-event-item.selected { border-color: #c0392b; background: rgba(192,57,43,0.15); }
+html.maroon-mode .epm-event-name { color: #f9e8ec; }
+html.maroon-mode .epm-event-meta { color: #7a3040; }
+
+/* -- FieldDrawPage -- */
+html.maroon-mode .field-page-root { background: #0f0608; }
+html.maroon-mode .field-toolbar { background: #160a0c; border-left-color: #3a1018; }
+html.maroon-mode .field-toolbar-label { color: #5c2028; }
+html.maroon-mode .field-back-btn { background: #2e0810; border-color: #3a1018; color: #b08090; }
+html.maroon-mode .field-back-btn:hover { background: #3a1018; color: #f9e8ec; }
+html.maroon-mode .field-size-btn { background: #2e0810; }
+html.maroon-mode .field-size-btn.active { border-color: #c0392b; }
+html.maroon-mode .field-tool-btn,
+html.maroon-mode .field-action-btn { background: #2e0810; border-color: #3a1018; color: #7a3040; }
+html.maroon-mode .field-tool-btn:hover,
+html.maroon-mode .field-action-btn:hover:not(:disabled) { background: #3a1018; color: #f9e8ec; }
+html.maroon-mode .field-tool-btn.active { background: #420e16; border-color: #c0392b; color: #e57373; }
+html.maroon-mode .field-team-input { background: #2e0810; border-color: #3a1018; color: #f9e8ec; }
+html.maroon-mode .field-team-input:focus { border-color: #c0392b; }
+html.maroon-mode .field-toolbar-hint { color: #5c2028; }
+
+/* -- RoleSelectPage — scouting preview -- */
+html.maroon-mode .scouting-preview { background: #2e0810; border-color: #5c1020; }
+html.maroon-mode .sp-heading { color: #7a3040; }
+html.maroon-mode .sp-shift { color: #f9e8ec; }
+html.maroon-mode .sp-shift-label { color: #7a3040; }
+html.maroon-mode .sp-shift-range { color: #b08090; }
+html.maroon-mode .sp-red  { background: #1f0a0a; border-right-color: #3a1018; }
+html.maroon-mode .sp-blue { background: #050f1f; }
+html.maroon-mode .sp-pos  { color: #7a3040; }
+html.maroon-mode .sp-name { color: #f9e8ec; }
+
+/* -- Appearance tab (maroon) -- */
+html.maroon-mode .appearance-section { background: #2e0810; border-color: #5c1020; }
+html.maroon-mode .appearance-section h3 { color: #f9e8ec; }
+html.maroon-mode .appearance-desc { color: #7a3040; }
+html.maroon-mode .theme-card { background: #1e0608; border-color: #3a1018; }
+html.maroon-mode .theme-card:hover { background: #2e0810; border-color: #c0392b; }
+html.maroon-mode .theme-card.active { background: rgba(192,57,43,0.1); border-color: #c0392b; }
+html.maroon-mode .theme-card-label { color: #f9e8ec; }
+html.maroon-mode .theme-card-desc  { color: #7a3040; }
+html.maroon-mode .theme-card-check { color: #e57373; }
+
+/* -- SyncStatus extended -- */
+html.maroon-mode .status-text { color: #7a3040; }
+html.maroon-mode .pending-badge { background: #2e1800; color: #fbbf24; }
+html.maroon-mode .sync-error { color: #e57373; }
+html.maroon-mode .last-sync { color: #5c2028; }
+html.maroon-mode .status-indicator.online  .status-dot { background: #22c55e; }
+html.maroon-mode .status-indicator.offline .status-dot { background: #e57373; }
+
+/* -- MatchScoutForm extended -- */
+html.maroon-mode .next-button { background: #c0392b; }
+html.maroon-mode .next-button:hover:not(:disabled) { background: #922b21; }
+html.maroon-mode .back-button { background: #2e0810; color: #b08090; }
+html.maroon-mode .back-button:hover { background: #3a1018; }
+html.maroon-mode .submit-button { background: #16a34a; }
+html.maroon-mode .submit-button:hover { background: #15803d; }
+html.maroon-mode .lineup-team-btn .lineup-pos { color: #7a3040; }
+html.maroon-mode .lineup-team-btn .lineup-num { color: #f9e8ec; }
+
+/* -- PitScoutForm extended -- */
+html.maroon-mode .save-button { background: #c0392b; }
+html.maroon-mode .save-button:hover { background: #922b21; }
+html.maroon-mode .cancel-button { background: #2e0810; color: #b08090; }
+html.maroon-mode .cancel-button:hover { background: #3a1018; }
+html.maroon-mode .hint { color: #7a3040; }
+
+/* -- PhotoCapture -- */
+html.maroon-mode .capture-button { background: #c0392b; }
+html.maroon-mode .capture-button:hover { background: #922b21; }
+html.maroon-mode .remove-button { background: #7f1d1d; }
+html.maroon-mode .remove-button:hover { background: #991b1b; }
+
+/* -- TeamList grid -- */
+html.maroon-mode .team-grid .team-card { background: #2e0810; border: 1px solid #3a1018; }
+html.maroon-mode .team-grid .team-card:hover { border-color: #c0392b; }
+html.maroon-mode .team-number { color: #e57373; }
+html.maroon-mode .team-stat { color: #7a3040; }
+html.maroon-mode .checklist-item.scouted { background: rgba(34,197,94,0.06); }
+html.maroon-mode .checklist-time { color: #5c2028; }
+html.maroon-mode .checklist-team-number { color: #f9e8ec; }
+html.maroon-mode .checklist-team-name   { color: #7a3040; }

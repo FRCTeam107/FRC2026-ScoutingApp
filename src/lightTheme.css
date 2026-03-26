@@ -209,7 +209,8 @@ html.light-mode .drive-tip {
   color: #6b7280;
 }
 html.light-mode .drive-tip strong { color: #111827; }
-html.light-mode .match-select {
+html.light-mode .match-type-select,
+html.light-mode .match-number-input {
   background: #ffffff;
   border-color: #d1d5db;
   color: #111827;

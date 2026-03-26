@@ -193,7 +193,8 @@ html.maroon-mode .team-list-empty { color: #7a3040; }
 /* ── Drive Team page ── */
 html.maroon-mode .drive-tip { background: #2e0810; border-color: #5c1020; color: #b08090; }
 html.maroon-mode .drive-tip strong { color: #f9e8ec; }
-html.maroon-mode .match-select {
+html.maroon-mode .match-type-select,
+html.maroon-mode .match-number-input {
   background: #1e0810;
   border-color: #5c1020;
   color: #f9e8ec;

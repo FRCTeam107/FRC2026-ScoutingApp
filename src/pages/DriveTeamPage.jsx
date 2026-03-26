@@ -48,14 +48,10 @@ const LEVEL_ORDER = { qm: 0, ef: 1, qf: 2, sf: 3, f: 4 };
 const LEVEL_GROUP = { qm: 'Qualifications', ef: 'Playoffs', qf: 'Playoffs', sf: 'Playoffs', f: 'Finals' };
 
 export function DriveTeamPage() {
-  const [matchType, setMatchType]     = useState('qm');
-  const [matchNumber, setMatchNumber] = useState('');
-  const [playoffSet, setPlayoffSet]   = useState('');
-  const [playoffGame, setPlayoffGame] = useState('');
+  const [selectedKey, setSelectedKey] = useState('');
   const [matchData, setMatchData]     = useState(null);
   const [schedule, setSchedule]       = useState([]);
   const [schedLoading, setSchedLoading] = useState(false);
-  const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState(null);
   const [refreshKey, setRefreshKey]   = useState(0);
 
@@ -81,52 +77,23 @@ export function DriveTeamPage() {
       .finally(() => setSchedLoading(false));
   }, [currentEvent?.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleLoad = async () => {
-    if (!currentEvent) {
-      setError('No event loaded. Go to Manager → Event Setup first.');
-      return;
-    }
-    setLoading(true);
+  // Group schedule into sections for the <select>
+  const LEVEL_GROUP = { qm: 'Qualifications', ef: 'Playoffs', qf: 'Playoffs', sf: 'Playoffs', f: 'Finals' };
+  const GROUP_ORDER = ['Qualifications', 'Playoffs', 'Finals', 'Other'];
+  const grouped = schedule.reduce((acc, m) => {
+    const group = LEVEL_GROUP[m.comp_level] ?? 'Other';
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(m);
+    return acc;
+  }, {});
+
+  function handleSelect(key) {
+    setSelectedKey(key);
     setError(null);
-
-    try {
-      let sched = schedule;
-      if (!sched.length) {
-        sched = await getEventMatches(currentEvent.key);
-        setMatchSchedule(sched);
-        setSchedule(sched);
-      }
-
-      let match;
-      if (matchType === 'qm') {
-        const num = parseInt(matchNumber);
-        if (!num) { setError('Enter a match number.'); setLoading(false); return; }
-        match = sched.find(m => m.comp_level === 'qm' && m.match_number === num);
-        if (!match) setError(`Qual ${num} not found in the schedule.`);
-      } else if (matchType === 'playoff') {
-        const set  = parseInt(playoffSet);
-        const game = parseInt(playoffGame);
-        if (!set || !game) { setError('Enter both Set # and Game #.'); setLoading(false); return; }
-        match = sched.find(m =>
-          ['ef','qf','sf'].includes(m.comp_level) &&
-          m.set_number === set &&
-          m.match_number === game
-        );
-        if (!match) setError(`Playoff Set ${set} Game ${game} not found in the schedule.`);
-      } else {
-        const num = parseInt(matchNumber);
-        if (!num) { setError('Enter a match number.'); setLoading(false); return; }
-        match = sched.find(m => m.comp_level === 'f' && m.match_number === num);
-        if (!match) setError(`Final ${num} not found in the schedule.`);
-      }
-
-      setMatchData(match ?? null);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!key) { setMatchData(null); return; }
+    const match = schedule.find(m => m.key === key);
+    setMatchData(match ?? null);
+  }
 
   const getTeamStats = (teamNumber) => {
     const recs = allRecords.filter(r => r.teamNumber === teamNumber)
@@ -318,62 +285,25 @@ export function DriveTeamPage() {
 
         <div className="match-lookup">
           <select
-            className="match-type-select"
-            value={matchType}
-            onChange={e => { setMatchType(e.target.value); setMatchData(null); setError(null); setMatchNumber(''); setPlayoffSet(''); setPlayoffGame(''); }}
+            className="match-select"
+            value={selectedKey}
+            onChange={e => handleSelect(e.target.value)}
+            disabled={schedLoading || !currentEvent}
           >
-            <option value="qm">Qual</option>
-            <option value="playoff">Playoff</option>
-            <option value="f">Final</option>
+            <option value="">
+              {schedLoading ? 'Loading schedule…' : schedule.length ? '— Select a match —' : 'No schedule loaded'}
+            </option>
+            {GROUP_ORDER.filter(g => grouped[g]).map(group => (
+              <optgroup key={group} label={group}>
+                {grouped[group].map(m => (
+                  <option key={m.key} value={m.key}>
+                    {formatMatchLabel(m)}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
           </select>
-
-          {matchType === 'playoff' ? (
-            <>
-              <input
-                type="number"
-                className="match-number-input"
-                placeholder="Set #"
-                value={playoffSet}
-                min="1"
-                onChange={e => setPlayoffSet(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleLoad()}
-                title="Set number (the first number in SF 3‑2)"
-              />
-              <input
-                type="number"
-                className="match-number-input"
-                placeholder="Game #"
-                value={playoffGame}
-                min="1" max="3"
-                onChange={e => setPlayoffGame(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleLoad()}
-                title="Game within the set (the second number in SF 3‑2)"
-              />
-            </>
-          ) : (
-            <input
-              type="number"
-              className="match-number-input"
-              placeholder="Match #"
-              value={matchNumber}
-              min="1"
-              onChange={e => setMatchNumber(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleLoad()}
-            />
-          )}
-
-          <button
-            className="load-match-btn"
-            onClick={handleLoad}
-            disabled={loading || schedLoading || !currentEvent}
-          >
-            {loading || schedLoading ? 'Loading…' : 'Load'}
-          </button>
         </div>
-
-        {matchType === 'playoff' && (
-          <p className="match-lookup-hint">e.g. SF 3„2 → Set 3, Game 2</p>
-        )}
 
         {error && <p className="match-error">{error}</p>}
       </div>
@@ -382,11 +312,11 @@ export function DriveTeamPage() {
         <div className="drive-empty-state">
           <div className="drive-empty-icon">🏟️</div>
           <h2>Ready for Match Prep</h2>
-          <p>Select a match type, enter the number(s), and press Load.</p>
+          <p>Select a match from the dropdown to see alliance breakdowns and predictions.</p>
           <div className="drive-empty-tips">
-            <div className="drive-tip"><strong>Qual</strong> — Enter the qual number (e.g. 12).</div>
-            <div className="drive-tip"><strong>Playoff</strong> — Enter Set # and Game # (e.g. SF 3-2 → Set 3, Game 2).</div>
-            <div className="drive-tip"><strong>Final</strong> — Enter the game number (1, 2, or 3).</div>
+            <div className="drive-tip"><strong>Qualifications</strong> — Round-robin rounds to earn playoff seeding.</div>
+            <div className="drive-tip"><strong>Playoffs</strong> — Double-elimination bracket (e.g. SF 3-2).</div>
+            <div className="drive-tip"><strong>Finals</strong> — Championship match.</div>
           </div>
           {!currentEvent && (
             <p className="drive-empty-warn">No event loaded — go to Manager → Event Setup to load a match schedule.</p>

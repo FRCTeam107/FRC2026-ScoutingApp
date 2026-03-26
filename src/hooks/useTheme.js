@@ -6,7 +6,7 @@ export const THEMES = [
   { id: 'dark',   label: 'Dark',   emoji: '🌑', desc: 'Default dark mode' },
   { id: 'light',  label: 'Light',  emoji: '☀️', desc: 'Light mode' },
   { id: 'pink',   label: 'Pink',   emoji: '🩷', desc: 'Pink mode' },
-  { id: 'maroon', label: 'Maroon', emoji: '🖍️', desc: 'Maroon mode' },
+  { id: 'maroon', label: 'Maroon', emoji: '🍷', desc: 'Maroon mode' },
 ];
 
 export function useTheme() {

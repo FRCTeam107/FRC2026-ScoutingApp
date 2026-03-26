@@ -33,13 +33,27 @@ function computePerfIndex(stats, profile) {
   return autoOut + teleopOut;
 }
 
+// Build a human-readable label for any match (works for quals, double-elim, finals)
+function formatMatchLabel(match) {
+  const { comp_level: lvl, set_number: set, match_number: num } = match;
+  if (lvl === 'qm') return `Qual ${num}`;
+  if (lvl === 'ef') return `Elim ${set}-${num}`;
+  if (lvl === 'qf') return `QF ${set}-${num}`;
+  if (lvl === 'sf') return `SF ${set}-${num}`;
+  if (lvl === 'f')  return `Final ${num}`;
+  return `${lvl.toUpperCase()} ${set}-${num}`;
+}
+
+const LEVEL_ORDER = { qm: 0, ef: 1, qf: 2, sf: 3, f: 4 };
+const LEVEL_GROUP = { qm: 'Qualifications', ef: 'Playoffs', qf: 'Playoffs', sf: 'Playoffs', f: 'Finals' };
+
 export function DriveTeamPage() {
-  const [matchNumber, setMatchNumber] = useState('');
-  const [matchType, setMatchType] = useState('qm');
-  const [matchData, setMatchData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [selectedKey, setSelectedKey] = useState('');
+  const [matchData, setMatchData]     = useState(null);
+  const [schedule, setSchedule]       = useState([]);
+  const [schedLoading, setSchedLoading] = useState(false);
+  const [error, setError]             = useState(null);
+  const [refreshKey, setRefreshKey]   = useState(0);
 
   useEffect(() => {
     const handler = () => setRefreshKey(k => k + 1);
@@ -51,40 +65,35 @@ export function DriveTeamPage() {
   const profiles = getTeamProfiles();
   const allRecords = getMatchRecords();
 
-  const handleLoad = async () => {
-    const num = parseInt(matchNumber);
-    if (!num) return;
-    if (!currentEvent) {
-      setError('No event loaded. Go to Manager → Event Setup first.');
-      return;
-    }
+  // Load schedule automatically when the event is known
+  useEffect(() => {
+    if (!currentEvent) return;
+    const cached = getMatchSchedule();
+    if (cached && cached.length) { setSchedule(cached); return; }
+    setSchedLoading(true);
+    getEventMatches(currentEvent.key)
+      .then(data => { setMatchSchedule(data); setSchedule(data); })
+      .catch(e => setError(e.message))
+      .finally(() => setSchedLoading(false));
+  }, [currentEvent?.key]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    setLoading(true);
+  // Group schedule into sections for the <select>
+  const LEVEL_GROUP = { qm: 'Qualifications', ef: 'Playoffs', qf: 'Playoffs', sf: 'Playoffs', f: 'Finals' };
+  const GROUP_ORDER = ['Qualifications', 'Playoffs', 'Finals', 'Other'];
+  const grouped = schedule.reduce((acc, m) => {
+    const group = LEVEL_GROUP[m.comp_level] ?? 'Other';
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(m);
+    return acc;
+  }, {});
+
+  function handleSelect(key) {
+    setSelectedKey(key);
     setError(null);
-
-    try {
-      let schedule = getMatchSchedule();
-      if (!schedule) {
-        schedule = await getEventMatches(currentEvent.key);
-        setMatchSchedule(schedule);
-      }
-
-      const match = schedule.find(
-        m => m.comp_level === matchType && m.match_number === num
-      );
-
-      if (!match) {
-        setError(`${matchType.toUpperCase()} Match ${num} not found in the schedule.`);
-        setMatchData(null);
-      } else {
-        setMatchData(match);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!key) { setMatchData(null); return; }
+    const match = schedule.find(m => m.key === key);
+    setMatchData(match ?? null);
+  }
 
   const getTeamStats = (teamNumber) => {
     const recs = allRecords.filter(r => r.teamNumber === teamNumber)
@@ -276,31 +285,24 @@ export function DriveTeamPage() {
 
         <div className="match-lookup">
           <select
-            className="match-type-select"
-            value={matchType}
-            onChange={e => setMatchType(e.target.value)}
-            title="Qual = round-robin qualifying rounds · Semifinal = playoff semis · Final = championship match"
+            className="match-select"
+            value={selectedKey}
+            onChange={e => handleSelect(e.target.value)}
+            disabled={schedLoading || !currentEvent}
           >
-            <option value="qm">Qual</option>
-            <option value="sf">Semifinal</option>
-            <option value="f">Final</option>
+            <option value="">
+              {schedLoading ? 'Loading schedule…' : schedule.length ? '— Select a match —' : 'No schedule loaded'}
+            </option>
+            {GROUP_ORDER.filter(g => grouped[g]).map(group => (
+              <optgroup key={group} label={group}>
+                {grouped[group].map(m => (
+                  <option key={m.key} value={m.key}>
+                    {formatMatchLabel(m)}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
           </select>
-          <input
-            type="number"
-            className="match-number-input"
-            placeholder="Match #"
-            value={matchNumber}
-            min="1"
-            onChange={e => setMatchNumber(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleLoad()}
-          />
-          <button
-            className="load-match-btn"
-            onClick={handleLoad}
-            disabled={!matchNumber || loading}
-          >
-            {loading ? 'Loading…' : 'Load'}
-          </button>
         </div>
 
         {error && <p className="match-error">{error}</p>}
@@ -310,11 +312,11 @@ export function DriveTeamPage() {
         <div className="drive-empty-state">
           <div className="drive-empty-icon">🏟️</div>
           <h2>Ready for Match Prep</h2>
-          <p>Select a match type and enter a match number to see alliance breakdowns and predictions.</p>
+          <p>Select a match from the dropdown to see alliance breakdowns and predictions.</p>
           <div className="drive-empty-tips">
-            <div className="drive-tip"><strong>Qual</strong> — Round-robin qualifying rounds. Every team plays ~5–6 of these to earn their playoff seeding.</div>
-            <div className="drive-tip"><strong>Semifinal</strong> — Playoff bracket semifinals. Top-seeded alliances compete to reach the finals.</div>
-            <div className="drive-tip"><strong>Final</strong> — Championship match. The last two alliances standing.</div>
+            <div className="drive-tip"><strong>Qualifications</strong> — Round-robin rounds to earn playoff seeding.</div>
+            <div className="drive-tip"><strong>Playoffs</strong> — Double-elimination bracket (e.g. SF 3-2).</div>
+            <div className="drive-tip"><strong>Finals</strong> — Championship match.</div>
           </div>
           {!currentEvent && (
             <p className="drive-empty-warn">No event loaded — go to Manager → Event Setup to load a match schedule.</p>
@@ -325,7 +327,7 @@ export function DriveTeamPage() {
       {matchData && (
         <>
           <div className="match-label">
-            {matchType === 'qm' ? 'Qualification' : matchType === 'sf' ? 'Semifinal' : 'Final'} Match {matchData.match_number}
+            {formatMatchLabel(matchData)}
           </div>
 
           <div className="alliance-grid">

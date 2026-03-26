@@ -1,0 +1,391 @@
+/* ============================================================
+   LIGHT MODE — applied via html.light-mode class
+   ============================================================ */
+
+/* ── Global / body ── */
+html.light-mode,
+html.light-mode body {
+  background: #f0f2f5;
+  color: #111827;
+}
+
+html.light-mode .app {
+  background: #f0f2f5;
+}
+
+/* ── Header ── */
+html.light-mode .app-header {
+  background: #ffffff;
+  border-bottom-color: #e5e7eb;
+}
+
+html.light-mode .logo { color: #111827; }
+
+html.light-mode .back-link,
+html.light-mode .fan-nav-link,
+html.light-mode .scouting-nav-link {
+  color: #2563eb;
+  border-color: #d1d5db;
+}
+
+html.light-mode .back-link:hover,
+html.light-mode .fan-nav-link:hover,
+html.light-mode .scouting-nav-link:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+/* ── Sync status ── */
+html.light-mode .sync-status { background: #f3f4f6; }
+html.light-mode .sync-button { background: #2563eb; }
+html.light-mode .sync-button:hover:not(:disabled) { background: #1d4ed8; }
+
+/* ── Role select ── */
+html.light-mode .role-select-page { background: #f0f2f5; }
+html.light-mode .role-header h1 { color: #111827; }
+html.light-mode .role-header h2 { color: #6b7280; }
+
+html.light-mode .role-card {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+html.light-mode .role-card h3 { color: #111827; }
+html.light-mode .role-card p  { color: #6b7280; }
+
+html.light-mode .event-status-btn {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+html.light-mode .event-status-btn:hover { border-color: #2563eb; color: #111827; }
+html.light-mode .event-status-btn.loaded { border-color: #16a34a; color: #111827; }
+html.light-mode .offline-note { color: #9ca3af; }
+
+/* ── Modals ── */
+html.light-mode .modal-content {
+  background: #ffffff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+html.light-mode .modal-content h3 { color: #111827; }
+html.light-mode .modal-content input {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+html.light-mode .modal-content input:focus { border-color: #2563eb; }
+html.light-mode .confirm-btn { background: #2563eb; }
+html.light-mode .confirm-btn:hover:not(:disabled) { background: #1d4ed8; }
+
+/* ── Forms / inputs ── */
+html.light-mode input,
+html.light-mode select,
+html.light-mode textarea {
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+}
+html.light-mode input:focus,
+html.light-mode select:focus,
+html.light-mode textarea:focus {
+  border-color: #2563eb;
+  outline-color: #2563eb;
+}
+html.light-mode input::placeholder,
+html.light-mode textarea::placeholder { color: #9ca3af; }
+
+/* ── Common cards / panels ── */
+html.light-mode .section-card,
+html.light-mode .panel,
+html.light-mode .card {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+
+/* ── Page wrappers ── */
+html.light-mode .page-content {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+html.light-mode .recent-matches { border-top-color: #e5e7eb; }
+html.light-mode .recent-matches h3 { color: #111827; }
+html.light-mode .record-item { background: #f3f4f6; }
+
+/* ── Match Scout form ── */
+html.light-mode .stage-dot { background: #d1d5db; }
+html.light-mode .stage-dot.active { background: #2563eb; }
+html.light-mode .stage-dot.current { box-shadow: 0 0 12px rgba(37,99,235,0.4); }
+html.light-mode .stage-title { color: #111827; }
+html.light-mode .stage-subtitle { color: #6b7280; }
+html.light-mode .form-group label { color: #374151; }
+
+html.light-mode .match-scout-form .form-group input,
+html.light-mode .match-scout-form .form-group textarea,
+html.light-mode .match-scout-form .form-group .team-select {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+html.light-mode .match-scout-form .form-group input:focus,
+html.light-mode .match-scout-form .form-group textarea:focus,
+html.light-mode .match-scout-form .form-group .team-select:focus {
+  border-color: #2563eb;
+}
+html.light-mode .match-scout-form .form-group .team-select option {
+  background: #ffffff;
+  color: #111827;
+}
+
+html.light-mode .alliance-btn { background: #f3f4f6; color: #9ca3af; }
+html.light-mode .summary-stats .stat { background: #f3f4f6; }
+
+/* ── Focus / Climb / Choice buttons ── */
+html.light-mode .focus-btn,
+html.light-mode .climb-option,
+html.light-mode .pit-choice-btn {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+html.light-mode .focus-btn:hover:not(.active),
+html.light-mode .climb-option:hover:not(.selected),
+html.light-mode .pit-choice-btn:hover:not(.selected) {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+html.light-mode .focus-btn.active,
+html.light-mode .climb-option.selected,
+html.light-mode .pit-choice-btn.selected {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: #ffffff;
+}
+
+/* ── Mode Toggle ── */
+html.light-mode .mode-toggle { background: #e5e7eb; }
+html.light-mode .mode-button { color: #9ca3af; }
+html.light-mode .mode-button:hover:not(.active) { background: #d1d5db; }
+
+/* ── Accuracy Slider ── */
+html.light-mode .slider { background: #e5e7eb; }
+html.light-mode .stepper-btn {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+/* ── Defense Rating ── */
+html.light-mode .rating-option {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #9ca3af;
+}
+html.light-mode .rating-option:hover { border-color: #2563eb; }
+html.light-mode .rating-labels { color: #9ca3af; }
+
+/* ── Firing Button ── */
+html.light-mode .firing-button {
+  background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+html.light-mode .firing-button.active.teleop {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #60a5fa;
+  box-shadow: 0 0 40px rgba(59,130,246,0.4);
+}
+
+/* ── Team List (Pit) ── */
+html.light-mode .checklist-item { background: #f9fafb; }
+html.light-mode .checklist-item:hover { background: #f3f4f6; }
+html.light-mode .team-list-header h3 { color: #111827; }
+html.light-mode .team-list-count { color: #9ca3af; }
+html.light-mode .team-list-empty { color: #9ca3af; }
+
+/* ── Drive Team page ── */
+html.light-mode .drive-tip {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #6b7280;
+}
+html.light-mode .drive-tip strong { color: #111827; }
+html.light-mode .match-type-select,
+html.light-mode .match-number-input {
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+}
+html.light-mode .field-link-btn {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #1d4ed8;
+}
+html.light-mode .field-link-btn:hover { background: #dbeafe; }
+html.light-mode .dtc { background: #ffffff; border-color: #e5e7eb; }
+html.light-mode .match-label { color: #6b7280; }
+
+/* ── Role select extra ── */
+html.light-mode .role-footer .offline-note { color: #9ca3af; }
+
+/* ── Manager / analytics page ── */
+html.light-mode .stat-card { background: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+html.light-mode .stat-card.accent {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+}
+html.light-mode .stat-value { color: #2563eb; }
+html.light-mode .stat-label { color: #6b7280; }
+
+html.light-mode .tab-btn {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #6b7280;
+}
+html.light-mode .tab-btn.active {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: #fff;
+}
+
+html.light-mode .weight-card { background: #ffffff; border-color: #e5e7eb; }
+
+html.light-mode .schedule-table thead tr { background: #f3f4f6; }
+html.light-mode .schedule-table tbody tr:nth-child(even) { background: #f9fafb; }
+html.light-mode .schedule-table tbody tr:nth-child(odd)  { background: #ffffff; }
+
+html.light-mode .event-setup-section,
+html.light-mode .current-event-section,
+html.light-mode .event-teams-section,
+html.light-mode .event-actions-section {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+html.light-mode .admin-section { border-top-color: #e5e7eb; }
+
+html.light-mode .test-toggle-btn {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #374151;
+}
+html.light-mode .test-toggle-btn:hover,
+html.light-mode .test-toggle-btn.active {
+  border-color: #ca8a04;
+  color: #92400e;
+}
+html.light-mode .test-toggle-btn.active { background: #fef9c3; }
+
+html.light-mode .export-btn-import {
+  background: #f9fafb;
+  color: #374151;
+  border-color: #d1d5db;
+}
+html.light-mode .export-btn-import:hover {
+  background: #f3f4f6;
+  border-color: #6366f1;
+}
+
+/* ── Admin/Scouting Schedule ── */
+html.light-mode .ss-config-section,
+html.light-mode .ss-scouters-section,
+html.light-mode .ss-schedule-section {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+html.light-mode .ss-table th { background: #f3f4f6; color: #374151; }
+html.light-mode .ss-table td { border-top-color: #e5e7eb; color: #111827; }
+html.light-mode .ss-row-even td { background: #f9fafb; }
+html.light-mode .ss-row-odd td  { background: #ffffff; }
+
+html.light-mode .ss-summary-card { background: #ffffff; border-color: #e5e7eb; }
+html.light-mode .ss-summary-stat { color: #2563eb; }
+html.light-mode .ss-summary-shifts { color: #9ca3af; }
+html.light-mode .ss-publish-section { background: #ffffff; border-color: #e5e7eb; }
+
+html.light-mode .back-btn {
+  border-color: #d1d5db;
+  color: #374151;
+  background: transparent;
+}
+html.light-mode .back-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+  border-color: #6b7280;
+}
+
+html.light-mode .as-table th { background: #f3f4f6; color: #374151; }
+html.light-mode .as-table tr:hover { background: #f3f4f6; }
+html.light-mode .as-table td { border-bottom-color: #e5e7eb; color: #111827; }
+html.light-mode .as-card,
+html.light-mode .as-sub-card {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+html.light-mode .as-move-btn {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #374151;
+}
+html.light-mode .as-move-btn:hover:not(:disabled) { background: #f3f4f6; color: #111827; }
+html.light-mode .as-scratch-btn { border-color: #d1d5db; color: #6b7280; }
+
+/* ── Fan page ── */
+html.light-mode .fan-hero {
+  background: linear-gradient(135deg, #eff6ff, #f0f2f5);
+  border-color: #bfdbfe;
+}
+html.light-mode .fan-hero-number { color: #1d4ed8; text-shadow: none; }
+html.light-mode .fan-hero-name { color: #111827; }
+html.light-mode .fan-hero-event { color: #6b7280; }
+
+html.light-mode .fan-section { background: #ffffff; border-color: #e5e7eb; }
+html.light-mode .fan-section-title { color: #6b7280; }
+html.light-mode .fan-stat-card { background: #f9fafb; border-color: #e5e7eb; }
+html.light-mode .fan-stat-value { color: #111827; }
+html.light-mode .fan-stat-label { color: #9ca3af; }
+html.light-mode .fan-match-row { background: #f9fafb; border-color: #e5e7eb; }
+html.light-mode .fan-match-label { color: #111827; }
+html.light-mode .fan-partners { color: #374151; }
+html.light-mode .fan-opponents { color: #6b7280; }
+html.light-mode .fan-final-score { color: #111827; }
+html.light-mode .fan-muted { color: #6b7280; }
+html.light-mode .fan-loading { color: #6b7280; }
+
+html.light-mode .fan-ext-link { color: #2563eb; border-color: #bfdbfe; }
+html.light-mode .fan-ext-link:hover { background: #eff6ff; border-color: #2563eb; }
+
+html.light-mode .fan-change-event-btn { border-color: #d1d5db; color: #6b7280; }
+html.light-mode .fan-change-event-btn:hover { border-color: #2563eb; color: #2563eb; }
+html.light-mode .fan-change-event-btn.overriding { border-color: #ca8a04; color: #92400e; }
+
+html.light-mode .fan-event-picker {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+html.light-mode .fan-picker-option:hover { background: #f3f4f6; border-color: #d1d5db; }
+html.light-mode .fan-picker-option.active { background: #eff6ff; border-color: #2563eb; }
+html.light-mode .fan-picker-option-label { color: #111827; }
+html.light-mode .fan-picker-option-sub   { color: #6b7280; }
+html.light-mode .fan-picker-heading      { color: #9ca3af; }
+html.light-mode .fan-picker-subheading   { color: #d1d5db; }
+html.light-mode .fan-picker-input {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+html.light-mode .fan-picker-input:focus { border-color: #2563eb; }
+html.light-mode .fan-picker-load-btn { background: #2563eb; }
+html.light-mode .fan-picker-load-btn:hover { background: #1d4ed8; }
+
+html.light-mode .fan-refresh-btn { border-color: #d1d5db; color: #6b7280; }
+html.light-mode .fan-refresh-btn:hover:not(:disabled) {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+}
+html.light-mode .fan-last-updated { color: #9ca3af; }
+
+/* ── Scrollbar ── */
+html.light-mode ::-webkit-scrollbar-track { background: #f0f2f5; }
+html.light-mode ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+html.light-mode ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }

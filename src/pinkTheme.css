@@ -259,6 +259,20 @@ html.pink-mode .fan-ext-link:hover {
   border-color: #ec4899;
 }
 
+/* ── Refresh bar ── */
+html.pink-mode .fan-refresh-btn {
+  border-color: #5c1840;
+  color: #7a3858;
+}
+
+html.pink-mode .fan-refresh-btn:hover:not(:disabled) {
+  border-color: #ec4899;
+  color: #f472b6;
+  background: rgba(236, 72, 153, 0.08);
+}
+
+html.pink-mode .fan-last-updated { color: #5c2040; }
+
 /* ── Event picker ── */
 html.pink-mode .fan-change-event-btn {
   border-color: #5c1840;

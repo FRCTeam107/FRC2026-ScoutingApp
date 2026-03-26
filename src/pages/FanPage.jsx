@@ -133,11 +133,20 @@ export function FanPage() {
       });
   }, [year]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [refreshing, setRefreshing]     = useState(false);
+  const [lastUpdated, setLastUpdated]   = useState(null);
+
+  function refresh() {
+    setRefreshCount(c => c + 1);
+  }
+
   // ── Step 2: Load event data when the active key is determined/changed ─
   useEffect(() => {
     if (!activeKey) return;
-    setLoading(true);
-    setData(null);
+    const isInitial = refreshCount === 0;
+    if (isInitial) { setLoading(true); setData(null); }
+    else { setRefreshing(true); }
     setError(null);
     Promise.all([
       getEventMatches(activeKey),
@@ -158,10 +167,11 @@ export function FanPage() {
         eventKey: activeKey,
         eventName: knownEvent?.name ?? eventInfo?.name ?? activeKey,
       });
+      setLastUpdated(new Date());
     })
     .catch(e => setError(e.message))
-    .finally(() => setLoading(false));
-  }, [activeKey]); // eslint-disable-line react-hooks/exhaustive-deps
+    .finally(() => { setLoading(false); setRefreshing(false); });
+  }, [activeKey, refreshCount]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Fix event name once allEvents arrives (handles override on first load) ──
   useEffect(() => {
@@ -323,6 +333,23 @@ export function FanPage() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* ── Refresh bar ── */}
+      <div className="fan-refresh-bar">
+        <button
+          className={`fan-refresh-btn ${refreshing ? 'spinning' : ''}`}
+          onClick={refresh}
+          disabled={loading || refreshing}
+          title="Refresh match data"
+        >
+          🔄 {refreshing ? 'Refreshing…' : 'Refresh'}
+        </button>
+        {lastUpdated && !refreshing && (
+          <span className="fan-last-updated">
+            Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
+        )}
       </div>
 
       {loading && <div className="fan-loading">Loading event data…</div>}

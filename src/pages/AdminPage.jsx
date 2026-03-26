@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme, THEMES } from '../hooks/useTheme';
 import {
   getCurrentEvent,
   setCurrentEvent,
@@ -34,6 +35,7 @@ import './AdminPage.css';
 export function AdminPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('event');
+  const { theme, setTheme } = useTheme();
 
   // ── Export / Import state ────────────────────────────────────────────────
   const [exportStatus, setExportStatus] = useState(null);
@@ -404,6 +406,9 @@ export function AdminPage() {
         </button>
         <button className={`tab ${activeTab === 'export' ? 'active' : ''}`} onClick={() => setActiveTab('export')}>
           Export / Import
+        </button>
+        <button className={`tab ${activeTab === 'appearance' ? 'active' : ''}`} onClick={() => setActiveTab('appearance')}>
+          Appearance
         </button>
       </div>
 
@@ -844,6 +849,30 @@ export function AdminPage() {
               {importStatus === 'error' && (
                 <p className="export-status export-status-err">✗ {importMessage}</p>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* ── Appearance tab ─────────────────────────────────────────── */}
+        {activeTab === 'appearance' && (
+          <div className="appearance-tab">
+            <div className="appearance-section">
+              <h3>App Theme</h3>
+              <p className="appearance-desc">Choose a colour theme for the entire app. Your preference is saved automatically.</p>
+              <div className="theme-selector-grid">
+                {THEMES.map(t => (
+                  <button
+                    key={t.id}
+                    className={`theme-card${theme === t.id ? ' active' : ''}`}
+                    onClick={() => setTheme(t.id)}
+                  >
+                    <span className="theme-card-emoji">{t.emoji}</span>
+                    <span className="theme-card-label">{t.label}</span>
+                    <span className="theme-card-desc">{t.desc}</span>
+                    {theme === t.id && <span className="theme-card-check">✓</span>}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}

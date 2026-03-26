@@ -37,17 +37,6 @@ html.pink-mode .scouting-nav-link:hover {
   border-color: #ec4899;
 }
 
-/* ── Theme toggle button ── */
-html.pink-mode .theme-toggle-btn {
-  border-color: #ec4899;
-  color: #f472b6;
-}
-
-html.pink-mode .theme-toggle-btn:hover {
-  background: #ec4899;
-  color: #fff;
-}
-
 /* ── Sync status ── */
 html.pink-mode .sync-status {
   background: #2e0a20;
@@ -655,7 +644,7 @@ html.pink-mode ::-webkit-scrollbar-thumb:hover { background: #ec4899; }
 
 
 /* ----------------------------------------------------------
-   PINK MODE � Extended coverage pass 2
+   PINK MODE � Extended coverage pass 2
    ---------------------------------------------------------- */
 
 /* -- Global table elements -- */
@@ -801,7 +790,7 @@ html.pink-mode .dev-tools-section { background: #18000f; border-color: #3a0a2a; 
 html.pink-mode .dev-tools-header h3 { color: #c084a0; }
 html.pink-mode .dev-note { color: #7a3858; }
 
-/* -- Drive Team � detailed cards -- */
+/* -- Drive Team � detailed cards -- */
 html.pink-mode .dtc-stat-cell { background: #280020; }
 html.pink-mode .dtc-stat-label { color: #7a3858; }
 html.pink-mode .dtc-stat-val   { color: #fce7f3; }
@@ -872,7 +861,7 @@ html.pink-mode .field-tool-btn.active { background: #3a0a2a; border-color: #ec48
 html.pink-mode .field-team-input { background: #2e0a22; border-color: #3a0a2a; color: #fce7f3; }
 html.pink-mode .field-team-input:focus { border-color: #ec4899; }
 
-/* -- RoleSelectPage � scouting preview -- */
+/* -- RoleSelectPage � scouting preview -- */
 html.pink-mode .scouting-preview { background: #2e0a22; border-color: #5c1840; }
 html.pink-mode .sp-heading { color: #7a3858; }
 html.pink-mode .sp-shift { color: #fce7f3; }

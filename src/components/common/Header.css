@@ -76,7 +76,41 @@
 
 @media (max-width: 600px) {
   .app-header {
-    flex-direction: column;
-    gap: 12px;
+    padding: 10px 14px;
+  }
+
+  .logo {
+    font-size: 14px;
+    /* Truncate long title on narrow screens */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+  }
+
+  .header-left {
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .back-link {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .fan-nav-link,
+  .scouting-nav-link {
+    font-size: 12px;
+    padding: 7px 10px;
+    /* Ensure comfortable tap target */
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .header-right {
+    gap: 8px;
+    flex-shrink: 0;
   }
 }

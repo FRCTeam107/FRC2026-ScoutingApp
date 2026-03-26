@@ -11,8 +11,11 @@ import { AdminPage } from './pages/AdminPage';
 import { FanPage } from './pages/FanPage';
 import { PasswordModal } from './components/common/PasswordModal';
 import { verifyScoutingPassword } from './lib/supabase';
+import { useTheme } from './hooks/useTheme';
 import './App.css';
 import './pinkTheme.css';
+import './lightTheme.css';
+import './maroonTheme.css';
 
 const SESSION_KEY = 'scouting_auth';
 
@@ -55,6 +58,7 @@ function ProtectedScoutingRoute({ children }) {
 }
 
 function App() {
+  useTheme();
   return (
     <BrowserRouter>
       <div className="app">

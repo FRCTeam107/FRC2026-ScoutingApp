@@ -305,7 +305,7 @@ html.maroon-mode ::-webkit-scrollbar-thumb:hover { background: #c0392b; }
 
 
 /* ----------------------------------------------------------
-   MAROON MODE — Extended coverage pass 2
+   MAROON MODE ï¿½ Extended coverage pass 2
    ---------------------------------------------------------- */
 
 /* -- Global table elements -- */
@@ -452,7 +452,7 @@ html.maroon-mode .dev-tools-section { background: #1e0608; border-color: #3a1018
 html.maroon-mode .dev-tools-header h3 { color: #b08090; }
 html.maroon-mode .dev-note { color: #7a3040; }
 
-/* -- Drive Team — detailed cards -- */
+/* -- Drive Team ï¿½ detailed cards -- */
 html.maroon-mode .dtc { background: #1e0608; border-color: #3a1018; }
 html.maroon-mode .dtc.red  { border-color: rgba(239,68,68,0.4); }
 html.maroon-mode .dtc.blue { border-color: rgba(59,130,246,0.4); }
@@ -530,7 +530,7 @@ html.maroon-mode .field-team-input { background: #2e0810; border-color: #3a1018;
 html.maroon-mode .field-team-input:focus { border-color: #c0392b; }
 html.maroon-mode .field-toolbar-hint { color: #5c2028; }
 
-/* -- RoleSelectPage — scouting preview -- */
+/* -- RoleSelectPage ï¿½ scouting preview -- */
 html.maroon-mode .scouting-preview { background: #2e0810; border-color: #5c1020; }
 html.maroon-mode .sp-heading { color: #7a3040; }
 html.maroon-mode .sp-shift { color: #f9e8ec; }

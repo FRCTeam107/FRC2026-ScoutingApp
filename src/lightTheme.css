@@ -392,7 +392,7 @@ html.light-mode ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
 
 /* ----------------------------------------------------------
-   LIGHT MODE — Extended coverage pass 2
+   LIGHT MODE ï¿½ Extended coverage pass 2
    ---------------------------------------------------------- */
 
 /* -- Global table elements -- */
@@ -545,7 +545,7 @@ html.light-mode .dev-tools-section { background: #f9fafb; border-color: #d1d5db;
 html.light-mode .dev-tools-header h3 { color: #374151; }
 html.light-mode .dev-note { color: #6b7280; }
 
-/* -- Drive Team — detailed cards -- */
+/* -- Drive Team ï¿½ detailed cards -- */
 html.light-mode .dtc { background: #ffffff; border-color: #e5e7eb; }
 html.light-mode .dtc.red  { border-color: rgba(239,68,68,0.4); }
 html.light-mode .dtc.blue { border-color: rgba(59,130,246,0.4); }
@@ -623,7 +623,7 @@ html.light-mode .field-team-input { background: #f3f4f6; border-color: #e5e7eb; 
 html.light-mode .field-team-input:focus { border-color: #2563eb; }
 html.light-mode .field-toolbar-hint { color: #9ca3af; }
 
-/* -- RoleSelectPage — scouting preview -- */
+/* -- RoleSelectPage ï¿½ scouting preview -- */
 html.light-mode .scouting-preview { background: #f9fafb; border-color: #e5e7eb; }
 html.light-mode .sp-heading { color: #9ca3af; }
 html.light-mode .sp-shift { color: #374151; }

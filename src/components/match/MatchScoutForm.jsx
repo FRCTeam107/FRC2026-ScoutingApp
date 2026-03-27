@@ -223,6 +223,7 @@ export function MatchScoutForm({ onSave }) {
           </div>
 
           <button
+            type="button"
             className="next-button"
             onClick={nextStage}
             disabled={!teamNumber}
@@ -293,8 +294,8 @@ export function MatchScoutForm({ onSave }) {
           />
 
           <div className="stage-nav">
-            <button className="back-button" onClick={prevStage}>← Back</button>
-            <button className="next-button" onClick={nextStage}>Teleop →</button>
+            <button type="button" className="back-button" onClick={prevStage}>← Back</button>
+            <button type="button" className="next-button" onClick={nextStage}>Teleop →</button>
           </div>
         </div>
       )}
@@ -361,8 +362,8 @@ export function MatchScoutForm({ onSave }) {
           />
 
           <div className="stage-nav">
-            <button className="back-button" onClick={prevStage}>← Auto</button>
-            <button className="next-button" onClick={nextStage}>Finish →</button>
+            <button type="button" className="back-button" onClick={prevStage}>← Auto</button>
+            <button type="button" className="next-button" onClick={nextStage}>Finish →</button>
           </div>
         </div>
       )}
@@ -401,8 +402,8 @@ export function MatchScoutForm({ onSave }) {
           </div>
 
           <div className="stage-nav">
-            <button className="back-button" onClick={prevStage}>← Back</button>
-            <button className="submit-button" onClick={handleSubmit}>
+            <button type="button" className="back-button" onClick={prevStage}>← Back</button>
+            <button type="button" className="submit-button" onClick={handleSubmit}>
               Save & Next Match
             </button>
           </div>

@@ -84,7 +84,13 @@ export function saveMatchRecord(record) {
     records.push(recordWithMeta);
   }
 
-  localStorage.setItem(KEYS.MATCH_RECORDS, JSON.stringify(records));
+  try {
+    localStorage.setItem(KEYS.MATCH_RECORDS, JSON.stringify(records));
+  } catch (e) {
+    console.error('Failed to save match record to localStorage:', e);
+    alert('Save failed — storage may be full. Try clearing old data in Admin.');
+    return;
+  }
   markPendingSync('matchRecord', `${record.teamNumber}_${record.matchNumber}`);
 }
 

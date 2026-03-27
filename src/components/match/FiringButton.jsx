@@ -47,6 +47,7 @@ export function FiringButton({ mode, onStart, onStop, totalSeconds }) {
   return (
     <div className="firing-container">
       <button
+        type="button"
         className={`firing-button ${isPressed ? 'active' : ''} ${mode}`}
         onMouseDown={handleStart}
         onMouseUp={handleEnd}

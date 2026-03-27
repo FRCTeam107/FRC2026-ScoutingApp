@@ -389,7 +389,7 @@ export function AdminPage() {
       />
 
       <div className="page-header">
-        <button className="back-btn" onClick={() => navigate('/')}>← Back</button>
+        <button className="back-btn" onClick={() => navigate('/scouting')}>← Back</button>
         <h1>Admin</h1>
         <p>Event setup, field image, and developer tools</p>
       </div>

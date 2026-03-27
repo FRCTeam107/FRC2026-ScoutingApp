@@ -35,7 +35,20 @@ export function saveTeamProfile(profile) {
     ...profile,
     updatedAt: new Date().toISOString()
   };
-  localStorage.setItem(KEYS.TEAM_PROFILES, JSON.stringify(profiles));
+  try {
+    localStorage.setItem(KEYS.TEAM_PROFILES, JSON.stringify(profiles));
+  } catch (e) {
+    // localStorage quota exceeded — retry without base64 photo
+    if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+      profiles[profile.teamNumber] = { ...profiles[profile.teamNumber], photoBase64: null };
+      try {
+        localStorage.setItem(KEYS.TEAM_PROFILES, JSON.stringify(profiles));
+        console.warn('Photo too large for local storage — saved without base64. Use Supabase sync to store photos.');
+      } catch (e2) {
+        console.error('Failed to save team profile even without photo:', e2);
+      }
+    }
+  }
   markPendingSync('teamProfile', profile.teamNumber);
 }
 

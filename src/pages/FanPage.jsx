@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getTeamEvents, getEventMatches, getEventRankings, getEventWebcasts, getEventInfo } from '../lib/tba';
+import { getTeamEvents, getEventMatchesFull, getEventRankings, getEventWebcasts, getEventInfo } from '../lib/tba';
 import './FanPage.css';
 
 function pickEvent(events) {
@@ -50,6 +50,13 @@ function getOpponents(match, myAlliance) {
     .join(', ');
 }
 
+function formatMatchTime(match) {
+  const ts = match.predicted_time || match.time;
+  if (!ts) return null;
+  const d = new Date(ts * 1000);
+  return d.toLocaleTimeString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+}
+
 function MatchRow({ match }) {
   const alliance = getMyAlliance(match);
   if (!alliance) return null;
@@ -81,7 +88,12 @@ function MatchRow({ match }) {
             <span className={`fan-result-badge ${resultClass}`}>{resultLabel}</span>
           </>
         ) : (
-          <span className="fan-upcoming-badge">Upcoming</span>
+          <div className="fan-upcoming-info">
+            <span className="fan-upcoming-badge">Upcoming</span>
+            {formatMatchTime(match) && (
+              <span className="fan-match-time">{formatMatchTime(match)}</span>
+            )}
+          </div>
         )}
       </div>
     </div>
@@ -149,7 +161,7 @@ export function FanPage() {
     else { setRefreshing(true); }
     setError(null);
     Promise.all([
-      getEventMatches(activeKey),
+      getEventMatchesFull(activeKey),
       getEventRankings(activeKey).catch(() => null),
       getEventWebcasts(activeKey).catch(() => []),
       getEventInfo(activeKey).catch(() => null),

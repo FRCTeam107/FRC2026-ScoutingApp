@@ -70,6 +70,33 @@ export async function getEventMatches(eventKey) {
 }
 
 /**
+ * Fetch full match objects for an event (includes predicted_time and time fields)
+ * Used by the fan page to show expected match times.
+ */
+export async function getEventMatchesFull(eventKey) {
+  if (!TBA_KEY) {
+    throw new Error('TBA API key not configured. Add VITE_TBA_KEY to your .env.local file.');
+  }
+
+  const response = await fetch(`${TBA_BASE}/event/${eventKey}/matches`, {
+    headers: { 'X-TBA-Auth-Key': TBA_KEY }
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) throw new Error(`Event "${eventKey}" not found.`);
+    throw new Error(`Failed to fetch match schedule: ${response.statusText}`);
+  }
+
+  const matches = await response.json();
+  const levelOrder = { qm: 0, ef: 1, qf: 2, sf: 3, f: 4 };
+  return matches.sort((a, b) => {
+    if (a.comp_level !== b.comp_level) return (levelOrder[a.comp_level] ?? 9) - (levelOrder[b.comp_level] ?? 9);
+    if (a.set_number !== b.set_number) return a.set_number - b.set_number;
+    return a.match_number - b.match_number;
+  });
+}
+
+/**
  * Fetch events for a team in a given year
  * @param {number|string} teamNumber - Team number (e.g., 107)
  * @param {number} year - Year (e.g., 2026)

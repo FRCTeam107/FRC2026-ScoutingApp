@@ -29,9 +29,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
     }
   }, [teamNumber]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = () => {
     if (!formData.teamNumber) {
       alert('Please enter a team number');
       return;
@@ -56,7 +54,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
   };
 
   return (
-    <form className="pit-scout-form" onSubmit={handleSubmit}>
+    <form className="pit-scout-form">
       <div className="form-group">
         <label htmlFor="teamNumber">Team Number *</label>
         <input
@@ -65,7 +63,6 @@ export function PitScoutForm({ teamNumber, onSave }) {
           value={formData.teamNumber}
           onChange={(e) => handleChange('teamNumber', e.target.value)}
           placeholder="e.g., 107"
-          required
           min="1"
           max="99999"
         />
@@ -149,7 +146,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
       </div>
 
       <div className="form-actions">
-        <button type="submit" className="save-button">
+        <button type="button" className="save-button" onClick={handleSubmit}>
           Save Team Profile
         </button>
       </div>

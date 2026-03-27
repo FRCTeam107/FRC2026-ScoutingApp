@@ -3,10 +3,20 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Guard: don't crash if env vars are missing (e.g. Vercel build without secrets)
+export const supabase = (supabaseUrl && supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
+
+export const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
+
+function requireSupabase() {
+  if (!supabase) throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your Vercel environment variables.');
+}
 
 // Upload photo to storage bucket
 export async function uploadPhoto(teamNumber, base64Data) {
+  requireSupabase();
   // Convert base64 to blob
   const base64Response = await fetch(base64Data);
   const blob = await base64Response.blob();
@@ -32,6 +42,7 @@ export async function uploadPhoto(teamNumber, base64Data) {
 
 // Sync team profile to Supabase
 export async function syncTeamProfile(profile) {
+  requireSupabase();
   const { error } = await supabase
     .from('team_profiles')
     .upsert({
@@ -50,6 +61,7 @@ export async function syncTeamProfile(profile) {
 
 // Sync match record to Supabase
 export async function syncMatchRecord(record) {
+  requireSupabase();
   const { error } = await supabase
     .from('match_records')
     .upsert({
@@ -78,6 +90,7 @@ export async function syncMatchRecord(record) {
 
 // Delete team profile from Supabase
 export async function deleteTeamProfileFromCloud(teamNumber) {
+  requireSupabase();
   const { error } = await supabase
     .from('team_profiles')
     .delete()
@@ -88,6 +101,7 @@ export async function deleteTeamProfileFromCloud(teamNumber) {
 
 // Verify admin password
 export async function verifyAdminPassword(password) {
+  requireSupabase();
   const { data, error } = await supabase
     .from('app_settings')
     .select('value')
@@ -100,6 +114,7 @@ export async function verifyAdminPassword(password) {
 
 // Verify scouting area password (set in Supabase app_settings, key = 'scouting_password')
 export async function verifyScoutingPassword(password) {
+  requireSupabase();
   const { data, error } = await supabase
     .from('app_settings')
     .select('value')
@@ -112,6 +127,7 @@ export async function verifyScoutingPassword(password) {
 
 // Delete all match records from Supabase
 export async function deleteAllMatchRecords() {
+  requireSupabase();
   const { error } = await supabase
     .from('match_records')
     .delete()
@@ -122,6 +138,7 @@ export async function deleteAllMatchRecords() {
 
 // Fetch all team profiles from Supabase
 export async function fetchTeamProfiles() {
+  requireSupabase();
   const { data, error } = await supabase
     .from('team_profiles')
     .select('*')
@@ -133,6 +150,7 @@ export async function fetchTeamProfiles() {
 
 // Fetch all match records from Supabase
 export async function fetchMatchRecords() {
+  requireSupabase();
   const { data, error } = await supabase
     .from('match_records')
     .select('*')
@@ -144,6 +162,7 @@ export async function fetchMatchRecords() {
 
 // Publish scouting schedule config so all devices receive it
 export async function publishScoutingSchedule(scouters, groupSize, totalMatchCount) {
+  requireSupabase();
   const { error } = await supabase.from('app_settings').upsert([
     { key: 'scouting_scouters',      value: JSON.stringify(scouters) },
     { key: 'scouting_group_size',    value: String(groupSize) },
@@ -155,6 +174,7 @@ export async function publishScoutingSchedule(scouters, groupSize, totalMatchCou
 
 // Publish the full match schedule so all devices receive it without reloading the event
 export async function publishMatchSchedule(matches) {
+  requireSupabase();
   const { error } = await supabase.from('app_settings').upsert(
     { key: 'match_schedule', value: JSON.stringify(matches) },
     { onConflict: 'key' }
@@ -164,6 +184,7 @@ export async function publishMatchSchedule(matches) {
 
 // Remove the published schedule from all devices
 export async function unpublishScoutingSchedule() {
+  requireSupabase();
   const { error } = await supabase.from('app_settings').upsert([
     { key: 'scouting_scouters',      value: '[]' },
     { key: 'scouting_group_size',    value: '3' },
@@ -175,6 +196,7 @@ export async function unpublishScoutingSchedule() {
 
 // Export all scouting data from Supabase (returns raw DB rows)
 export async function exportAllData() {
+  requireSupabase();
   const [matchRes, profileRes] = await Promise.all([
     supabase.from('match_records').select('*').order('match_number', { ascending: true }),
     supabase.from('team_profiles').select('*').order('team_number'),
@@ -191,6 +213,7 @@ export async function exportAllData() {
 
 // Fetch the currently published scouting schedule config
 export async function fetchScoutingSchedule() {
+  requireSupabase();
   const { data, error } = await supabase
     .from('app_settings')
     .select('key, value')

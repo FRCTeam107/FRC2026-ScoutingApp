@@ -9,6 +9,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
     description: '',
     ballsPerSecond: '',
     photoBase64: null,
+    photoUrl: null,
     trenchCapability: 'trench',
     climbSide: 'doNotClimb'
   });
@@ -20,7 +21,8 @@ export function PitScoutForm({ teamNumber, onSave }) {
         teamNumber: existing?.teamNumber ?? teamNumber,
         description: existing?.description || '',
         ballsPerSecond: existing?.ballsPerSecond || '',
-        photoBase64: existing?.photoBase64 || existing?.photoUrl || null,
+        photoBase64: existing?.photoBase64 || null,
+        photoUrl: existing?.photoUrl || null,
         trenchCapability: typeof existing?.trenchCapability === 'string' ? existing.trenchCapability : 'trench',
         climbSide: typeof existing?.climbSide === 'string' ? existing.climbSide : 'doNotClimb'
       });
@@ -40,6 +42,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
       description: formData.description,
       ballsPerSecond: formData.ballsPerSecond ? parseFloat(formData.ballsPerSecond) : null,
       photoBase64: formData.photoBase64,
+      photoUrl: formData.photoUrl,
       trenchCapability: formData.trenchCapability,
       climbSide: formData.climbSide
     };
@@ -140,6 +143,7 @@ export function PitScoutForm({ teamNumber, onSave }) {
         <label>Robot Photo</label>
         <PhotoCapture
           value={formData.photoBase64}
+          photoUrl={formData.photoUrl}
           onChange={(base64) => handleChange('photoBase64', base64)}
         />
       </div>

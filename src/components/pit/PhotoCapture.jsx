@@ -1,15 +1,16 @@
 import { useRef, useState, useEffect } from 'react';
 import './PhotoCapture.css';
 
-export function PhotoCapture({ value, onChange }) {
+export function PhotoCapture({ value, photoUrl, onChange }) {
   const fileInputRef = useRef(null);
-  const [preview, setPreview] = useState(value || null);
+  // Prefer photoUrl if present, else value (base64)
+  const [preview, setPreview] = useState(photoUrl || value || null);
 
   useEffect(() => {
-    setPreview(value || null);
-  }, [value]);
+    setPreview(photoUrl || value || null);
+  }, [value, photoUrl]);
 
-  const compressImage = (file, maxWidth = 800, quality = 0.7) => {
+  const compressImage = (file, maxWidth = 400, quality = 0.5) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = (e) => {

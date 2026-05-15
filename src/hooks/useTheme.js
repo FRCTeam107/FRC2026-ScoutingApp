@@ -7,6 +7,7 @@ export const THEMES = [
   { id: 'light',  label: 'Light',  emoji: '☀️', desc: 'Light mode' },
   { id: 'pink',   label: 'Pink',   emoji: '🩷', desc: 'Pink mode' },
   { id: 'maroon', label: 'Maroon', emoji: '🍷', desc: 'Maroon mode' },
+  { id: 'green',  label: 'Green',  emoji: '🌿', desc: 'Green mode' },
 ];
 
 export function useTheme() {
@@ -17,7 +18,7 @@ export function useTheme() {
   useEffect(() => {
     const html = document.documentElement;
     // Remove all theme classes then apply the active one
-    html.classList.remove('pink-mode', 'light-mode', 'maroon-mode');
+    html.classList.remove('pink-mode', 'light-mode', 'maroon-mode', 'green-mode');
     if (theme !== 'dark') html.classList.add(`${theme}-mode`);
     localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);

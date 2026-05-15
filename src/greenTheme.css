@@ -1,0 +1,467 @@
+/* ============================================================
+   GREEN MODE — applied via html.green-mode class
+   ============================================================ */
+
+/* ── Global / body ── */
+html.green-mode,
+html.green-mode body {
+  background: #030f06;
+  color: #e8f9ec;
+}
+
+html.green-mode .app { background: #030f06; }
+
+/* ── Header ── */
+html.green-mode .app-header {
+  background: #060f08;
+  border-bottom-color: #1a5c24;
+}
+
+html.green-mode .logo { color: #e8f9ec; }
+
+html.green-mode .back-link,
+html.green-mode .fan-nav-link,
+html.green-mode .scouting-nav-link {
+  color: #4ade80;
+  border-color: #1a5c24;
+}
+
+html.green-mode .back-link:hover,
+html.green-mode .fan-nav-link:hover,
+html.green-mode .scouting-nav-link:hover {
+  background: #0a2e12;
+  border-color: #22c55e;
+}
+
+/* ── Sync status ── */
+html.green-mode .sync-status { background: #0a2e12; }
+html.green-mode .sync-button { background: #16a34a; }
+html.green-mode .sync-button:hover:not(:disabled) { background: #15803d; }
+
+/* ── Role select ── */
+html.green-mode .role-select-page { background: #030f06; }
+html.green-mode .role-header h1 { color: #e8f9ec; }
+html.green-mode .role-header h2 { color: #4a7a58; }
+
+html.green-mode .role-card { background: #0a2e12; }
+html.green-mode .role-card h3 { color: #e8f9ec; }
+html.green-mode .role-card p  { color: #6aaa80; }
+
+html.green-mode .role-card.pit:hover    { border-color: #22c55e; border-top-color: #22c55e; }
+html.green-mode .role-card.match:hover  { border-color: #16a34a; border-top-color: #16a34a; }
+html.green-mode .role-card.manager:hover{ border-color: #c084fc; border-top-color: #c084fc; }
+html.green-mode .role-card.admin:hover  { border-color: #4ade80; border-top-color: #4ade80; }
+html.green-mode .role-card.drive:hover  { border-color: #86efac; border-top-color: #86efac; }
+
+html.green-mode .event-status-btn {
+  background: #0a2e12;
+  border-color: #1a5c24;
+  color: #4a7a58;
+}
+html.green-mode .event-status-btn:hover { border-color: #22c55e; color: #e8f9ec; }
+html.green-mode .event-status-btn.loaded { border-color: #22c55e; color: #e8f9ec; }
+html.green-mode .offline-note { color: #2a5c34; }
+
+/* ── Modals ── */
+html.green-mode .modal-content { background: #0a2e12; }
+html.green-mode .modal-content h3 { color: #e8f9ec; }
+html.green-mode .modal-content input {
+  background: #061e0a;
+  border-color: #2a5c34;
+  color: #e8f9ec;
+}
+html.green-mode .modal-content input:focus { border-color: #22c55e; }
+html.green-mode .confirm-btn { background: #16a34a; }
+html.green-mode .confirm-btn:hover:not(:disabled) { background: #15803d; }
+
+/* ── Forms / inputs ── */
+html.green-mode input,
+html.green-mode select,
+html.green-mode textarea {
+  background: #061e0a;
+  border-color: #2a5c34;
+  color: #e8f9ec;
+}
+html.green-mode input:focus,
+html.green-mode select:focus,
+html.green-mode textarea:focus {
+  border-color: #22c55e;
+  outline-color: #22c55e;
+}
+
+/* ── Common panels ── */
+html.green-mode .section-card,
+html.green-mode .panel,
+html.green-mode .card {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+/* ── Page containers ── */
+html.green-mode .page-content { background: #061e0a; }
+html.green-mode .recent-matches { border-top-color: #1a5c24; }
+html.green-mode .recent-matches h3 { color: #e8f9ec; }
+html.green-mode .record-item { background: #0a2e12; }
+
+/* ── Match Scout form ── */
+html.green-mode .stage-dot { background: #0a2e12; }
+html.green-mode .stage-dot.active { background: #16a34a; }
+html.green-mode .stage-dot.current { box-shadow: 0 0 12px rgba(22,163,74,0.5); }
+html.green-mode .stage-title { color: #e8f9ec; }
+html.green-mode .stage-subtitle { color: #6aaa80; }
+html.green-mode .form-group label { color: #e8f9ec; }
+
+html.green-mode .match-scout-form .form-group input,
+html.green-mode .match-scout-form .form-group textarea,
+html.green-mode .match-scout-form .form-group .team-select,
+html.green-mode .match-scout-form .form-group .team-select option {
+  background: #061e0a;
+  border-color: #2a5c34;
+  color: #e8f9ec;
+}
+html.green-mode .match-scout-form .form-group input:focus,
+html.green-mode .match-scout-form .form-group textarea:focus,
+html.green-mode .match-scout-form .form-group .team-select:focus {
+  border-color: #22c55e;
+}
+
+html.green-mode .alliance-btn { background: #0a2e12; color: #2a5c34; }
+html.green-mode .summary-stats .stat { background: #0a2e12; }
+
+/* ── Focus / Climb / Choice buttons ── */
+html.green-mode .focus-btn,
+html.green-mode .climb-option,
+html.green-mode .pit-choice-btn {
+  background: #0a2e12;
+  border-color: #1a5c24;
+  color: #6aaa80;
+}
+html.green-mode .focus-btn:hover:not(.active),
+html.green-mode .climb-option:hover:not(.selected),
+html.green-mode .pit-choice-btn:hover:not(.selected) {
+  border-color: #22c55e;
+  background: #122e18;
+}
+html.green-mode .focus-btn.active,
+html.green-mode .climb-option.selected,
+html.green-mode .pit-choice-btn.selected {
+  background: #16a34a;
+  border-color: #4ade80;
+}
+
+/* ── Mode Toggle ── */
+html.green-mode .mode-toggle { background: #0a2e12; }
+html.green-mode .mode-button { color: #2a5c34; }
+html.green-mode .mode-button:hover:not(.active) { background: #122e18; }
+
+/* ── Accuracy Slider ── */
+html.green-mode .slider { background: #0a2e12; }
+html.green-mode .stepper-btn {
+  background: #0a2e12;
+  border-color: #1a5c24;
+  color: #e8f9ec;
+}
+
+/* ── Defense Rating ── */
+html.green-mode .rating-option {
+  background: #0a2e12;
+  border-color: #1a5c24;
+  color: #2a5c34;
+}
+html.green-mode .rating-option:hover { border-color: #22c55e; }
+html.green-mode .rating-labels { color: #2a5c34; }
+
+/* ── Firing Button ── */
+html.green-mode .firing-button {
+  background: linear-gradient(180deg, #0a2e12 0%, #030f06 100%);
+  border-color: #1a5c24;
+  color: #6aaa80;
+}
+html.green-mode .firing-button.active.teleop {
+  background: linear-gradient(180deg, #16a34a 0%, #166534 100%);
+  border-color: #4ade80;
+  box-shadow: 0 0 40px rgba(22,163,74,0.5);
+}
+
+/* ── Team List (Pit) ── */
+html.green-mode .checklist-item { background: #0a2e12; }
+html.green-mode .checklist-item:hover { background: #122e18; }
+html.green-mode .team-list-header h3 { color: #e8f9ec; }
+html.green-mode .team-list-count { color: #2a5c34; }
+html.green-mode .team-list-empty { color: #2a5c34; }
+
+/* ── Drive Team page ── */
+html.green-mode .drive-tip { background: #0a2e12; border-color: #1a5c24; color: #6aaa80; }
+html.green-mode .drive-tip strong { color: #e8f9ec; }
+html.green-mode .match-select {
+  background: #061e0a;
+  border-color: #1a5c24;
+  color: #e8f9ec;
+}
+
+html.green-mode .field-link-btn { background: #0a2e12; border-color: #22c55e; color: #4ade80; }
+html.green-mode .field-link-btn:hover { background: #122e18; }
+html.green-mode .dtc { background: #0a2e12; border-color: #1a5c24; }
+html.green-mode .match-label { color: #6aaa80; }
+
+/* ── Manager page ── */
+html.green-mode .stat-card { background: #0a2e12; }
+html.green-mode .stat-card.accent {
+  background: linear-gradient(135deg, #166534 0%, #16a34a 100%);
+}
+html.green-mode .stat-value { color: #4ade80; }
+html.green-mode .stat-label { color: #2a5c34; }
+
+html.green-mode .tab-btn { background: #0a2e12; border-color: #1a5c24; color: #6aaa80; }
+html.green-mode .tab-btn.active { background: #16a34a; border-color: #4ade80; color: #fff; }
+
+html.green-mode .weight-card { background: #0a2e12; border-color: #1a5c24; }
+html.green-mode .schedule-table thead tr { background: #0a2e12; }
+html.green-mode .schedule-table tbody tr:nth-child(even) { background: #071a0c; }
+html.green-mode .schedule-table tbody tr:nth-child(odd)  { background: #061508; }
+
+html.green-mode .event-setup-section,
+html.green-mode .current-event-section,
+html.green-mode .event-teams-section,
+html.green-mode .event-actions-section { background: #0a2e12; }
+
+html.green-mode .admin-section { border-top-color: #1a5c24; }
+html.green-mode .test-toggle-btn { background: #0a2e12; border-color: #1a5c24; color: #6aaa80; }
+html.green-mode .test-toggle-btn:hover,
+html.green-mode .test-toggle-btn.active { border-color: #22c55e; color: #4ade80; }
+html.green-mode .test-toggle-btn.active { background: #122e18; }
+
+html.green-mode .export-btn-import { background: #0a2e12; color: #4ade80; border-color: #1a5c24; }
+html.green-mode .export-btn-import:hover { background: #122e18; border-color: #22c55e; }
+
+/* ── Admin / Scouting Schedule ── */
+html.green-mode .ss-config-section,
+html.green-mode .ss-scouters-section,
+html.green-mode .ss-schedule-section { background: #0a2e12; border-color: #1a5c24; }
+html.green-mode .ss-table th { background: #071a0c; }
+html.green-mode .ss-table td { border-top-color: #1a5c24; }
+html.green-mode .ss-row-even td { background: #071a0c; }
+html.green-mode .ss-row-odd td  { background: #061508; }
+html.green-mode .ss-summary-card { background: #0a2e12; border-color: #1a5c24; }
+html.green-mode .ss-summary-stat { color: #4ade80; }
+html.green-mode .ss-summary-shifts { color: #2a5c34; }
+html.green-mode .ss-publish-section { background: #0a2e12; border-color: #1a5c24; }
+
+html.green-mode .back-btn { border-color: #1a5c24; color: #6aaa80; }
+html.green-mode .back-btn:hover { background: #0a2e12; color: #e8f9ec; border-color: #22c55e; }
+
+html.green-mode .as-card,
+html.green-mode .as-sub-card { background: #0a2e12 !important; border-color: #1a5c24 !important; }
+html.green-mode .as-table th { background: #122e18; border-bottom-color: #1a5c24; }
+html.green-mode .as-table tr:hover { background: #122e18; }
+html.green-mode .as-table td { border-bottom-color: #122e18; }
+html.green-mode .as-move-btn { background: #0a2e12; border-color: #1a5c24; color: #6aaa80; }
+html.green-mode .as-move-btn:hover:not(:disabled) { background: #122e18; color: #e8f9ec; }
+html.green-mode .as-scratch-btn { border-color: #1a5c24; color: #2a5c34; }
+
+/* ── Admin page cards ── */
+html.green-mode .admin-section,
+html.green-mode .as-card,
+html.green-mode .as-sub-card {
+  background: #0a2e12 !important;
+  border-color: #1a5c24 !important;
+}
+html.green-mode .as-table th {
+  background: #122e18;
+  border-bottom-color: #1a5c24;
+}
+html.green-mode .as-table tr:hover { background: #122e18; }
+html.green-mode .as-table td { border-bottom-color: #122e18; }
+
+/* ── Manager / analytics page ── */
+html.green-mode .team-card,
+html.green-mode .stat-box,
+html.green-mode .analytics-panel,
+html.green-mode .manager-section {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+/* ── Drive team page panels ── */
+html.green-mode .dt-panel,
+html.green-mode .dt-card {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+/* ── Match scout form panels ── */
+html.green-mode .match-section,
+html.green-mode .phase-panel,
+html.green-mode .scout-field {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+/* ── Pit scout form panels ── */
+html.green-mode .pit-form-section,
+html.green-mode .pit-card {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+/* ── Event picker modal ── */
+html.green-mode .ep-modal,
+html.green-mode .event-picker-modal {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+html.green-mode .ep-input,
+html.green-mode .event-search-input {
+  background: #061e0a;
+  border-color: #2a5c34;
+  color: #e8f9ec;
+}
+
+/* ── Scouting preview ── */
+html.green-mode .scouting-preview,
+html.green-mode .sp-shift {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+/* ── Fan page ── */
+html.green-mode .fan-hero {
+  background: linear-gradient(135deg, #0a2e12, #030f06);
+  border-color: #1a5c24;
+}
+html.green-mode .fan-hero-number { color: #4ade80; text-shadow: 0 0 40px rgba(22,163,74,0.4); }
+
+html.green-mode .fan-section {
+  background: #0a2e12;
+  border-color: #1a5c24;
+}
+
+html.green-mode .fan-stat-card {
+  background: #061e0a;
+  border-color: #1a5c24;
+}
+
+html.green-mode .fan-match-row {
+  background: #061e0a;
+  border-color: #1a5c24;
+}
+
+html.green-mode .fan-ext-link { border-color: #1a5c24; }
+html.green-mode .fan-ext-link:hover {
+  background: #122e18;
+  border-color: #22c55e;
+}
+
+/* ── Refresh bar ── */
+html.green-mode .fan-refresh-btn {
+  border-color: #1a5c24;
+  color: #2a5c34;
+}
+html.green-mode .fan-refresh-btn:hover:not(:disabled) {
+  border-color: #22c55e;
+  color: #4ade80;
+  background: rgba(22, 163, 74, 0.08);
+}
+html.green-mode .fan-last-updated { color: #1a3a22; }
+
+/* ── Event picker ── */
+html.green-mode .fan-change-event-btn {
+  border-color: #1a5c24;
+  color: #2a5c34;
+}
+html.green-mode .fan-change-event-btn:hover {
+  border-color: #22c55e;
+  color: #4ade80;
+}
+html.green-mode .fan-change-event-btn.overriding {
+  border-color: #22c55e;
+  color: #4ade80;
+}
+
+html.green-mode .fan-event-picker {
+  background: #0a2e12;
+  border-color: #1a5c24;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+html.green-mode .fan-picker-option:hover {
+  background: #122e18;
+  border-color: #1a5c24;
+}
+
+html.green-mode .fan-picker-option.active {
+  background: rgba(22, 163, 74, 0.15);
+  border-color: #16a34a;
+}
+
+html.green-mode .fan-picker-option-label { color: #e8f9ec; }
+html.green-mode .fan-picker-option-sub   { color: #2a5c34; }
+html.green-mode .fan-picker-heading      { color: #2a5c34; }
+html.green-mode .fan-picker-subheading   { color: #1a3a22; }
+
+html.green-mode .fan-picker-input {
+  background: #061e0a;
+  border-color: #1a5c24;
+  color: #e8f9ec;
+}
+html.green-mode .fan-picker-input:focus { border-color: #22c55e; }
+
+html.green-mode .fan-picker-load-btn { background: #16a34a; }
+html.green-mode .fan-picker-load-btn:hover { background: #15803d; }
+
+html.green-mode .t107-fan-btn {
+  border-color: #22c55e;
+  color: #4ade80;
+}
+html.green-mode .t107-fan-btn:hover {
+  background: #16a34a;
+  color: #fff;
+}
+
+/* ── Global table elements ── */
+html.green-mode th { color: #60a878; border-bottom-color: #122e18; }
+html.green-mode td { color: #e8f9ec; border-bottom-color: #122e18; }
+html.green-mode tr:hover td { background: #0a2e12; }
+
+/* ── Manager page extended ── */
+html.green-mode .manager-page { background: #030f06; }
+html.green-mode .page-header h1 { color: #e8f9ec; }
+html.green-mode .page-header p { color: #2a5c34; }
+html.green-mode .backup-banner { background: #0a1e0a; border-color: #1a4a1a; color: #86efac; }
+html.green-mode .backup-exit-btn { background: #166534; color: #fff; }
+
+html.green-mode .tab-bar { background: #0a2e12; }
+html.green-mode .tab { color: #2a5c34; }
+html.green-mode .tab.active { background: #16a34a; color: #fff; }
+html.green-mode .tab:hover:not(.active) { background: #122e18; }
+html.green-mode .tab-content { background: #061e0a; }
+
+html.green-mode .analytics-section h3 { color: #e8f9ec; }
+html.green-mode .schedule-level-heading { color: #e8f9ec; }
+
+html.green-mode .top-item { background: #0a2e12; }
+html.green-mode .top-item:hover { background: #122e18; }
+html.green-mode .top-item .team-num { color: #e8f9ec; }
+
+html.green-mode .search-input {
+  background: #061e0a;
+  border-color: #1a5c24;
+  color: #e8f9ec;
+}
+html.green-mode .search-input:focus { border-color: #22c55e; }
+html.green-mode .sort-select {
+  background: #061e0a;
+  border-color: #1a5c24;
+  color: #e8f9ec;
+}
+html.green-mode .sort-dir-btn { background: #16a34a; }
+html.green-mode .clickable-row:hover td { background: #0a2e12; }
+
+html.green-mode .team-card { background: #0a2e12; }
+html.green-mode .team-card-info h3 { color: #e8f9ec; }
+
+/* ── Scrollbar ── */
+html.green-mode ::-webkit-scrollbar-track { background: #030f06; }
+html.green-mode ::-webkit-scrollbar-thumb { background: #1a5c24; border-radius: 4px; }
+html.green-mode ::-webkit-scrollbar-thumb:hover { background: #22c55e; }

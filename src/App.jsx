@@ -16,6 +16,7 @@ import './App.css';
 import './pinkTheme.css';
 import './lightTheme.css';
 import './maroonTheme.css';
+import './greenTheme.css';
 
 const SESSION_KEY = 'scouting_auth';
 

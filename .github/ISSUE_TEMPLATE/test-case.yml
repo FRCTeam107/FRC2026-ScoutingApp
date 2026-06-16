@@ -1,0 +1,81 @@
+name: Test Case
+description: Document a test case (mirrors Azure DevOps Test Case work item)
+title: "[TEST] "
+labels: ["test-case"]
+body:
+  - type: dropdown
+    id: test-suite
+    attributes:
+      label: Test Suite
+      description: Which area does this test belong to? (equivalent to Test Suite in Azure DevOps)
+      options:
+        - Auth / Password Gate
+        - Fan Page
+        - Role Select Page
+        - Match Scouting Form
+        - Pit Scouting Form
+        - Header Navigation
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What does this test verify?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Test Steps
+      description: List each step with its expected result (Action → Expected Result)
+      placeholder: |
+        1. Navigate to /scouting
+           Expected: Password gate is shown
+        2. Click "Enter Password"
+           Expected: Password modal opens
+        3. Click "Cancel"
+           Expected: Modal closes
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: Overall Expected Result
+      description: What is the final expected outcome when the test passes?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: automated
+    attributes:
+      label: Automated?
+      description: Is this test covered by an automated Playwright test?
+      options:
+        - "Yes — Playwright"
+        - "No — Manual"
+    validations:
+      required: true
+
+  - type: input
+    id: spec-file
+    attributes:
+      label: Spec File
+      description: Playwright test file and test name (if automated)
+      placeholder: "tests/auth.spec.js > Protected scouting routes > password modal opens"
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: Equivalent to Priority field in Azure DevOps
+      options:
+        - "1 - Critical"
+        - "2 - High"
+        - "3 - Medium"
+        - "4 - Low"
+    validations:
+      required: true

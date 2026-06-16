@@ -16,6 +16,7 @@
  */
 
 import { execSync } from 'child_process';
+import { writeFileSync, unlinkSync } from 'fs';
 
 // ── Label definitions ──────────────────────────────────────────────────────
 
@@ -369,19 +370,17 @@ function createIssues() {
     const bodyFile = `.tmp_issue_body_${Date.now()}.md`;
 
     // Write body to a temp file to avoid shell escaping issues
-    import('fs').then(({ writeFileSync, unlinkSync }) => {
-      writeFileSync(bodyFile, body, 'utf8');
-      const url = gh(`issue create --title "${tc.title}" --label "test-case" --label "automated" --label "${tc.suite}" --body-file "${bodyFile}"`);
-      try { unlinkSync(bodyFile); } catch { /* ignore */ }
+    writeFileSync(bodyFile, body, 'utf8');
+    const url = gh(`issue create --title "${tc.title}" --type "Test Case" --label "test-case" --label "automated" --label "${tc.suite}" --body-file "${bodyFile}"`);
+    try { unlinkSync(bodyFile); } catch { /* ignore */ }
 
-      if (url) {
-        console.log(`✓ ${tc.title}\n  ${url}`);
-        created++;
-      } else {
-        console.error(`✗ Failed: ${tc.title}`);
-        failed++;
-      }
-    });
+    if (url) {
+      console.log(`✓ ${tc.title}\n  ${url}`);
+      created++;
+    } else {
+      console.error(`✗ Failed: ${tc.title}`);
+      failed++;
+    }
   }
 
   console.log(`\nDone. Created: ${created}  Failed: ${failed}`);

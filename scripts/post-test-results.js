@@ -82,6 +82,18 @@ function collectTests(suites, contextTitle = '') {
   return results;
 }
 
+// ── Post a single comment on a GitHub Issue ───────────────────────────────
+
+function postIssueComment(issueNumber, commentBody) {
+  const bodyFile = `.tmp_issue_comment_${Date.now()}.md`;
+  writeFileSync(bodyFile, commentBody, 'utf8');
+  try {
+    return gh(`issue comment ${issueNumber} --repo ${REPO} --body-file "${bodyFile}"`);
+  } finally {
+    try { unlinkSync(bodyFile); } catch { /* ignore */ }
+  }
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────
 
 function main() {
@@ -102,7 +114,26 @@ function main() {
   const passed = tests.filter(t => t.status === 'passed').length;
   const failed = tests.filter(t => t.status === 'failed').length;
 
-  // 4. Build PR comment body
+  // Build run URL for linking back to the CI run
+  const runId = process.env.GITHUB_RUN_ID;
+  const serverUrl = process.env.GITHUB_SERVER_URL ?? 'https://github.com';
+  const runUrl = runId ? `${serverUrl}/${REPO}/actions/runs/${runId}` : null;
+  const runLink = runUrl ? `[Run #${runId}](${runUrl})` : 'local run';
+  const today = new Date().toISOString().split('T')[0];
+
+  // 4. Post a trend comment on each individual issue
+  console.log('\nPosting trend comments on issues...');
+  for (const test of tests) {
+    const num = issueMap[test.fullTitle];
+    if (!num) continue;
+    const icon = test.status === 'passed' ? '✅' : '❌';
+    const verb = test.status === 'passed' ? 'Passed' : 'Failed';
+    const comment = `${icon} **${verb}** — ${runLink} — ${today}`;
+    const result = postIssueComment(num, comment);
+    console.log(`  ${icon} #${num} ${result ? '✓' : '(failed to post)'}`);
+  }
+
+  // 5. Build PR summary comment body
   const icon = (s) => s === 'passed' ? '✅' : '❌';
   const rows = tests.map(t => {
     const num = issueMap[t.fullTitle];
@@ -116,7 +147,7 @@ function main() {
     ? `✅ **All ${tests.length} tests passed**`
     : `❌ **${failed} of ${tests.length} tests failed**`;
 
-  const body = [
+  const prBody = [
     `## 🎭 Playwright Test Results`,
     ``,
     summary,
@@ -125,25 +156,24 @@ function main() {
     `|:---:|---|:---:|`,
     ...rows,
     ``,
-    `*Run by the [Playwright CI workflow](https://github.com/${REPO}/actions)*`,
+    `*${runLink} • ${today}*`,
   ].join('\n');
 
-  // 5. Post as a PR comment (only in PR context)
+  // 6. Post as a PR comment (only in PR context)
   if (!PR_NUMBER) {
-    console.log('No PR_NUMBER — skipping comment (this is a direct push).\n');
-    console.log(body);
+    console.log('\nNo PR_NUMBER — skipping PR summary comment (direct push to main).');
     return;
   }
 
   const bodyFile = `.tmp_pr_comment_${Date.now()}.md`;
-  writeFileSync(bodyFile, body, 'utf8');
+  writeFileSync(bodyFile, prBody, 'utf8');
   try {
     const result = gh(`pr comment ${PR_NUMBER} --repo ${REPO} --body-file "${bodyFile}"`);
     if (result !== null) {
-      console.log(`✓ Posted test results comment to PR #${PR_NUMBER}`);
+      console.log(`\n✓ Posted summary to PR #${PR_NUMBER}`);
     } else {
-      console.warn('Could not post PR comment — printing body instead:\n');
-      console.log(body);
+      console.warn('\nCould not post PR comment — printing body instead:\n');
+      console.log(prBody);
     }
   } finally {
     try { unlinkSync(bodyFile); } catch { /* ignore */ }

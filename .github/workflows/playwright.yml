@@ -35,12 +35,14 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_TBA_KEY: ${{ secrets.VITE_TBA_KEY }}
 
-      - name: Post test results to PR
-        if: always() && github.event_name == 'pull_request'
+      - name: Post test results to PR and issues
+        if: always()
         run: node scripts/post-test-results.js
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
 
       - name: Upload Playwright report

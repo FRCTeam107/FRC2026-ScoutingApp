@@ -15,6 +15,7 @@ function pickEvent(events) {
   return past[0] ?? null;
 }
 
+
 const EVENT_OVERRIDE_KEY = 'fan_event_override';
 
 const TEAM_NUMBER = 107;
